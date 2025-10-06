@@ -1,6 +1,8 @@
 # CasinoHub - Influencer Gaming Website
 
-A Next.js 14 application for casino gaming influencers with live tournament countdowns, multilingual support (EN/SR), and Sanity CMS integration.
+A Next.js 15 application for casino gaming influencers with live tournament countdowns, multilingual support (EN/SR), and Sanity CMS integration.
+
+🔗 **GitHub Repository:** https://github.com/aleksakarac/casino-influencer-site-3
 
 ## 🚀 Features
 
@@ -17,12 +19,13 @@ A Next.js 14 application for casino gaming influencers with live tournament coun
 
 ## 🛠️ Tech Stack
 
-- **Framework:** Next.js 14 (App Router)
+- **Framework:** Next.js 15.5.4 (App Router + Turbopack)
 - **Language:** TypeScript
-- **Styling:** Tailwind CSS
+- **Styling:** Tailwind CSS v4
 - **Animations:** Framer Motion
-- **CMS:** Sanity
+- **CMS:** Sanity v3.58.0
 - **i18n:** next-intl
+- **React:** React 19
 - **Deployment:** Vercel (recommended)
 
 ## 📦 Installation
@@ -112,4 +115,6 @@ npx sanity deploy
 
 ---
 
-**Built with ❤️ using Next.js 14, TypeScript, and Sanity CMS**
+**Built with ❤️ using Next.js 15, TypeScript, and Sanity CMS**
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
