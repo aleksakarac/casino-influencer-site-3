@@ -50,3 +50,5 @@ sanity-studio/.sanity
 
 # OS
 Thumbs.db
+
+.vercel

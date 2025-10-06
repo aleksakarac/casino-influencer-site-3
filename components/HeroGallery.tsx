@@ -27,12 +27,12 @@ export default function HeroGallery({ images, locale }: HeroGalleryProps) {
   if (!images || images.length === 0) {
     // Placeholder when no images
     return (
-      <div className="relative h-[500px] bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
+      <div className="relative h-[220px] bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
-            <span className="text-4xl">🎰</span>
+          <div className="w-16 h-16 mx-auto mb-2 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+            <span className="text-2xl">🎰</span>
           </div>
-          <p className="text-gray-400 text-lg">Hero Gallery - Add images in CMS</p>
+          <p className="text-gray-400 text-sm">Hero Gallery - Add images in CMS</p>
         </div>
       </div>
     );
@@ -40,7 +40,7 @@ export default function HeroGallery({ images, locale }: HeroGalleryProps) {
 
   return (
     <div
-      className="relative h-[500px] overflow-hidden"
+      className="relative h-[220px] overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >

@@ -80,7 +80,7 @@ export default function TournamentCards({ tournaments, locale }: TournamentCards
   if (!tournaments || tournaments.length === 0) {
     return (
       <section className="py-12 px-4">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <div className="text-center py-20">
             <div className="text-6xl mb-6">🏆</div>
             <p className="text-gray-400 text-xl">{t('noTournaments')}</p>
@@ -92,7 +92,7 @@ export default function TournamentCards({ tournaments, locale }: TournamentCards
 
   return (
     <section className="py-12 px-4">
-      <div className="max-w-6xl mx-auto space-y-8">
+      <div className="max-w-5xl mx-auto space-y-8">
         {tournaments.map((tournament, index) => {
           const isExpired = new Date(tournament.endDate).getTime() < new Date().getTime();
 
