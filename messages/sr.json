@@ -1,0 +1,28 @@
+{
+  "nav": {
+    "language": "SR",
+    "switchTo": "EN"
+  },
+  "hero": {
+    "loading": "Učitavanje..."
+  },
+  "middleBar": {
+    "link1": "Sve Igre",
+    "link2": "Turniri",
+    "link3": "Promocije"
+  },
+  "tournament": {
+    "prizePool": "Nagradni Fond",
+    "players": "Igrači",
+    "buyIn": "Ulaznica",
+    "winner": "Nagrada Pobedniku",
+    "tableType": "Tip Stola",
+    "join": "Pridruži se Turniru",
+    "ended": "Turnir Završen",
+    "timeRemaining": "Preostalo Vreme",
+    "noTournaments": "Trenutno nema aktivnih turnira. Vratite se uskoro!"
+  },
+  "footer": {
+    "copyright": "© 2025 CasinoHub. Sva prava zadržana."
+  }
+}

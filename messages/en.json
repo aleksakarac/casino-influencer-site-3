@@ -1,0 +1,28 @@
+{
+  "nav": {
+    "language": "EN",
+    "switchTo": "SR"
+  },
+  "hero": {
+    "loading": "Loading..."
+  },
+  "middleBar": {
+    "link1": "All Games",
+    "link2": "Tournaments",
+    "link3": "Promotions"
+  },
+  "tournament": {
+    "prizePool": "Prize Pool",
+    "players": "Players",
+    "buyIn": "Buy-In",
+    "winner": "Winner Prize",
+    "tableType": "Table Type",
+    "join": "Join Tournament",
+    "ended": "Tournament Ended",
+    "timeRemaining": "Time Remaining",
+    "noTournaments": "No active tournaments at the moment. Check back soon!"
+  },
+  "footer": {
+    "copyright": "© 2025 CasinoHub. All rights reserved."
+  }
+}
