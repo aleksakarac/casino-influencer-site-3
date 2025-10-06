@@ -4,6 +4,8 @@ A Next.js 15 application for casino gaming influencers with live tournament coun
 
 🔗 **GitHub Repository:** https://github.com/aleksakarac/casino-influencer-site-3
 
+🌐 **Live Production Site:** https://casinohub-seven.vercel.app
+
 ## 🚀 Features
 
 ### Phase 1 (Desktop Only - 1024px+)
