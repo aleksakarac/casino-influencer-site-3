@@ -9,7 +9,21 @@ type Card = {
   _id: string;
   cardType: 'bonus' | 'play' | 'welcome';
   order: number;
-  [key: string]: unknown;
+  // BonusCard properties
+  title?: string;
+  backgroundImage?: string;
+  activationsCount?: number;
+  bonusCode?: string;
+  // PlayCard properties
+  gameImage?: string;
+  // WelcomeCard properties
+  benefits?: string[];
+  // Common optional properties
+  tag?: {
+    name: string;
+    color: string;
+    textColor: string;
+  };
 };
 
 type CardConfig = {
@@ -55,7 +69,7 @@ export function GameCardsGrid({ cards, cardConfig, vavadaLink }: GameCardsGridPr
                 return (
                   <BonusCard
                     key={card._id}
-                    card={card}
+                    card={card as { _id: string; title: string; backgroundImage: string; tag?: { name: string; color: string; textColor: string; }; activationsCount: number; bonusCode: string; }}
                     borderColor={borderColor}
                     vavadaLink={vavadaLink || '#'}
                   />
@@ -64,7 +78,7 @@ export function GameCardsGrid({ cards, cardConfig, vavadaLink }: GameCardsGridPr
                 return (
                   <PlayCard
                     key={card._id}
-                    card={card}
+                    card={card as { _id: string; title: string; gameImage: string; tag?: { name: string; color: string; textColor: string; }; }}
                     borderColor={borderColor}
                     vavadaLink={vavadaLink || '#'}
                   />
@@ -73,7 +87,7 @@ export function GameCardsGrid({ cards, cardConfig, vavadaLink }: GameCardsGridPr
                 return (
                   <WelcomeCard
                     key={card._id}
-                    card={card}
+                    card={card as { _id: string; backgroundImage: string; tag?: { name: string; color: string; textColor: string; }; bonusCode: string; benefits: string[]; }}
                     borderColor={borderColor}
                     vavadaLink={vavadaLink || '#'}
                   />
