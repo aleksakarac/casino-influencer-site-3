@@ -1,0 +1,58 @@
+{
+  "Header": {
+    "logoAlt": "Aca Jankovic"
+  },
+  "Hero": {
+    "title": "Premium Slot Iskustvo",
+    "subtitle": "Otkrijte ekskluzivne bonuse i turnire"
+  },
+  "MiddleBar": {
+    "games": {
+      "title": "Igre",
+      "subtitle": "Uskoro"
+    },
+    "tournaments": {
+      "title": "Turniri",
+      "subtitle": "Uskoro"
+    },
+    "rewards": {
+      "title": "Nagrade",
+      "subtitle": "Uskoro"
+    }
+  },
+  "FeaturedGames": {
+    "title": "Istaknute Igre",
+    "subtitle": "Doživite vrhunsko kazino iskustvo",
+    "viewAll": "Prikaži Sve Igre",
+    "players": "Igrači",
+    "prize": "Nagradni Fond",
+    "hot": "VRELO"
+  },
+  "Tournaments": {
+    "title": "Istaknuti Turnir",
+    "subtitle": "Pridružite se vrhunskoj gaming konkurenciji",
+    "players": "Igrači",
+    "buyIn": "Ulaznica",
+    "winner": "Pobednik",
+    "tableType": "Tip Stola",
+    "endsIn": "Turnir se završava za",
+    "days": "Dana",
+    "hours": "Sati",
+    "minutes": "Min",
+    "seconds": "Sek",
+    "joinTournament": "Pridruži Se Turniru",
+    "ended": "Turnir Završen"
+  },
+  "Footer": {
+    "joinCommunity": "Pridružite Se Našoj Zajednici",
+    "communitySubtitle": "Povežite se sa drugim igračima i budite u toku sa najnovijim vestima",
+    "kick": "Kick",
+    "instagram": "Instagram",
+    "discord": "Discord",
+    "copyright": "© 2024 Aca Jankovic. Sva prava zadržana",
+    "privacy": "Politika Privatnosti",
+    "terms": "Uslovi Korišćenja",
+    "support": "Podrška",
+    "disclaimer": "Igrajte odgovorno. Morate imati 18+ godina da biste učestvovali."
+  }
+}

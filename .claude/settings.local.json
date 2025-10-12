@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git commit -m \"$(cat <<''EOF''\nRefine card system, rebrand to Aca Jankovic, and fix hydration errors\n\nMajor changes:\n- Refined game card layout: 2 columns on mobile, 3 on desktop, max 60% width on desktop\n- Fixed card background images by replacing Next.js Image with CSS background-image\n- Made cards fully responsive with square aspect ratio\n- Rebranded from \"CasinoHub\" to \"Aca Jankovic\" across all components and metadata\n- Fixed hydration error in TournamentGrid by using useLocale() hook instead of window check\n- Updated all translation files (en.json, sr.json) with new branding\n- Improved grid responsiveness and centering\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

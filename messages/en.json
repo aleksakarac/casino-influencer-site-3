@@ -1,0 +1,58 @@
+{
+  "Header": {
+    "logoAlt": "Aca Jankovic"
+  },
+  "Hero": {
+    "title": "Premium Slots Experience",
+    "subtitle": "Discover exclusive bonuses and tournaments"
+  },
+  "MiddleBar": {
+    "games": {
+      "title": "Games",
+      "subtitle": "Coming Soon"
+    },
+    "tournaments": {
+      "title": "Tournaments",
+      "subtitle": "Coming Soon"
+    },
+    "rewards": {
+      "title": "Rewards",
+      "subtitle": "Coming Soon"
+    }
+  },
+  "FeaturedGames": {
+    "title": "Featured Games",
+    "subtitle": "Experience premium casino gaming",
+    "viewAll": "View All Games",
+    "players": "Players",
+    "prize": "Prize Pool",
+    "hot": "HOT"
+  },
+  "Tournaments": {
+    "title": "Featured Tournament",
+    "subtitle": "Join the ultimate gaming competition",
+    "players": "Players",
+    "buyIn": "Buy-in",
+    "winner": "Winner",
+    "tableType": "Table Type",
+    "endsIn": "Tournament ends in",
+    "days": "Days",
+    "hours": "Hrs",
+    "minutes": "Min",
+    "seconds": "Sec",
+    "joinTournament": "Join Tournament",
+    "ended": "Tournament Ended"
+  },
+  "Footer": {
+    "joinCommunity": "Join Our Community",
+    "communitySubtitle": "Connect with fellow players and stay updated with the latest news",
+    "kick": "Kick",
+    "instagram": "Instagram",
+    "discord": "Discord",
+    "copyright": "© 2024 Aca Jankovic. All rights reserved",
+    "privacy": "Privacy Policy",
+    "terms": "Terms and Conditions",
+    "support": "Support",
+    "disclaimer": "Play responsibly. Must be 18+ to participate."
+  }
+}
