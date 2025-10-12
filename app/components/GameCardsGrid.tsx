@@ -9,7 +9,7 @@ type Card = {
   _id: string;
   cardType: 'bonus' | 'play' | 'welcome';
   order: number;
-  [key: string]: any;
+  [key: string]: unknown;
 };
 
 type CardConfig = {

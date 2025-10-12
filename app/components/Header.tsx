@@ -1,11 +1,9 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useTranslations } from 'next-intl';
 import LanguageToggle from './LanguageToggle';
 
 export default function Header() {
-  const t = useTranslations('Header');
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -10,7 +10,20 @@ import { gameCardsQuery } from '@/app/lib/sanity/queries';
 
 export default function HomePage() {
   const searchParams = useSearchParams();
-  const [cardsData, setCardsData] = useState<any>(null);
+  const [cardsData, setCardsData] = useState<{
+    cards: Array<{
+      _id: string;
+      cardType: 'bonus' | 'play' | 'welcome';
+      order: number;
+      [key: string]: unknown;
+    }>;
+    cardConfig: {
+      bonusBorder?: string;
+      playBorder?: string;
+      welcomeBorder?: string;
+    };
+    vavadaLink: string;
+  } | null>(null);
 
   useEffect(() => {
     // Fetch game cards data
@@ -20,9 +33,9 @@ export default function HomePage() {
 
         // Merge and sort all cards by order
         const allCards = [
-          ...(data.bonusCards || []).map((card: any) => ({ ...card, cardType: 'bonus' })),
-          ...(data.playCards || []).map((card: any) => ({ ...card, cardType: 'play' })),
-          ...(data.welcomeCards || []).map((card: any) => ({ ...card, cardType: 'welcome' })),
+          ...(data.bonusCards || []).map((card: { _id: string; order: number }) => ({ ...card, cardType: 'bonus' as const })),
+          ...(data.playCards || []).map((card: { _id: string; order: number }) => ({ ...card, cardType: 'play' as const })),
+          ...(data.welcomeCards || []).map((card: { _id: string; order: number }) => ({ ...card, cardType: 'welcome' as const })),
         ].sort((a, b) => a.order - b.order);
 
         setCardsData({

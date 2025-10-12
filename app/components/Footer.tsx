@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
-import { Play, Instagram } from 'lucide-react';
+import { Instagram } from 'lucide-react';
 
 // Custom SVG Icons
 const KickIcon = ({ size = 20, className = "" }) => (

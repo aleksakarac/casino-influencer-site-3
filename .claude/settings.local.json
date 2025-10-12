@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git commit -m \"$(cat <<''EOF''\nRefine card system, rebrand to Aca Jankovic, and fix hydration errors\n\nMajor changes:\n- Refined game card layout: 2 columns on mobile, 3 on desktop, max 60% width on desktop\n- Fixed card background images by replacing Next.js Image with CSS background-image\n- Made cards fully responsive with square aspect ratio\n- Rebranded from \"CasinoHub\" to \"Aca Jankovic\" across all components and metadata\n- Fixed hydration error in TournamentGrid by using useLocale() hook instead of window check\n- Updated all translation files (en.json, sr.json) with new branding\n- Improved grid responsiveness and centering\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")"
+      "Bash(npm run dev)",
+      "Read(//c/Users/Aleksa/Pictures/Screenshots/**)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nImplement complete UI redesign with leaderboard and animations\n\nMajor UI/UX improvements:\n- Redesigned navigation with Chrome-style tabs and smooth animations\n- Added Framer Motion animations throughout the site\n- Updated color scheme to amber/yellow gold theme\n- Implemented seamless unified background (fixed section boxes)\n\nNew leaderboard system:\n- Created full leaderboard page with prize cards and ranking system\n- Added 3 new Sanity schemas: leaderboardEntry, tournamentPrize, leaderboardSettings\n- Implemented LeaderboardEntry component with rank icons, badges, and stats\n- Created PrizeCard component with hover effects and gradients\n- Added proper data fetching and state management\n\nComponent updates:\n- Header: Added slide-down animation, amber gradients, bottom glow\n- MiddleBar: Chrome-style tabs with curves, staggered animations, icon glows\n- Footer: Shimmer effects, custom SVG icons, improved animations\n- GameCardsGrid: Added section header with animation, unified background\n- TournamentGrid: Removed section background for seamless design\n\nTechnical improvements:\n- Fixed background inconsistency by removing section-level gradients\n- Updated page structure for better layout flow\n- Added translations for leaderboard (EN/SR)\n- Maintained all existing backend functionality and Sanity integration\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(vercel:*)"
     ],
     "deny": [],
     "ask": []
