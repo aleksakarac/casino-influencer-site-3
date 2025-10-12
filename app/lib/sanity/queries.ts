@@ -30,3 +30,32 @@ export const gameCardsQuery = `{
   },
   "vavadaLink": *[_type == "siteSettings"][0].vavadaRefLink
 }`;
+
+export const leaderboardQuery = `{
+  "prizes": *[_type == "tournamentPrize" && isActive == true] | order(order asc) [0...4] {
+    _id,
+    prizeNumber,
+    "prizeImage": prizeImage.asset->url,
+    prizeTitle,
+    prizeDescription,
+    order
+  },
+  "entries": *[_type == "leaderboardEntry" && isActive == true] | order(place asc) [0...10] {
+    _id,
+    place,
+    viewerName,
+    watchtime,
+    watchTimeHours,
+    avatarEmoji,
+    "avatar": avatar.asset->url,
+    daysWatched,
+    avgDaily,
+    badge,
+    change
+  },
+  "settings": *[_type == "leaderboardSettings"][0] {
+    title,
+    subtitle,
+    isActive
+  }
+}`;

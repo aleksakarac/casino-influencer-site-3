@@ -60,7 +60,7 @@ export default function HomePage() {
   }, [searchParams]);
 
   return (
-    <div className="max-w-[1400px] mx-auto px-6">
+    <>
       <Suspense fallback={<LoadingSpinner />}>
         {cardsData ? (
           <GameCardsGrid
@@ -74,10 +74,8 @@ export default function HomePage() {
       </Suspense>
 
       <Suspense fallback={<LoadingSpinner />}>
-        <div id="tournaments-section">
-          <TournamentGrid />
-        </div>
+        <TournamentGrid />
       </Suspense>
-    </div>
+    </>
   );
 }

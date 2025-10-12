@@ -6,6 +6,9 @@ import cardTypeConfig from './cardTypeConfig';
 import bonusCard from './bonusCard';
 import playCard from './playCard';
 import welcomeCard from './welcomeCard';
+import leaderboardEntry from './leaderboardEntry';
+import tournamentPrize from './tournamentPrize';
+import leaderboardSettings from './leaderboardSettings';
 
 export const schemas = [
   siteSettings,
@@ -16,4 +19,7 @@ export const schemas = [
   bonusCard,
   playCard,
   welcomeCard,
+  leaderboardEntry,
+  tournamentPrize,
+  leaderboardSettings,
 ];

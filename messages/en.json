@@ -54,5 +54,14 @@
     "terms": "Terms and Conditions",
     "support": "Support",
     "disclaimer": "Play responsibly. Must be 18+ to participate."
+  },
+  "Leaderboard": {
+    "defaultTitle": "🏆 Top Viewers Tournament",
+    "defaultSubtitle": "Most dedicated viewers of Aca Jankovic • Updated regularly",
+    "prizesTitle": "Tournament Prizes",
+    "leaderboardTitle": "Top 10 Leaderboard",
+    "error": "Error",
+    "errorMessage": "Failed to load leaderboard data. Please try again later.",
+    "noEntries": "No leaderboard entries yet. Check back soon!"
   }
 }

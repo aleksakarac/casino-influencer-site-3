@@ -54,5 +54,14 @@
     "terms": "Uslovi Korišćenja",
     "support": "Podrška",
     "disclaimer": "Igrajte odgovorno. Morate imati 18+ godina da biste učestvovali."
+  },
+  "Leaderboard": {
+    "defaultTitle": "🏆 Turnir Najboljih Gledalaca",
+    "defaultSubtitle": "Najposvećeniji gledaoci Ace Jankovića • Redovno ažurirano",
+    "prizesTitle": "Nagrade Turnira",
+    "leaderboardTitle": "Top 10 Rang Lista",
+    "error": "Greška",
+    "errorMessage": "Neuspešno učitavanje podataka rang liste. Pokušajte ponovo kasnije.",
+    "noEntries": "Još nema unosa na rang listi. Proverite uskoro!"
   }
 }

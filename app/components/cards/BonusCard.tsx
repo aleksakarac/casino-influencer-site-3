@@ -52,11 +52,10 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
       {/* Tag (Top Right) */}
       {card.tag && (
         <div
-          className="absolute top-0 right-0 px-4 py-2 text-sm font-bold uppercase shadow-lg z-10"
+          className="absolute top-2 right-2 px-3 py-1 text-xs font-bold uppercase shadow-lg z-10 rounded-full border-2 bg-black/20 backdrop-blur-sm"
           style={{
-            backgroundColor: card.tag.color,
-            color: card.tag.textColor,
-            clipPath: 'polygon(0 0, 100% 0, 100% 100%, 15% 100%)',
+            borderColor: card.tag.color,
+            color: card.tag.color,
           }}
         >
           {card.tag.name}
@@ -77,16 +76,6 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
             {card.activationsCount} Aktivacija
           </p>
 
-          {/* Claim Button */}
-          <a
-            href={vavadaLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-2 px-3 rounded-lg text-center transition-colors text-sm"
-          >
-            Claim Bonus
-          </a>
-
           {/* Code Box */}
           <div className="bg-black/60 backdrop-blur-sm rounded-lg p-2 flex items-center justify-between">
             <span className="text-white font-mono text-xs">
@@ -101,6 +90,16 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
               {copying ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             </button>
           </div>
+
+          {/* Claim Button */}
+          <a
+            href={vavadaLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-1.5 px-2.5 rounded-lg text-center transition-colors text-sm"
+          >
+            Claim Bonus
+          </a>
         </div>
       </div>
     </div>

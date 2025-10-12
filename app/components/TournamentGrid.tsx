@@ -29,10 +29,10 @@ export default function TournamentGrid() {
   const locale = useLocale() as 'en' | 'sr';
 
   return (
-    <section className="pt-6 pb-12 bg-gradient-to-b from-black to-gray-900 max-w-4xl mx-auto px-4">
+    <section id="tournaments-section" className="pt-6 pb-12 max-w-4xl mx-auto px-4">
       {/* Section Header */}
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent mb-2">
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent mb-2">
           {t('title')}
         </h2>
         <p className="text-gray-400 max-w-md mx-auto">{t('subtitle')}</p>

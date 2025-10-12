@@ -52,11 +52,10 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
       {/* Tag */}
       {card.tag && (
         <div
-          className="absolute top-0 right-0 z-10 px-3 py-1 text-xs font-bold uppercase shadow-lg"
+          className="absolute top-2 right-2 z-10 px-3 py-1 text-xs font-bold uppercase shadow-lg rounded-full border-2 bg-black/20 backdrop-blur-sm"
           style={{
-            backgroundColor: card.tag.color,
-            color: card.tag.textColor,
-            clipPath: 'polygon(0 0, 100% 0, 100% 100%, 15% 100%)',
+            borderColor: card.tag.color,
+            color: card.tag.color,
           }}
         >
           {card.tag.name}
@@ -68,11 +67,22 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
         {/* Title */}
         <h3 className="text-xl font-bold text-yellow-400 drop-shadow-lg">Bonus</h3>
 
-        {/* Code Box */}
-        <div className="w-full bg-black/70 backdrop-blur-sm rounded-lg p-2 border-2 border-yellow-500">
-          <div className="flex items-center justify-between">
+        {/* Benefits */}
+        <div className="w-full space-y-1">
+          {card.benefits.map((benefit, index) => (
+            <div key={index} className="text-white text-left flex items-start text-sm">
+              <span className="text-yellow-400 mr-1.5">•</span>
+              <span>{benefit}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom Section with consistent spacing */}
+        <div className="w-full space-y-2">
+          {/* Code Box */}
+          <div className="bg-black/60 backdrop-blur-sm rounded-lg p-2 flex items-center justify-between">
             <span className="text-white font-mono text-xs">
-              Kod: <span className="font-bold text-yellow-400">{card.bonusCode}</span>
+              Kod: <span className="font-bold">{card.bonusCode}</span>
             </span>
             <button
               onClick={copyCode}
@@ -83,27 +93,17 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
               {copying ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
             </button>
           </div>
-        </div>
 
-        {/* Benefits */}
-        <div className="w-full space-y-1">
-          {card.benefits.map((benefit, index) => (
-            <div key={index} className="text-white text-left flex items-start text-xs">
-              <span className="text-yellow-400 mr-1">•</span>
-              <span>{benefit}</span>
-            </div>
-          ))}
+          {/* Button */}
+          <a
+            href={vavadaLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-1.5 px-2.5 rounded-lg text-center transition-colors text-sm"
+          >
+            Iskoristi Kod
+          </a>
         </div>
-
-        {/* Button */}
-        <a
-          href={vavadaLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-2 px-4 rounded-lg transition-colors text-sm"
-        >
-          Iskoristi Kod
-        </a>
       </div>
     </div>
   );

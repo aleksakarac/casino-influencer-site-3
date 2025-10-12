@@ -34,11 +34,10 @@ export function PlayCard({ card, borderColor, vavadaLink }: PlayCardProps) {
       {/* Tag */}
       {card.tag && (
         <div
-          className="absolute top-0 right-0 z-10 px-3 py-1 text-xs font-bold uppercase shadow-lg"
+          className="absolute top-2 right-2 z-10 px-3 py-1 text-xs font-bold uppercase shadow-lg rounded-full border-2 bg-black/20 backdrop-blur-sm"
           style={{
-            backgroundColor: card.tag.color,
-            color: card.tag.textColor,
-            clipPath: 'polygon(0 0, 100% 0, 100% 100%, 15% 100%)',
+            borderColor: card.tag.color,
+            color: card.tag.color,
           }}
         >
           {card.tag.name}
