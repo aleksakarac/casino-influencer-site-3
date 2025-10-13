@@ -82,55 +82,58 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
       )}
 
       {/* Content */}
-      <div className="absolute inset-0 flex flex-col justify-between">
-        {/* Top Section - Title & Subtitle */}
-        <div className="p-2 md:p-3 mt-8 md:mt-10">
-          <h3 className="text-sm md:text-lg font-bold text-white drop-shadow-lg leading-tight">
-            {card.title}
-          </h3>
-          <p className="text-[9px] md:text-xs text-gray-300 mt-0.5 md:mt-1">
-            {card.activationsCount} Activations
-          </p>
-        </div>
-
+      <div className="absolute inset-0 flex flex-col justify-end">
         {/* Bottom Section with Solid Background */}
-        <div className="bg-black/90 backdrop-blur-sm p-2 md:p-3 space-y-1.5 md:space-y-2 flex flex-col items-center rounded-b-xl">
-          {/* Code Box */}
-          <div className="bg-black/70 backdrop-blur-sm rounded md:rounded-lg p-1.5 md:p-2 flex items-center justify-between w-[80%] md:w-[80%] border border-white/10">
-            <span className="text-white font-mono text-[9px] md:text-xs font-bold tracking-wide">
-              {card.bonusCode}
-            </span>
-            <button
-              onClick={copyCode}
-              disabled={copying}
-              className="text-gray-300 hover:text-green-400 transition-colors ml-1 md:ml-2"
-              aria-label="Copy code"
-            >
-              {copying ? (
-                <Check size={9} className="md:hidden" />
-              ) : (
-                <Copy size={9} className="md:hidden" />
-              )}
-              {copying ? (
-                <Check size={12} className="hidden md:block" />
-              ) : (
-                <Copy size={12} className="hidden md:block" />
-              )}
-            </button>
+        <div className="bg-gradient-to-br from-purple-900/70 to-indigo-950/70 backdrop-blur-sm p-2 md:p-3 space-y-1.5 md:space-y-2 flex flex-col items-center rounded-b-xl">
+          {/* Title & Activations */}
+          <div className="w-full text-center mb-1 md:mb-2">
+            <h3 className="text-sm md:text-lg font-bold text-white leading-tight">
+              {card.title}
+            </h3>
+            <p className="text-[9px] md:text-xs text-gray-300 mt-0.5 md:mt-1">
+              {card.activationsCount} Activations
+            </p>
           </div>
 
-          {/* Claim Button */}
-          <a
-            href={vavadaLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="block w-[72%] md:w-[80%] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-[9px] md:text-xs font-bold py-0.5 md:py-2 px-2 md:px-4 rounded md:rounded-lg text-center transition-all duration-300 shadow-md md:shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-0.5 md:gap-1.5"
-          >
-            <Gift size={9} className="md:hidden" />
-            <Gift size={12} className="hidden md:block" />
-            CLAIM BONUS
-          </a>
+          {/* Code Box and Button Container */}
+          <div className="w-full flex flex-col md:flex-row items-center gap-1.5 md:gap-2">
+            {/* Code Box */}
+            <div className="bg-purple-800/40 backdrop-blur-sm rounded md:rounded-lg px-2 md:px-3 py-1.5 md:py-2 flex items-center justify-between w-[80%] md:w-[48%] border border-purple-500/30 h-[24px] md:h-[38px]">
+              <span className="text-white font-mono text-[9px] md:text-[11px] font-bold tracking-wide">
+                {card.bonusCode}
+              </span>
+              <button
+                onClick={copyCode}
+                disabled={copying}
+                className="text-gray-300 hover:text-green-400 transition-colors ml-1 md:ml-2 flex-shrink-0"
+                aria-label="Copy code"
+              >
+                {copying ? (
+                  <Check size={10} className="md:hidden" />
+                ) : (
+                  <Copy size={10} className="md:hidden" />
+                )}
+                {copying ? (
+                  <Check size={14} className="hidden md:block" />
+                ) : (
+                  <Copy size={14} className="hidden md:block" />
+                )}
+              </button>
+            </div>
+
+            {/* Claim Button */}
+            <a
+              href={vavadaLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center justify-center w-[72%] md:w-[48%] h-[24px] md:h-[38px] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-[9px] md:text-[11px] font-bold px-2 md:px-4 rounded md:rounded-lg text-center transition-all duration-300 shadow-md md:shadow-lg hover:shadow-xl transform hover:scale-105 gap-0.5 md:gap-1.5"
+            >
+              <Gift size={10} className="md:hidden" />
+              <Gift size={14} className="hidden md:block" />
+              CLAIM BONUS
+            </a>
+          </div>
         </div>
       </div>
     </div>

@@ -45,13 +45,7 @@ export const leaderboardQuery = `{
     place,
     viewerName,
     watchtime,
-    watchTimeHours,
-    avatarEmoji,
-    "avatar": avatar.asset->url,
-    daysWatched,
-    avgDaily,
-    badge,
-    change
+    watchTimeHours
   },
   "settings": *[_type == "leaderboardSettings"][0] {
     title,

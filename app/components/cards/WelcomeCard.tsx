@@ -72,14 +72,14 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
         </div>
 
         {/* Bottom Section */}
-        <div className="w-full space-y-1.5 md:space-y-2 flex flex-col items-center">
+        <div className="w-full flex flex-col md:flex-row items-center justify-center gap-1.5 md:gap-2">
           {/* Code Display with Crown Icon */}
-          <div className="flex items-center gap-1 md:gap-2 text-purple-200">
-            <span className="text-[9px] md:text-sm">Code:</span>
-            <div className="flex items-center gap-1 md:gap-1.5 bg-purple-800/40 px-2 md:px-3 py-1 md:py-1.5 rounded-md md:rounded-lg border border-purple-500/30">
-              <Crown size={9} className="md:hidden text-yellow-400" />
-              <Crown size={12} className="hidden md:block text-yellow-400" />
-              <span className="font-bold text-white font-mono text-[9px] md:text-sm tracking-wider">
+          <div className="flex items-center gap-1 md:gap-2 text-purple-200 h-[24px] md:h-[38px]">
+            <span className="text-[9px] md:text-[11px]">Code:</span>
+            <div className="flex items-center gap-1 md:gap-1.5 bg-purple-800/40 px-2 md:px-3 h-full rounded-md md:rounded-lg border border-purple-500/30">
+              <Crown size={10} className="md:hidden text-yellow-400" />
+              <Crown size={14} className="hidden md:block text-yellow-400" />
+              <span className="font-bold text-white font-mono text-[9px] md:text-[11px] tracking-wider">
                 {card.bonusCode}
               </span>
             </div>
@@ -91,7 +91,7 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="block w-[72%] md:w-[80%] bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white text-[9px] md:text-xs font-bold py-0.5 md:py-2 px-2 md:px-4 rounded md:rounded-lg text-center transition-all duration-300 shadow-md md:shadow-lg hover:shadow-xl transform hover:scale-105"
+            className="flex items-center justify-center w-[72%] md:w-auto h-[24px] md:h-[38px] bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white text-[9px] md:text-[11px] font-bold px-2 md:px-6 rounded md:rounded-lg text-center transition-all duration-300 shadow-md md:shadow-lg hover:shadow-xl transform hover:scale-105 whitespace-nowrap"
           >
             CLAIM
           </a>

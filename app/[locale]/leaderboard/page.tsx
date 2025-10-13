@@ -25,12 +25,6 @@ interface LeaderboardEntryData {
   viewerName: string;
   watchtime: string;
   watchTimeHours: number;
-  avatarEmoji: string;
-  avatar?: string;
-  daysWatched: number;
-  avgDaily: number;
-  badge: string;
-  change: string;
 }
 
 interface LeaderboardSettings {
@@ -136,19 +130,14 @@ export default function LeaderboardPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="space-y-3"
+            className="space-y-2 md:space-y-3"
           >
             {data.entries.map((entry, index) => (
               <LeaderboardEntry
                 key={entry._id}
                 rank={entry.place}
                 name={entry.viewerName}
-                avatarEmoji={entry.avatarEmoji || '🎮'}
-                watchTime={entry.watchTimeHours || 0}
-                daysWatched={entry.daysWatched || 0}
-                avgDaily={entry.avgDaily || 0}
-                badge={entry.badge || 'Gold'}
-                change={entry.change || '0'}
+                watchTime={entry.watchtime}
                 index={index}
               />
             ))}
