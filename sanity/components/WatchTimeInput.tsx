@@ -1,13 +1,16 @@
-import { StringInputProps, set, unset, setIfMissing, PatchEvent } from 'sanity';
+import { StringInputProps, set, unset, setIfMissing, PatchEvent, useFormValue } from 'sanity';
 import { Stack, Text, TextInput } from '@sanity/ui';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 
 export function WatchTimeInput(props: StringInputProps) {
-  const { onChange, value = '' } = props;
+  const { onChange, value = '', path } = props;
+  const documentValue = useFormValue([]) as Record<string, unknown>;
+  const isUpdatingRef = useRef(false);
 
   // Calculate total hours from the display format
-  const calculateHours = useCallback((displayValue: string): number => {
-    if (!displayValue) return 0;
+  const calculateHours = useCallback((displayValue: unknown): number => {
+    // Only process if displayValue is a string
+    if (typeof displayValue !== 'string' || !displayValue) return 0;
 
     // Try short format first: "X:Y:Z" (Days:Hours:Minutes)
     const shortMatch = displayValue.match(/^(\d+):(\d+):(\d+)$/);
@@ -34,38 +37,46 @@ export function WatchTimeInput(props: StringInputProps) {
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = event.currentTarget.value;
 
-      // Create patches array
-      const patches = [];
-
-      // Patch for the current watchtime field
-      if (newValue) {
-        patches.push(set(newValue));
-      } else {
-        patches.push(unset());
-      }
-
-      // Calculate and add patches for watchTimeHours field
-      if (newValue) {
-        const calculatedHours = calculateHours(newValue);
-        if (calculatedHours > 0) {
-          // Ensure the field exists first, then set the value
-          patches.push(setIfMissing(0, ['watchTimeHours']));
-          patches.push(set(calculatedHours, ['watchTimeHours']));
-        }
-      } else {
-        // If watchtime is cleared, also clear watchTimeHours
-        patches.push(unset(['watchTimeHours']));
-      }
-
-      // Emit all patches together
-      onChange(PatchEvent.from(patches));
+      // Only update the current watchtime field
+      onChange(newValue ? set(newValue) : unset());
     },
-    [onChange, calculateHours]
+    [onChange]
   );
 
+  // Update the watchTimeHours field when watchtime changes
+  useEffect(() => {
+    // Prevent infinite loops
+    if (isUpdatingRef.current) {
+      isUpdatingRef.current = false;
+      return;
+    }
+
+    if (typeof value === 'string' && value) {
+      const calculatedHours = calculateHours(value);
+      const currentHours = documentValue?.watchTimeHours as number | undefined;
+
+      // Only update if the calculated hours differ from current value
+      if (calculatedHours > 0 && calculatedHours !== currentHours) {
+        isUpdatingRef.current = true;
+        onChange(
+          PatchEvent.from([
+            setIfMissing(0, ['watchTimeHours']),
+            set(calculatedHours, ['watchTimeHours'])
+          ])
+        );
+      }
+    } else if (!value && documentValue?.watchTimeHours !== undefined) {
+      // Clear watchTimeHours when watchtime is empty
+      isUpdatingRef.current = true;
+      onChange(unset(['watchTimeHours']));
+    }
+  }, [value, calculateHours, onChange, documentValue]);
+
   const calculatedHours = calculateHours(value);
-  const isShortFormat = /^\d+:\d+:\d+$/.test(value);
-  const isLongFormat = /^\d+\s*Days?,\s*\d+\s*Hours?,\s*\d+\s*Minutes?$/i.test(value);
+  // Safely convert value to string only for validation checks
+  const valueStr = typeof value === 'string' ? value : '';
+  const isShortFormat = /^\d+:\d+:\d+$/.test(valueStr);
+  const isLongFormat = /^\d+\s*Days?,\s*\d+\s*Hours?,\s*\d+\s*Minutes?$/i.test(valueStr);
   const isValidFormat = isShortFormat || isLongFormat;
 
   return (
@@ -76,7 +87,7 @@ export function WatchTimeInput(props: StringInputProps) {
         value={value}
         placeholder="3:5:40 or 3 Days, 5 Hours, 40 Minutes"
       />
-      {value && (
+      {valueStr && (
         <Text size={1} muted>
           {isValidFormat && calculatedHours > 0 ? (
             <span style={{ color: '#43d675' }}>
