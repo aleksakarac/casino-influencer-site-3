@@ -6,11 +6,12 @@ import { motion } from 'framer-motion';
 import { ExternalLink, Home, Trophy, Calendar, Link2 } from 'lucide-react';
 import { useActiveSection } from '@/app/hooks/useActiveSection';
 import { client } from '@/app/lib/sanity';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 export default function MiddleBar() {
   const pathname = usePathname();
   const router = useRouter();
+  const locale = useLocale();
   const activeSection = useActiveSection();
   const [vavadaLink, setVavadaLink] = useState<string>('#');
   const t = useTranslations('MiddleBar');
@@ -56,7 +57,7 @@ export default function MiddleBar() {
   // Navigation handlers
   const handlePokupiBonuse = () => {
     if (pathname?.includes('/leaderboard')) {
-      router.push('/#games');
+      router.push(`/${locale}/#games`);
     } else {
       scrollToSection('games-section');
     }
@@ -64,7 +65,7 @@ export default function MiddleBar() {
 
   const handleTurniri = () => {
     if (pathname?.includes('/leaderboard')) {
-      router.push('/#tournaments');
+      router.push(`/${locale}/#tournaments`);
     } else {
       scrollToSection('tournaments-section');
     }
@@ -101,7 +102,7 @@ export default function MiddleBar() {
       title: t('leaderboard'),
       color: "from-purple-400 to-indigo-500",
       textColor: "text-purple-400",
-      action: () => router.push('/leaderboard'),
+      action: () => router.push(`/${locale}/leaderboard`),
       isPage: true,
       pageId: 'rang-lista'
     },
