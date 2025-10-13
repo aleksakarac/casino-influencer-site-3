@@ -55,6 +55,20 @@
     "leaderboardTitle": "Top 10 Rang Lista",
     "error": "Greška",
     "errorMessage": "Neuspešno učitavanje podataka rang liste. Pokušajte ponovo kasnije.",
-    "noEntries": "Još nema unosa na rang listi. Proverite uskoro!"
+    "noEntries": "Još nema unosa na rang listi. Proverite uskoro!",
+    "howToWinTitle": "Kako Osvojiti Nagrade",
+    "howToWinText1": "Gledajte",
+    "howToWinText1Bold": "Acu Jankovića",
+    "howToWinText1Rest": "uživo na",
+    "howToWinText1Kick": "Kicku",
+    "howToWinText1End": "da biste zarađivali vreme gledanja",
+    "howToWinText2": "Top",
+    "howToWinText2Bold": "10 gledalaca",
+    "howToWinText2Rest": "sa najviše vremena gledanja će osvojiti ekskluzivne nagrade na osnovu njihovog ranga",
+    "howToWinText3": "Nastavite da gledate kako biste se popeli na rang listi i osvojili neverovatne nagrade!",
+    "watchButton": "Gledaj Acu na Kicku",
+    "exclusivePrizesTitle": "Ekskluzivne Nagrade",
+    "exclusivePrizesSubtitle": "Top 4 gledaoca će dobiti ove neverovatne nagrade",
+    "wantToSeeYourName": "Želite li da vidite svoje ime ovde?"
   }
 }

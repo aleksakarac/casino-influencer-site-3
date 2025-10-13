@@ -55,6 +55,20 @@
     "leaderboardTitle": "Top 10 Leaderboard",
     "error": "Error",
     "errorMessage": "Failed to load leaderboard data. Please try again later.",
-    "noEntries": "No leaderboard entries yet. Check back soon!"
+    "noEntries": "No leaderboard entries yet. Check back soon!",
+    "howToWinTitle": "How to Win Prizes",
+    "howToWinText1": "Watch",
+    "howToWinText1Bold": "Aca Jankovic",
+    "howToWinText1Rest": "live on",
+    "howToWinText1Kick": "Kick",
+    "howToWinText1End": "to earn watch time",
+    "howToWinText2": "The",
+    "howToWinText2Bold": "Top 10 viewers",
+    "howToWinText2Rest": "with the most watch time will win exclusive prizes based on their rank",
+    "howToWinText3": "Keep watching to climb the leaderboard and win amazing rewards!",
+    "watchButton": "Watch Aca on Kick",
+    "exclusivePrizesTitle": "Exclusive Prizes",
+    "exclusivePrizesSubtitle": "Top 4 viewers will receive these amazing rewards",
+    "wantToSeeYourName": "Want to see your name here?"
   }
 }

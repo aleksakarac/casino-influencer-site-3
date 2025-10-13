@@ -105,6 +105,59 @@ export default function LeaderboardPage() {
           )}
         </motion.div>
 
+        {/* How to Win Prizes Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="mb-8 bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border border-amber-500/30 rounded-2xl p-6 md:p-8 backdrop-blur-sm"
+        >
+          <div className="text-center mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+              {t('howToWinTitle')}
+            </h2>
+            <div className="max-w-2xl mx-auto space-y-3 text-gray-300">
+              <p className="text-base md:text-lg">
+                {t('howToWinText1')} <span className="text-amber-400 font-bold">{t('howToWinText1Bold')}</span> {t('howToWinText1Rest')}{' '}
+                <span className="text-green-400 font-bold">{t('howToWinText1Kick')}</span> {t('howToWinText1End')}
+              </p>
+              <p className="text-base md:text-lg">
+                {t('howToWinText2')} <span className="text-amber-400 font-bold">{t('howToWinText2Bold')}</span> {t('howToWinText2Rest')}
+              </p>
+              <p className="text-sm md:text-base text-gray-400">
+                {t('howToWinText3')}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex justify-center">
+            <a
+              href="https://kick.com/acajankovic"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-xl hover:from-green-400 hover:to-emerald-500 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30 transform hover:scale-105"
+            >
+              <Trophy size={20} />
+              {t('watchButton')}
+            </a>
+          </div>
+        </motion.div>
+
+        {/* Exclusive Prizes Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.08 }}
+          className="text-center mb-6"
+        >
+          <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent mb-2">
+            {t('exclusivePrizesTitle')}
+          </h3>
+          <p className="text-gray-400 text-sm md:text-base">
+            {t('exclusivePrizesSubtitle')}
+          </p>
+        </motion.div>
+
         {/* Prize Cards Grid */}
         {data.prizes.length > 0 && (
           <motion.div
@@ -156,14 +209,14 @@ export default function LeaderboardPage() {
           transition={{ delay: 1 }}
           className="text-center mt-12"
         >
-          <p className="text-gray-400 mb-4">Want to see your name here?</p>
+          <p className="text-gray-400 mb-4">{t('wantToSeeYourName')}</p>
           <a
             href="https://kick.com/acajankovic"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-400 hover:to-emerald-500 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30 transform hover:scale-105"
           >
-            Watch Aca on Kick
+            {t('watchButton')}
           </a>
         </motion.div>
       </div>
