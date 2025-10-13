@@ -98,7 +98,7 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
           {/* Code Box and Button Container */}
           <div className="w-full flex flex-col md:flex-row items-center gap-1.5">
             {/* Code Box */}
-            <div className="bg-purple-800/40 backdrop-blur-sm rounded md:rounded px-2 py-1.5 md:py-1.5 flex items-center justify-between w-[80%] md:w-[48%] border border-purple-500/30 h-[24px] md:h-[30px]">
+            <div className="bg-purple-800/40 backdrop-blur-sm rounded md:rounded px-2 py-1.5 md:py-1.5 flex items-center justify-between w-[80%] md:w-[43%] border border-purple-500/30 h-[24px] md:h-[30px]">
               <span className="text-white font-mono text-[9px] md:text-[10px] font-bold tracking-wide">
                 {card.bonusCode}
               </span>
@@ -127,7 +127,7 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center justify-center w-[72%] md:w-[48%] h-[24px] md:h-[30px] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-[9px] md:text-[10px] font-bold px-2 md:px-3 rounded text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 gap-0.5 md:gap-1"
+              className="flex items-center justify-center w-[72%] md:w-[53%] h-[24px] md:h-[30px] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-[9px] md:text-[10px] font-bold px-2 md:px-3 rounded text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 gap-0.5 md:gap-1"
             >
               <Gift size={10} className="md:hidden" />
               <Gift size={11} className="hidden md:block" />
