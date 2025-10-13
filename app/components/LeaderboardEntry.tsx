@@ -49,6 +49,35 @@ const getRankIconDesktop = (rank: number) => {
   }
 };
 
+const formatWatchTime = (watchTime: string): string => {
+  // Handle format like "3:5:40" or "3 Days, 5 Hours, 40 Minutes"
+  if (watchTime.includes('Day') || watchTime.includes('Hour') || watchTime.includes('Min')) {
+    // Already in long format, just clean it up
+    return watchTime
+      .replace(/Minutes?/gi, 'min')
+      .replace(/Hours?/gi, 'Hours')
+      .replace(/Days?/gi, 'Days')
+      .replace(/,/g, '');
+  }
+
+  // Format from short "3:5:40" to "3 Days 5 Hours 40min"
+  const parts = watchTime.split(':');
+  if (parts.length === 3) {
+    const days = parseInt(parts[0], 10);
+    const hours = parseInt(parts[1], 10);
+    const minutes = parseInt(parts[2], 10);
+
+    const result = [];
+    if (days > 0) result.push(`${days} Day${days !== 1 ? 's' : ''}`);
+    if (hours > 0) result.push(`${hours} Hour${hours !== 1 ? 's' : ''}`);
+    if (minutes > 0) result.push(`${minutes}min`);
+
+    return result.join(' ') || '0min';
+  }
+
+  return watchTime;
+};
+
 export function LeaderboardEntry({
   rank,
   name,
@@ -88,7 +117,7 @@ export function LeaderboardEntry({
         {/* Watch Time */}
         <div className="text-right min-w-[100px] md:min-w-[150px]">
           <div className="text-sm md:text-lg font-black text-amber-400">
-            {watchTime}
+            {formatWatchTime(watchTime)}
           </div>
           <div className="text-[10px] md:text-xs text-gray-500 uppercase tracking-wider mt-0.5">
             WATCH TIME

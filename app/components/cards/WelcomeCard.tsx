@@ -62,10 +62,10 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
         </div>
 
         {/* Benefits - Desktop Only */}
-        <div className="hidden md:block w-full space-y-1">
+        <div className="hidden md:flex md:flex-col md:items-center md:justify-center w-full space-y-1.5 flex-1">
           {card.benefits && card.benefits.map((benefit, index) => (
-            <div key={index} className="text-gray-200 text-left flex items-start text-[10px]">
-              <span className="text-purple-400 mr-1.5 mt-0.5">✓</span>
+            <div key={index} className="text-gray-200 text-center flex items-center text-xs">
+              <span className="text-purple-400 mr-2">✓</span>
               <span>{benefit}</span>
             </div>
           ))}
@@ -74,15 +74,13 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
         {/* Bottom Section */}
         <div className="w-full flex flex-col md:flex-row items-center justify-center gap-1.5">
           {/* Code Display with Crown Icon */}
-          <div className="flex items-center gap-1 md:gap-1.5 text-purple-200 h-[24px] md:h-[30px]">
-            <span className="text-[9px] md:text-[10px]">Code:</span>
-            <div className="flex items-center gap-1 bg-purple-800/40 px-2 h-full rounded-md border border-purple-500/30">
-              <Crown size={10} className="md:hidden text-yellow-400" />
-              <Crown size={11} className="hidden md:block text-yellow-400" />
-              <span className="font-bold text-white font-mono text-[9px] md:text-[10px] tracking-wider">
-                {card.bonusCode}
-              </span>
-            </div>
+          <div className="flex items-center gap-1.5 bg-purple-800/40 px-2.5 h-[24px] md:h-[30px] rounded-md border border-purple-500/30">
+            <span className="text-purple-200 text-[9px] md:text-[10px]">Code:</span>
+            <Crown size={10} className="md:hidden text-yellow-400" />
+            <Crown size={11} className="hidden md:block text-yellow-400" />
+            <span className="font-bold text-white font-mono text-[9px] md:text-[10px] tracking-wider">
+              {card.bonusCode}
+            </span>
           </div>
 
           {/* Claim Button */}
