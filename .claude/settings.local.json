@@ -18,7 +18,13 @@
       "Bash(printf \"production\")",
       "Bash(printf \"2024-01-01\")",
       "Bash(cat:*)",
-      "Bash(curl -s -I https://casinohub-influencer.vercel.app)"
+      "Bash(curl -s -I https://casinohub-influencer.vercel.app)",
+      "Bash(curl -s https://casinohub-influencer.vercel.app)",
+      "Bash(git rm:*)",
+      "Bash(curl -s https://casinohub-influencer.vercel.app/en)",
+      "Bash(netlify:*)",
+      "Bash(npm install:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
