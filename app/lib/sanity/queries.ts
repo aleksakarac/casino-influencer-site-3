@@ -44,8 +44,7 @@ export const leaderboardQuery = `{
     _id,
     place,
     viewerName,
-    watchtime,
-    watchTimeHours
+    watchtime
   },
   "settings": *[_type == "leaderboardSettings"][0] {
     title,

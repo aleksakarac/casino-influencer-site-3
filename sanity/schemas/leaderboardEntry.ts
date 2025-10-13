@@ -1,5 +1,4 @@
 import { defineType, defineField } from 'sanity';
-import { WatchTimeInput } from '../components/WatchTimeInput';
 
 export default defineType({
   name: 'leaderboardEntry',
@@ -22,7 +21,7 @@ export default defineType({
     }),
     defineField({
       name: 'watchtime',
-      title: 'Watch Time (Display)',
+      title: 'Watch Time',
       type: 'string',
       validation: (Rule) => Rule.required().custom((value) => {
         if (!value) return 'Watch time is required';
@@ -38,20 +37,8 @@ export default defineType({
 
         return true;
       }),
-      description: 'Formatted watch time display. Short: "3:5:40" or Long: "3 Days, 5 Hours, 40 Minutes"',
+      description: 'Watch time display. Short: "3:5:40" or Long: "3 Days, 5 Hours, 40 Minutes"',
       placeholder: '3:5:40 or 3 Days, 5 Hours, 40 Minutes',
-      components: {
-        input: WatchTimeInput,
-      },
-    }),
-    defineField({
-      name: 'watchTimeHours',
-      title: 'Watch Time (Hours) - Auto-calculated',
-      type: 'number',
-      validation: (Rule) => Rule.min(0),
-      description: 'Total watch time in hours (automatically calculated from display field)',
-      readOnly: true,
-      hidden: false,
     }),
     defineField({
       name: 'isActive',
@@ -81,11 +68,6 @@ export default defineType({
       title: 'Place (Ascending)',
       name: 'placeAsc',
       by: [{ field: 'place', direction: 'asc' }],
-    },
-    {
-      title: 'Watch Time (Descending)',
-      name: 'watchTimeDesc',
-      by: [{ field: 'watchTimeHours', direction: 'desc' }],
     },
   ],
 });

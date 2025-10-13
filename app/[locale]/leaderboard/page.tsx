@@ -26,7 +26,6 @@ interface LeaderboardEntryData {
   place: number;
   viewerName: string;
   watchtime: string;
-  watchTimeHours: number;
 }
 
 interface LeaderboardSettings {
