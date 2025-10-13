@@ -6,12 +6,14 @@ import { motion } from 'framer-motion';
 import { ExternalLink, Home, Trophy, Calendar, Link2 } from 'lucide-react';
 import { useActiveSection } from '@/app/hooks/useActiveSection';
 import { client } from '@/app/lib/sanity';
+import { useTranslations } from 'next-intl';
 
 export default function MiddleBar() {
   const pathname = usePathname();
   const router = useRouter();
   const activeSection = useActiveSection();
   const [vavadaLink, setVavadaLink] = useState<string>('#');
+  const t = useTranslations('MiddleBar');
 
   // Fetch Vavada link from Sanity
   useEffect(() => {
@@ -39,6 +41,8 @@ export default function MiddleBar() {
       ? 'pokupi-bonuse'
       : activeSection === 'tournaments-section'
       ? 'turniri'
+      : activeSection === 'links'
+      ? 'social'
       : null;
 
   // Scroll to section helper
@@ -85,7 +89,7 @@ export default function MiddleBar() {
     },
     {
       icon: Home,
-      title: "Pokupi bonuse",
+      title: t('getBonus'),
       color: "from-orange-400 to-red-500",
       textColor: "text-orange-400",
       action: handlePokupiBonuse,
@@ -94,7 +98,7 @@ export default function MiddleBar() {
     },
     {
       icon: Trophy,
-      title: "Rang lista",
+      title: t('leaderboard'),
       color: "from-purple-400 to-indigo-500",
       textColor: "text-purple-400",
       action: () => router.push('/leaderboard'),
@@ -103,7 +107,7 @@ export default function MiddleBar() {
     },
     {
       icon: Calendar,
-      title: "Turniri",
+      title: t('tournaments'),
       color: "from-amber-400 to-yellow-500",
       textColor: "text-amber-400",
       action: handleTurniri,
@@ -112,7 +116,7 @@ export default function MiddleBar() {
     },
     {
       icon: Link2,
-      title: "Social",
+      title: t('social'),
       color: "from-green-400 to-emerald-500",
       textColor: "text-green-400",
       action: handleSocial,

@@ -7,18 +7,10 @@
     "subtitle": "Otkrijte ekskluzivne bonuse i turnire"
   },
   "MiddleBar": {
-    "games": {
-      "title": "Igre",
-      "subtitle": "Uskoro"
-    },
-    "tournaments": {
-      "title": "Turniri",
-      "subtitle": "Uskoro"
-    },
-    "rewards": {
-      "title": "Nagrade",
-      "subtitle": "Uskoro"
-    }
+    "getBonus": "Pokupi bonuse",
+    "leaderboard": "Rang lista",
+    "tournaments": "Turniri",
+    "social": "Social"
   },
   "FeaturedGames": {
     "title": "Istaknute Igre",
@@ -48,6 +40,7 @@
     "communitySubtitle": "Povežite se sa drugim igračima i budite u toku sa najnovijim vestima",
     "kick": "Kick",
     "instagram": "Instagram",
+    "telegram": "Telegram",
     "discord": "Discord",
     "copyright": "© 2024 Aca Jankovic. Sva prava zadržana",
     "privacy": "Politika Privatnosti",

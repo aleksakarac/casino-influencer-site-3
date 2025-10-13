@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
-import { Instagram } from 'lucide-react';
+import { Instagram, Send } from 'lucide-react';
 
 // Custom SVG Icons
 const KickIcon = ({ size = 20, className = "" }) => (
@@ -37,6 +37,14 @@ export default function Footer() {
       color: "from-pink-400 to-purple-500",
       bgColor: "bg-gradient-to-r from-pink-600 to-purple-600",
       description: "Follow updates"
+    },
+    {
+      icon: Send,
+      name: t('telegram'),
+      href: "https://t.me/placeholder",
+      color: "from-blue-400 to-cyan-500",
+      bgColor: "bg-blue-500",
+      description: "Join channel"
     },
     {
       icon: DiscordIcon,

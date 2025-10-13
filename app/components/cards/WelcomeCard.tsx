@@ -1,8 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { toast } from 'sonner';
-import { Copy, Check } from 'lucide-react';
+import { Crown } from 'lucide-react';
 
 interface WelcomeCardProps {
   card: {
@@ -21,38 +19,27 @@ interface WelcomeCardProps {
 }
 
 export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps) {
-  const [copying, setCopying] = useState(false);
-
-  const copyCode = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setCopying(true);
-
-    await navigator.clipboard.writeText(card.bonusCode);
-    toast.success('Kod kopiran!', {
-      description: `${card.bonusCode} je kopiran u clipboard`,
-    });
-
-    setTimeout(() => setCopying(false), 2000);
-  };
-
   return (
     <div
-      className="relative rounded-xl overflow-hidden aspect-square border-4 w-full"
+      className="relative rounded-xl overflow-hidden aspect-square border w-full group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-purple-900 to-indigo-950"
       style={{
         borderColor,
-        backgroundImage: `url(${card.backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
+        borderWidth: '1px',
       }}
     >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/70" />
+      {/* Gradient Overlay for depth */}
+      <div className="absolute inset-0 bg-gradient-to-b from-purple-800/20 via-transparent to-black/40" />
 
-      {/* Tag */}
+      {/* Star Icon (Top Right) */}
+      <div className="absolute top-2 right-2 md:top-3 md:right-3 z-10 bg-gradient-to-br from-purple-500 to-pink-600 p-1.5 md:p-2 rounded-md md:rounded-lg shadow-lg">
+        <Crown size={9} className="md:hidden text-white" />
+        <Crown size={12} className="hidden md:block text-white" />
+      </div>
+
+      {/* Tag (Top Left) - NEW badge */}
       {card.tag && (
         <div
-          className="absolute top-2 right-2 z-10 px-3 py-1 text-xs font-bold uppercase shadow-lg rounded-full border-2 bg-black/20 backdrop-blur-sm"
+          className="absolute top-2 left-2 md:top-3 md:left-3 z-10 px-2 py-0.5 md:px-3 md:py-1 text-[9px] md:text-xs font-bold uppercase shadow-lg rounded-full border-2 bg-black/30 backdrop-blur-sm"
           style={{
             borderColor: card.tag.color,
             color: card.tag.color,
@@ -63,45 +50,50 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
       )}
 
       {/* Content */}
-      <div className="absolute inset-0 p-3 flex flex-col justify-between items-center text-center">
-        {/* Title */}
-        <h3 className="text-xl font-bold text-yellow-400 drop-shadow-lg">Bonus</h3>
+      <div className="absolute inset-0 p-2 md:p-3 flex flex-col justify-between items-center text-center">
+        {/* Title & Subtitle */}
+        <div className="mt-8 md:mt-10 w-full">
+          <h3 className="text-sm md:text-lg font-bold text-white drop-shadow-lg mb-0.5 md:mb-1">
+            Welcome Package
+          </h3>
+          <p className="text-[9px] md:text-xs text-purple-200">
+            Sign Up with Code {card.bonusCode}
+          </p>
+        </div>
 
-        {/* Benefits */}
-        <div className="w-full space-y-1">
-          {card.benefits.map((benefit, index) => (
-            <div key={index} className="text-white text-left flex items-start text-sm">
-              <span className="text-yellow-400 mr-1.5">•</span>
+        {/* Benefits - Desktop Only */}
+        <div className="hidden md:block w-full space-y-1.5">
+          {card.benefits && card.benefits.map((benefit, index) => (
+            <div key={index} className="text-gray-200 text-left flex items-start text-xs">
+              <span className="text-purple-400 mr-2 mt-0.5">✓</span>
               <span>{benefit}</span>
             </div>
           ))}
         </div>
 
-        {/* Bottom Section with consistent spacing */}
-        <div className="w-full space-y-2">
-          {/* Code Box */}
-          <div className="bg-black/60 backdrop-blur-sm rounded-lg p-2 flex items-center justify-between">
-            <span className="text-white font-mono text-xs">
-              Kod: <span className="font-bold">{card.bonusCode}</span>
-            </span>
-            <button
-              onClick={copyCode}
-              disabled={copying}
-              className="text-white hover:text-yellow-400 transition-colors"
-              aria-label="Copy code"
-            >
-              {copying ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-            </button>
+        {/* Bottom Section */}
+        <div className="w-full space-y-1.5 md:space-y-2 flex flex-col items-center">
+          {/* Code Display with Crown Icon */}
+          <div className="flex items-center gap-1 md:gap-2 text-purple-200">
+            <span className="text-[9px] md:text-sm">Code:</span>
+            <div className="flex items-center gap-1 md:gap-1.5 bg-purple-800/40 px-2 md:px-3 py-1 md:py-1.5 rounded-md md:rounded-lg border border-purple-500/30">
+              <Crown size={9} className="md:hidden text-yellow-400" />
+              <Crown size={12} className="hidden md:block text-yellow-400" />
+              <span className="font-bold text-white font-mono text-[9px] md:text-sm tracking-wider">
+                {card.bonusCode}
+              </span>
+            </div>
           </div>
 
-          {/* Button */}
+          {/* Claim Button */}
           <a
             href={vavadaLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="block w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-1.5 px-2.5 rounded-lg text-center transition-colors text-sm"
+            onClick={(e) => e.stopPropagation()}
+            className="block w-[72%] md:w-[80%] bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white text-[9px] md:text-xs font-bold py-0.5 md:py-2 px-2 md:px-4 rounded md:rounded-lg text-center transition-all duration-300 shadow-md md:shadow-lg hover:shadow-xl transform hover:scale-105"
           >
-            Iskoristi Kod
+            CLAIM
           </a>
         </div>
       </div>

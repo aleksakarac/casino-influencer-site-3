@@ -55,7 +55,7 @@ export function GameCardsGrid({ cards, cardConfig, vavadaLink }: GameCardsGridPr
         </motion.div>
 
         {/* Games Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-6 lg:gap-6 px-[12.5%]">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 px-0 md:px-4 lg:px-[12.5%]">
           {cards.map((card) => {
             const borderColor =
               card.cardType === 'bonus'

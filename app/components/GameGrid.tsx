@@ -77,7 +77,7 @@ export default function GameGrid() {
 
       {/* Game Cards Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6 mb-10">
-        {PLACEHOLDER_GAMES.map((game) => (
+        {PLACEHOLDER_GAMES.map((game, index) => (
           <GameCard
             key={game.id}
             name={game.name[locale]}
@@ -86,6 +86,7 @@ export default function GameGrid() {
             players={game.players}
             prize={game.prize}
             isHot={game.isHot}
+            index={index}
           />
         ))}
       </div>

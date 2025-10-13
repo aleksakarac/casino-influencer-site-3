@@ -1,7 +1,6 @@
 'use client';
 
-import { useState } from 'react';
-import { Play } from 'lucide-react';
+import { Gamepad2, Play } from 'lucide-react';
 
 interface PlayCardProps {
   card: {
@@ -19,22 +18,33 @@ interface PlayCardProps {
 }
 
 export function PlayCard({ card, borderColor, vavadaLink }: PlayCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <a
       href={vavadaLink}
       target="_blank"
       rel="noopener noreferrer"
-      className="block relative rounded-xl overflow-hidden aspect-square border-4 hover:scale-105 transition-transform duration-200 w-full"
-      style={{ borderColor }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className="block relative rounded-xl overflow-hidden aspect-square border hover:scale-105 transition-all duration-300 w-full group"
+      style={{ borderColor, borderWidth: '1px' }}
     >
-      {/* Tag */}
+      {/* Background Image with Overlay */}
+      <div
+        className="absolute inset-0 bg-cover bg-center transition-all duration-300 group-hover:scale-110"
+        style={{
+          backgroundImage: `url(${card.gameImage})`,
+        }}
+      />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80" />
+
+      {/* Controller Icon (Top Right) */}
+      <div className="absolute top-2 right-2 md:top-3 md:right-3 z-10 bg-gradient-to-br from-amber-500 to-yellow-600 p-1.5 md:p-2 rounded-md md:rounded-lg shadow-lg">
+        <Gamepad2 size={9} className="md:hidden text-white" />
+        <Gamepad2 size={12} className="hidden md:block text-white" />
+      </div>
+
+      {/* Tag (Top Left) */}
       {card.tag && (
         <div
-          className="absolute top-2 right-2 z-10 px-3 py-1 text-xs font-bold uppercase shadow-lg rounded-full border-2 bg-black/20 backdrop-blur-sm"
+          className="absolute top-2 left-2 md:top-3 md:left-3 z-10 px-2 py-0.5 md:px-3 md:py-1 text-[9px] md:text-xs font-bold uppercase shadow-lg rounded-full border-2 bg-black/30 backdrop-blur-sm"
           style={{
             borderColor: card.tag.color,
             color: card.tag.color,
@@ -44,31 +54,30 @@ export function PlayCard({ card, borderColor, vavadaLink }: PlayCardProps) {
         </div>
       )}
 
-      {/* Image Section (85% height) */}
-      <div
-        className="relative h-[85%] overflow-hidden transition-all duration-300"
-        style={{
-          backgroundImage: `url(${card.gameImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: isHovered ? 'brightness(0.5)' : 'brightness(1)'
-        }}
-      >
-        {/* Play Button Overlay */}
-        {isHovered && (
-          <div className="absolute inset-0 flex items-center justify-center animate-fadeIn">
-            <div className="bg-yellow-500 rounded-full p-4 shadow-2xl">
-              <Play className="w-8 h-8 text-black fill-black" />
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Title Section (15% height) */}
-      <div className="h-[15%] bg-gray-900 flex items-center justify-center px-2">
-        <h3 className="text-white font-bold text-center text-sm truncate">
-          {card.title}
-        </h3>
+      {/* Play Now Button - Bottom Center */}
+      <div className="absolute bottom-2 md:bottom-3 left-1/2 -translate-x-1/2 z-20 w-[65%] md:w-[80%]">
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            window.open(vavadaLink, '_blank', 'noopener,noreferrer');
+          }}
+          className="
+            w-full
+            px-2 py-0.5 md:px-4 md:py-2
+            bg-gradient-to-r from-amber-500 to-yellow-600
+            hover:from-amber-400 hover:to-yellow-500
+            text-black text-[9px] md:text-xs font-bold
+            rounded md:rounded-lg
+            shadow-md md:shadow-lg hover:shadow-xl
+            transition-all duration-300
+            transform hover:scale-105
+            flex items-center justify-center gap-0.5 md:gap-1.5
+          "
+        >
+          <Play size={9} className="md:hidden" fill="currentColor" />
+          <Play size={12} className="hidden md:block" fill="currentColor" />
+          PLAY NOW
+        </button>
       </div>
     </a>
   );

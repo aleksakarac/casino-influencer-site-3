@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, Gift } from 'lucide-react';
 
 interface BonusCardProps {
   card: {
@@ -26,33 +26,52 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
 
   const copyCode = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    e.preventDefault();
     setCopying(true);
 
-    await navigator.clipboard.writeText(card.bonusCode);
-    toast.success('Kod kopiran!', {
-      description: `${card.bonusCode} je kopiran u clipboard`,
-    });
+    try {
+      await navigator.clipboard.writeText(card.bonusCode);
+      toast.success('Kod kopiran!', {
+        description: `${card.bonusCode} je kopiran u clipboard`,
+      });
+    } catch (err) {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = card.bonusCode;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      toast.success('Kod kopiran!');
+    }
 
     setTimeout(() => setCopying(false), 2000);
   };
 
   return (
     <div
-      className="relative rounded-xl overflow-hidden aspect-square border-4 hover:scale-105 transition-transform duration-200 w-full"
+      className="relative rounded-xl overflow-hidden aspect-square border hover:scale-105 transition-all duration-300 w-full group"
       style={{
         borderColor,
+        borderWidth: '1px',
         backgroundImage: `url(${card.backgroundImage})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center'
       }}
     >
       {/* Overlay Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/90" />
+
+      {/* Icon (Top Left) */}
+      <div className="absolute top-2 left-2 md:top-3 md:left-3 z-10 bg-gradient-to-br from-green-500 to-emerald-600 p-1.5 md:p-2 rounded-md md:rounded-lg shadow-lg">
+        <Gift size={9} className="md:hidden text-white" />
+        <Gift size={12} className="hidden md:block text-white" />
+      </div>
 
       {/* Tag (Top Right) */}
       {card.tag && (
         <div
-          className="absolute top-2 right-2 px-3 py-1 text-xs font-bold uppercase shadow-lg z-10 rounded-full border-2 bg-black/20 backdrop-blur-sm"
+          className="absolute top-2 right-2 md:top-3 md:right-3 px-2 py-0.5 md:px-3 md:py-1 text-[9px] md:text-xs font-bold uppercase shadow-lg z-10 rounded-full border-2 bg-black/30 backdrop-blur-sm"
           style={{
             borderColor: card.tag.color,
             color: card.tag.color,
@@ -63,31 +82,40 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
       )}
 
       {/* Content */}
-      <div className="absolute inset-0 p-3 flex flex-col justify-between">
-        {/* Title (Top Left) */}
-        <h3 className="text-lg font-bold text-yellow-400 drop-shadow-lg">
-          {card.title}
-        </h3>
-
-        {/* Bottom Section */}
-        <div className="space-y-2">
-          {/* Activations Count */}
-          <p className="text-white text-xs font-medium">
-            {card.activationsCount} Aktivacija
+      <div className="absolute inset-0 flex flex-col justify-between">
+        {/* Top Section - Title & Subtitle */}
+        <div className="p-2 md:p-3 mt-8 md:mt-10">
+          <h3 className="text-sm md:text-lg font-bold text-white drop-shadow-lg leading-tight">
+            {card.title}
+          </h3>
+          <p className="text-[9px] md:text-xs text-gray-300 mt-0.5 md:mt-1">
+            {card.activationsCount} Activations
           </p>
+        </div>
 
+        {/* Bottom Section with Solid Background */}
+        <div className="bg-black/90 backdrop-blur-sm p-2 md:p-3 space-y-1.5 md:space-y-2 flex flex-col items-center rounded-b-xl">
           {/* Code Box */}
-          <div className="bg-black/60 backdrop-blur-sm rounded-lg p-2 flex items-center justify-between">
-            <span className="text-white font-mono text-xs">
-              Kod: <span className="font-bold">{card.bonusCode}</span>
+          <div className="bg-black/70 backdrop-blur-sm rounded md:rounded-lg p-1.5 md:p-2 flex items-center justify-between w-[80%] md:w-[80%] border border-white/10">
+            <span className="text-white font-mono text-[9px] md:text-xs font-bold tracking-wide">
+              {card.bonusCode}
             </span>
             <button
               onClick={copyCode}
               disabled={copying}
-              className="text-white hover:text-yellow-400 transition-colors"
+              className="text-gray-300 hover:text-green-400 transition-colors ml-1 md:ml-2"
               aria-label="Copy code"
             >
-              {copying ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+              {copying ? (
+                <Check size={9} className="md:hidden" />
+              ) : (
+                <Copy size={9} className="md:hidden" />
+              )}
+              {copying ? (
+                <Check size={12} className="hidden md:block" />
+              ) : (
+                <Copy size={12} className="hidden md:block" />
+              )}
             </button>
           </div>
 
@@ -96,9 +124,12 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
             href={vavadaLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="block w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-1.5 px-2.5 rounded-lg text-center transition-colors text-sm"
+            onClick={(e) => e.stopPropagation()}
+            className="block w-[72%] md:w-[80%] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-[9px] md:text-xs font-bold py-0.5 md:py-2 px-2 md:px-4 rounded md:rounded-lg text-center transition-all duration-300 shadow-md md:shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center justify-center gap-0.5 md:gap-1.5"
           >
-            Claim Bonus
+            <Gift size={9} className="md:hidden" />
+            <Gift size={12} className="hidden md:block" />
+            CLAIM BONUS
           </a>
         </div>
       </div>

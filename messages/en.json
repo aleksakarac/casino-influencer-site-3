@@ -7,18 +7,10 @@
     "subtitle": "Discover exclusive bonuses and tournaments"
   },
   "MiddleBar": {
-    "games": {
-      "title": "Games",
-      "subtitle": "Coming Soon"
-    },
-    "tournaments": {
-      "title": "Tournaments",
-      "subtitle": "Coming Soon"
-    },
-    "rewards": {
-      "title": "Rewards",
-      "subtitle": "Coming Soon"
-    }
+    "getBonus": "Get Bonus",
+    "leaderboard": "Top Viewer List",
+    "tournaments": "Tournaments",
+    "social": "Social"
   },
   "FeaturedGames": {
     "title": "Featured Games",
@@ -48,6 +40,7 @@
     "communitySubtitle": "Connect with fellow players and stay updated with the latest news",
     "kick": "Kick",
     "instagram": "Instagram",
+    "telegram": "Telegram",
     "discord": "Discord",
     "copyright": "© 2024 Aca Jankovic. All rights reserved",
     "privacy": "Privacy Policy",
