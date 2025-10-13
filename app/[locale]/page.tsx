@@ -8,6 +8,8 @@ import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { client } from '@/app/lib/sanity';
 import { gameCardsQuery } from '@/app/lib/sanity/queries';
 
+export const runtime = 'edge';
+
 export default function HomePage() {
   const searchParams = useSearchParams();
   const [cardsData, setCardsData] = useState<{

@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity';
+import { WatchTimeInput } from '../components/WatchTimeInput';
 
 export default defineType({
   name: 'leaderboardEntry',
@@ -23,16 +24,34 @@ export default defineType({
       name: 'watchtime',
       title: 'Watch Time (Display)',
       type: 'string',
-      validation: (Rule) => Rule.required(),
-      description: 'Formatted watch time display (e.g., "1,247h")',
-      placeholder: '1,247h',
+      validation: (Rule) => Rule.required().custom((value) => {
+        if (!value) return 'Watch time is required';
+
+        // Check short format: "X:Y:Z"
+        const shortFormat = /^\d+:\d+:\d+$/.test(value);
+        // Check long format: "X Days, Y Hours, Z Minutes"
+        const longFormat = /^\d+\s*Days?,\s*\d+\s*Hours?,\s*\d+\s*Minutes?$/i.test(value);
+
+        if (!shortFormat && !longFormat) {
+          return 'Invalid format. Use "3:5:40" or "3 Days, 5 Hours, 40 Minutes"';
+        }
+
+        return true;
+      }),
+      description: 'Formatted watch time display. Short: "3:5:40" or Long: "3 Days, 5 Hours, 40 Minutes"',
+      placeholder: '3:5:40 or 3 Days, 5 Hours, 40 Minutes',
+      components: {
+        input: WatchTimeInput,
+      },
     }),
     defineField({
       name: 'watchTimeHours',
-      title: 'Watch Time (Hours)',
+      title: 'Watch Time (Hours) - Auto-calculated',
       type: 'number',
-      validation: (Rule) => Rule.required().min(0),
-      description: 'Total watch time in hours (for sorting)',
+      validation: (Rule) => Rule.min(0),
+      description: 'Total watch time in hours (automatically calculated from display field)',
+      readOnly: true,
+      hidden: false,
     }),
     defineField({
       name: 'isActive',

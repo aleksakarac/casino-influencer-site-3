@@ -10,6 +10,8 @@ import { PrizeCard } from '@/app/components/cards/PrizeCard';
 import { LeaderboardEntry } from '@/app/components/LeaderboardEntry';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 
+export const runtime = 'edge';
+
 interface Prize {
   _id: string;
   prizeNumber: number;
