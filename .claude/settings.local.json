@@ -9,7 +9,16 @@
       "Bash(vercel:*)",
       "Bash(git commit:*)",
       "WebFetch(domain:vercel.com)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npx sanity:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(printf \"1s30e0de\")",
+      "Bash(printf \"production\")",
+      "Bash(printf \"2024-01-01\")",
+      "Bash(cat:*)",
+      "Bash(curl -s -I https://casinohub-influencer.vercel.app)"
     ],
     "deny": [],
     "ask": []
