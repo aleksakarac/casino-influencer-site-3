@@ -5,8 +5,3 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-export const config = {
-  // Match all pathnames except for
-  matcher: ['/', '/((?!api|studio|_next|_vercel|.*\\..*).*)']
-};
-
