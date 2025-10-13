@@ -31,15 +31,15 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
       <div className="absolute inset-0 bg-gradient-to-b from-purple-800/20 via-transparent to-black/40" />
 
       {/* Star Icon (Top Right) */}
-      <div className="absolute top-2 right-2 md:top-3 md:right-3 z-10 bg-gradient-to-br from-purple-500 to-pink-600 p-1.5 md:p-2 rounded-md md:rounded-lg shadow-lg">
+      <div className="absolute top-2 right-2 md:top-2 md:right-2 z-10 bg-gradient-to-br from-purple-500 to-pink-600 p-1.5 md:p-1.5 rounded-md shadow-lg">
         <Crown size={9} className="md:hidden text-white" />
-        <Crown size={12} className="hidden md:block text-white" />
+        <Crown size={10} className="hidden md:block text-white" />
       </div>
 
       {/* Tag (Top Left) - NEW badge */}
       {card.tag && (
         <div
-          className="absolute top-2 left-2 md:top-3 md:left-3 z-10 px-2 py-0.5 md:px-3 md:py-1 text-[9px] md:text-xs font-bold uppercase shadow-lg rounded-full border-2 bg-black/30 backdrop-blur-sm"
+          className="absolute top-2 left-2 md:top-2 md:left-2 z-10 px-2 py-0.5 md:px-2.5 md:py-0.5 text-[9px] md:text-[10px] font-bold uppercase shadow-lg rounded-full border-2 bg-black/30 backdrop-blur-sm"
           style={{
             borderColor: card.tag.color,
             color: card.tag.color,
@@ -50,36 +50,36 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
       )}
 
       {/* Content */}
-      <div className="absolute inset-0 p-2 md:p-3 flex flex-col justify-between items-center text-center">
+      <div className="absolute inset-0 p-2 flex flex-col justify-between items-center text-center">
         {/* Title & Subtitle */}
-        <div className="mt-8 md:mt-10 w-full">
-          <h3 className="text-sm md:text-lg font-bold text-white drop-shadow-lg mb-0.5 md:mb-1">
+        <div className="mt-8 md:mt-6 w-full">
+          <h3 className="text-sm md:text-base font-bold text-white drop-shadow-lg mb-0.5">
             Welcome Package
           </h3>
-          <p className="text-[9px] md:text-xs text-purple-200">
+          <p className="text-[9px] md:text-[10px] text-purple-200">
             Sign Up with Code {card.bonusCode}
           </p>
         </div>
 
         {/* Benefits - Desktop Only */}
-        <div className="hidden md:block w-full space-y-1.5">
+        <div className="hidden md:block w-full space-y-1">
           {card.benefits && card.benefits.map((benefit, index) => (
-            <div key={index} className="text-gray-200 text-left flex items-start text-xs">
-              <span className="text-purple-400 mr-2 mt-0.5">✓</span>
+            <div key={index} className="text-gray-200 text-left flex items-start text-[10px]">
+              <span className="text-purple-400 mr-1.5 mt-0.5">✓</span>
               <span>{benefit}</span>
             </div>
           ))}
         </div>
 
         {/* Bottom Section */}
-        <div className="w-full flex flex-col md:flex-row items-center justify-center gap-1.5 md:gap-2">
+        <div className="w-full flex flex-col md:flex-row items-center justify-center gap-1.5">
           {/* Code Display with Crown Icon */}
-          <div className="flex items-center gap-1 md:gap-2 text-purple-200 h-[24px] md:h-[38px]">
-            <span className="text-[9px] md:text-[11px]">Code:</span>
-            <div className="flex items-center gap-1 md:gap-1.5 bg-purple-800/40 px-2 md:px-3 h-full rounded-md md:rounded-lg border border-purple-500/30">
+          <div className="flex items-center gap-1 md:gap-1.5 text-purple-200 h-[24px] md:h-[30px]">
+            <span className="text-[9px] md:text-[10px]">Code:</span>
+            <div className="flex items-center gap-1 bg-purple-800/40 px-2 h-full rounded-md border border-purple-500/30">
               <Crown size={10} className="md:hidden text-yellow-400" />
-              <Crown size={14} className="hidden md:block text-yellow-400" />
-              <span className="font-bold text-white font-mono text-[9px] md:text-[11px] tracking-wider">
+              <Crown size={11} className="hidden md:block text-yellow-400" />
+              <span className="font-bold text-white font-mono text-[9px] md:text-[10px] tracking-wider">
                 {card.bonusCode}
               </span>
             </div>
@@ -91,7 +91,7 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="flex items-center justify-center w-[72%] md:w-auto h-[24px] md:h-[38px] bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white text-[9px] md:text-[11px] font-bold px-2 md:px-6 rounded md:rounded-lg text-center transition-all duration-300 shadow-md md:shadow-lg hover:shadow-xl transform hover:scale-105 whitespace-nowrap"
+            className="flex items-center justify-center w-[72%] md:w-auto h-[24px] md:h-[30px] bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white text-[9px] md:text-[10px] font-bold px-2 md:px-4 rounded text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 whitespace-nowrap"
           >
             CLAIM
           </a>
