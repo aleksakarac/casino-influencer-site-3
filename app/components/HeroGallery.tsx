@@ -45,13 +45,29 @@ export default function HeroGallery() {
         );
 
         if (gallery?.images && gallery.images.length > 0) {
-          const imageData: GalleryImage[] = gallery.images.map((img: {
-            desktopImage: SanityImageSource;
-            mobileImage: SanityImageSource;
-          }) => ({
-            desktopUrl: urlFor(img.desktopImage || img.mobileImage).width(1920).height(600).url(),
-            mobileUrl: urlFor(img.mobileImage || img.desktopImage).width(1920).height(800).url(),
-          }));
+          const imageData: GalleryImage[] = gallery.images.map((img: any) => {
+            // Support both old (single 'image' field) and new (desktopImage/mobileImage) formats
+            if (img.desktopImage || img.mobileImage) {
+              // New format with separate desktop/mobile images
+              return {
+                desktopUrl: urlFor(img.desktopImage || img.mobileImage).width(1920).height(600).url(),
+                mobileUrl: urlFor(img.mobileImage || img.desktopImage).width(1920).height(800).url(),
+              };
+            } else if (img.image) {
+              // Old format with single image - use for both desktop and mobile
+              return {
+                desktopUrl: urlFor(img.image).width(1920).height(600).url(),
+                mobileUrl: urlFor(img.image).width(1920).height(800).url(),
+              };
+            } else {
+              // Fallback to placeholder if no image found
+              const index = gallery.images.indexOf(img) % PLACEHOLDER_IMAGES.desktop.length;
+              return {
+                desktopUrl: PLACEHOLDER_IMAGES.desktop[index],
+                mobileUrl: PLACEHOLDER_IMAGES.mobile[index],
+              };
+            }
+          });
           setImages(imageData);
         }
 
