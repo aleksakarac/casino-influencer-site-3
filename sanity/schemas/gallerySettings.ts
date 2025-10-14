@@ -18,16 +18,25 @@ export default defineType({
       name: 'images',
       title: 'Gallery Images',
       type: 'array',
-      description: 'Upload 1-5 images for the hero carousel. Ideal dimensions: 1920×800 pixels (2.4:1 aspect ratio)',
+      description: 'Upload 1-5 images for the hero carousel. Desktop: 1920×600px (3.2:1), Mobile: 1920×800px (2.4:1)',
       of: [
         defineArrayMember({
           type: 'object',
           fields: [
             {
-              name: 'image',
-              title: 'Image',
+              name: 'desktopImage',
+              title: 'Desktop Image',
               type: 'image',
-              description: 'Recommended size: 1920×800 pixels. Images will be cropped to fit this aspect ratio.',
+              description: 'Recommended: 1920×600 pixels (3.2:1 aspect ratio) - Wide format for desktop/tablet displays',
+              options: {
+                hotspot: true,
+              },
+            },
+            {
+              name: 'mobileImage',
+              title: 'Mobile Image',
+              type: 'image',
+              description: 'Recommended: 1920×800 pixels (2.4:1 aspect ratio) or 1200×800 pixels (1.5:1) for mobile displays',
               options: {
                 hotspot: true,
               },
@@ -45,7 +54,7 @@ export default defineType({
           preview: {
             select: {
               title: 'alt.en',
-              media: 'image',
+              media: 'desktopImage',
             },
           },
         }),

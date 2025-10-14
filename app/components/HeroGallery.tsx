@@ -7,17 +7,34 @@ import { client, urlFor } from '@/app/lib/sanity';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
 // Placeholder images - will be used if Sanity images are not available
-const PLACEHOLDER_IMAGES = [
-  'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=1920&h=800&fit=crop',
-  'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1920&h=800&fit=crop',
-  'https://images.unsplash.com/photo-1579547945478-a6681fb3c3c9?w=1920&h=800&fit=crop',
-];
+const PLACEHOLDER_IMAGES = {
+  desktop: [
+    'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=1920&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1920&h=600&fit=crop',
+    'https://images.unsplash.com/photo-1579547945478-a6681fb3c3c9?w=1920&h=600&fit=crop',
+  ],
+  mobile: [
+    'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=1920&h=800&fit=crop',
+    'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1920&h=800&fit=crop',
+    'https://images.unsplash.com/photo-1579547945478-a6681fb3c3c9?w=1920&h=800&fit=crop',
+  ],
+};
+
+interface GalleryImage {
+  desktopUrl: string;
+  mobileUrl: string;
+}
 
 export default function HeroGallery() {
   const t = useTranslations('Hero');
   const locale = useLocale() as 'en' | 'sr';
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [images, setImages] = useState<string[]>(PLACEHOLDER_IMAGES);
+  const [images, setImages] = useState<GalleryImage[]>(
+    PLACEHOLDER_IMAGES.desktop.map((desktop, i) => ({
+      desktopUrl: desktop,
+      mobileUrl: PLACEHOLDER_IMAGES.mobile[i],
+    }))
+  );
   const [autoPlaySpeed, setAutoPlaySpeed] = useState(5000);
 
   useEffect(() => {
@@ -28,10 +45,14 @@ export default function HeroGallery() {
         );
 
         if (gallery?.images && gallery.images.length > 0) {
-          const imageUrls = gallery.images.map((img: { image: SanityImageSource }) =>
-            urlFor(img.image).width(1920).height(800).url()
-          );
-          setImages(imageUrls);
+          const imageData: GalleryImage[] = gallery.images.map((img: {
+            desktopImage: SanityImageSource;
+            mobileImage: SanityImageSource;
+          }) => ({
+            desktopUrl: urlFor(img.desktopImage || img.mobileImage).width(1920).height(600).url(),
+            mobileUrl: urlFor(img.mobileImage || img.desktopImage).width(1920).height(800).url(),
+          }));
+          setImages(imageData);
         }
 
         if (gallery?.autoPlaySpeed) {
@@ -65,10 +86,17 @@ export default function HeroGallery() {
           transition={{ duration: 1 }}
           className="absolute inset-0"
         >
-          <div
-            className="w-full h-full bg-cover bg-center"
-            style={{ backgroundImage: `url(${images[currentIndex]})` }}
-          ></div>
+          <picture className="w-full h-full block">
+            <source
+              media="(min-width: 768px)"
+              srcSet={images[currentIndex].desktopUrl}
+            />
+            <img
+              src={images[currentIndex].mobileUrl}
+              alt="Hero gallery image"
+              className="w-full h-full object-cover object-center"
+            />
+          </picture>
         </motion.div>
       </AnimatePresence>
 
