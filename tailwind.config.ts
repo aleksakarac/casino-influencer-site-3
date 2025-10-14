@@ -12,6 +12,11 @@ const config: Config = {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        'muller': ['Muller', 'sans-serif'],
+        'sochi': ['Sochi2014', 'sans-serif'],
+        'sans': ['Muller', 'Sochi2014', 'sans-serif'],
+      },
     },
   },
   plugins: [],
