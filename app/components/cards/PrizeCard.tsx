@@ -40,6 +40,11 @@ const getPrizeColors = (prizeNumber: number) => {
 };
 
 const getRankLabel = (prizeNumber: number) => {
+  // Prize 4 is awarded to places 4-10
+  if (prizeNumber === 4) {
+    return '4th - 10th Place';
+  }
+
   const suffixes = ['st', 'nd', 'rd', 'th'];
   const suffix = prizeNumber <= 3 ? suffixes[prizeNumber - 1] : suffixes[3];
   return `${prizeNumber}${suffix} Place`;
