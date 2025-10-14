@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { client, urlFor } from '@/app/lib/sanity';
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
 
 // Placeholder images - will be used if Sanity images are not available
 const PLACEHOLDER_IMAGES = [
@@ -27,7 +28,7 @@ export default function HeroGallery() {
         );
 
         if (gallery?.images && gallery.images.length > 0) {
-          const imageUrls = gallery.images.map((img: any) =>
+          const imageUrls = gallery.images.map((img: { image: SanityImageSource }) =>
             urlFor(img.image).width(1920).height(800).url()
           );
           setImages(imageUrls);
