@@ -45,7 +45,11 @@ export default function HeroGallery() {
         );
 
         if (gallery?.images && gallery.images.length > 0) {
-          const imageData: GalleryImage[] = gallery.images.map((img: any) => {
+          const imageData: GalleryImage[] = gallery.images.map((img: {
+            desktopImage?: SanityImageSource;
+            mobileImage?: SanityImageSource;
+            image?: SanityImageSource;
+          }) => {
             // Support both old (single 'image' field) and new (desktopImage/mobileImage) formats
             if (img.desktopImage || img.mobileImage) {
               // New format with separate desktop/mobile images
