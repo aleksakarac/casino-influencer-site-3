@@ -1,12 +1,23 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useRouter, usePathname } from 'next/navigation';
+import { useLocale } from 'next-intl';
 import LanguageToggle from './LanguageToggle';
 
 export default function Header() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const locale = useLocale();
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handleLogoClick = () => {
+    // If on the landing page, scroll to top
+    if (pathname === `/${locale}` || pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Otherwise, navigate to landing page
+      router.push(`/${locale}`);
+    }
   };
 
   return (
@@ -24,8 +35,8 @@ export default function Header() {
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="flex items-center space-x-2 cursor-pointer"
-          onClick={scrollToTop}
+          className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity duration-200"
+          onClick={handleLogoClick}
         >
           <div className="w-10 h-10 rounded-lg overflow-hidden shadow-lg bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center">
             <img
