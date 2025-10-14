@@ -65,7 +65,7 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
         {/* Benefits - Shows above 370px, smaller text below 460px */}
         <div className="hidden min-[370px]:flex min-[370px]:flex-col min-[370px]:items-center min-[370px]:justify-center w-full space-y-1.5 flex-1">
           {card.benefits && card.benefits.map((benefit, index) => (
-            <div key={index} className="text-gray-200 text-center flex items-center text-[10px] min-[460px]:text-xs">
+            <div key={index} className="text-gray-200 text-center flex items-center text-[11px] min-[460px]:text-xs font-bold">
               <span className="text-purple-400 mr-2">✓</span>
               <span>{benefit}</span>
             </div>
@@ -77,13 +77,13 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
           {/* Code Display */}
           <div className="flex items-center justify-between bg-purple-800/60 px-2.5 min-h-[30px] max-[400px]:min-h-[28px] rounded-xl border border-purple-500/30 w-full max-[400px]:w-[80%]">
             <div className="flex items-center gap-1">
-              <span className="text-purple-200 text-[10px] max-[400px]:hidden">
+              <span className="text-purple-200 text-[11px] font-bold max-[400px]:hidden">
                 Sign Up with Code
               </span>
-              <span className="text-purple-200 text-[10px] hidden max-[400px]:inline">
+              <span className="text-purple-200 text-[11px] font-bold hidden max-[400px]:inline">
                 Code
               </span>
-              <span className="font-bold text-white font-mono text-[10px] tracking-wider bg-purple-600/40 px-1.5 py-0.5 rounded border border-purple-400/30">
+              <span className="font-extrabold text-white font-mono text-xs tracking-wider bg-purple-600/40 px-1.5 py-0.5 rounded border border-purple-400/30">
                 {card.bonusCode}
               </span>
             </div>
@@ -107,7 +107,7 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="relative flex items-center justify-center w-full min-h-[30px] max-[400px]:min-h-[28px] bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white text-[10px] font-bold px-4 rounded-xl text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 whitespace-nowrap"
+              className="relative flex items-center justify-center w-full min-h-[30px] max-[400px]:min-h-[28px] bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white text-xs font-extrabold px-4 rounded-xl text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 whitespace-nowrap"
             >
               CLAIM
             </a>

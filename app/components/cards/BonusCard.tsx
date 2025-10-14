@@ -93,10 +93,10 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
 
           {/* Title & Activations */}
           <div className="relative w-full text-center mb-1 z-10">
-            <h3 className="text-base font-bold text-white leading-tight">
+            <h3 className="text-base font-extrabold text-white leading-tight">
               {card.title}
             </h3>
-            <p className="text-[10px] text-gray-300 mt-0.5">
+            <p className="text-[11px] font-bold text-gray-300 mt-0.5">
               {card.activationsCount} Activations
             </p>
           </div>
@@ -105,7 +105,7 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
           <div className="relative w-full flex flex-col items-center gap-1.5 z-10">
             {/* Code Box */}
             <div className="bg-purple-800/60 rounded-xl px-2 py-1.5 flex items-center justify-between w-full max-[400px]:w-[80%] border border-purple-500/30 min-h-[30px] max-[400px]:min-h-[28px]">
-              <span className="text-white font-mono text-[10px] font-bold tracking-wide">
+              <span className="text-white font-mono text-xs font-extrabold tracking-wide">
                 {card.bonusCode}
               </span>
               <button
@@ -128,7 +128,7 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="relative flex items-center justify-center w-full min-h-[30px] max-[400px]:min-h-[28px] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-[10px] font-bold px-3 rounded-xl text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 gap-1"
+                className="relative flex items-center justify-center w-full min-h-[30px] max-[400px]:min-h-[28px] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-xs font-extrabold px-3 rounded-xl text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 gap-1"
               >
                 <Gift size={11} />
                 CLAIM BONUS

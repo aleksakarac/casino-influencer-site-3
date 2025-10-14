@@ -18,6 +18,7 @@ export default defineType({
       name: 'images',
       title: 'Gallery Images',
       type: 'array',
+      description: 'Upload 1-5 images for the hero carousel. Ideal dimensions: 1920×800 pixels (2.4:1 aspect ratio)',
       of: [
         defineArrayMember({
           type: 'object',
@@ -26,6 +27,7 @@ export default defineType({
               name: 'image',
               title: 'Image',
               type: 'image',
+              description: 'Recommended size: 1920×800 pixels. Images will be cropped to fit this aspect ratio.',
               options: {
                 hotspot: true,
               },

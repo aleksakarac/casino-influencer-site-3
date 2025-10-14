@@ -10,7 +10,7 @@ import { PrizeCard } from '@/app/components/cards/PrizeCard';
 import { LeaderboardEntry } from '@/app/components/LeaderboardEntry';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 
-export const runtime = 'edge';
+export const dynamic = 'force-dynamic';
 
 interface Prize {
   _id: string;
@@ -86,7 +86,7 @@ export default function LeaderboardPage() {
   const subtitle = data.settings?.subtitle?.[locale] || t('defaultSubtitle');
 
   return (
-    <div className="min-h-screen pt-8 pb-12 bg-gradient-to-b from-gray-900 to-black">
+    <div className="pt-8 pb-12">
       <div className="max-w-[57.6rem] mx-auto px-4">
         {/* Header Section */}
         <motion.div

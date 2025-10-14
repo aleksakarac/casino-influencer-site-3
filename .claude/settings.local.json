@@ -2,29 +2,10 @@
   "permissions": {
     "allow": [
       "Bash(npm run dev)",
-      "Read(//c/Users/Aleksa/Pictures/Screenshots/**)",
-      "Bash(git add:*)",
-      "Bash(git commit -m \"$(cat <<''EOF''\nImplement complete UI redesign with leaderboard and animations\n\nMajor UI/UX improvements:\n- Redesigned navigation with Chrome-style tabs and smooth animations\n- Added Framer Motion animations throughout the site\n- Updated color scheme to amber/yellow gold theme\n- Implemented seamless unified background (fixed section boxes)\n\nNew leaderboard system:\n- Created full leaderboard page with prize cards and ranking system\n- Added 3 new Sanity schemas: leaderboardEntry, tournamentPrize, leaderboardSettings\n- Implemented LeaderboardEntry component with rank icons, badges, and stats\n- Created PrizeCard component with hover effects and gradients\n- Added proper data fetching and state management\n\nComponent updates:\n- Header: Added slide-down animation, amber gradients, bottom glow\n- MiddleBar: Chrome-style tabs with curves, staggered animations, icon glows\n- Footer: Shimmer effects, custom SVG icons, improved animations\n- GameCardsGrid: Added section header with animation, unified background\n- TournamentGrid: Removed section background for seamless design\n\nTechnical improvements:\n- Fixed background inconsistency by removing section-level gradients\n- Updated page structure for better layout flow\n- Added translations for leaderboard (EN/SR)\n- Maintained all existing backend functionality and Sanity integration\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
-      "Bash(git push:*)",
-      "Bash(vercel:*)",
-      "Bash(git commit:*)",
-      "WebFetch(domain:vercel.com)",
-      "Bash(npm run build:*)",
       "Bash(npx sanity:*)",
-      "Bash(netstat:*)",
-      "Bash(findstr:*)",
-      "Bash(taskkill:*)",
-      "Bash(printf \"1s30e0de\")",
-      "Bash(printf \"production\")",
-      "Bash(printf \"2024-01-01\")",
-      "Bash(cat:*)",
-      "Bash(curl -s -I https://casinohub-influencer.vercel.app)",
-      "Bash(curl -s https://casinohub-influencer.vercel.app)",
-      "Bash(git rm:*)",
-      "Bash(curl -s https://casinohub-influencer.vercel.app/en)",
-      "Bash(netlify:*)",
-      "Bash(npm install:*)",
-      "Bash(curl:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
     ],
     "deny": [],
     "ask": []

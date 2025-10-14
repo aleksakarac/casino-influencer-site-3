@@ -71,7 +71,7 @@ export function PlayCard({ card, borderColor, vavadaLink }: PlayCardProps) {
               px-3
               bg-gradient-to-r from-amber-500 to-yellow-600
               hover:from-amber-400 hover:to-yellow-500
-              text-black text-[10px] font-bold
+              text-black text-xs font-extrabold
               rounded-xl
               shadow-md hover:shadow-lg
               transition-all duration-300

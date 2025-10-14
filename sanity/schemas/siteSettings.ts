@@ -30,21 +30,6 @@ export default defineType({
       description: 'Image shown when sharing on social media',
     }),
     defineField({
-      name: 'backgroundTheme',
-      title: 'Background Theme',
-      type: 'string',
-      options: {
-        list: [
-          { title: 'Vavada Style (Default)', value: 'vavada' },
-          { title: 'Minimal Dark', value: 'minimal' },
-          { title: 'Animated Gradient', value: 'gradient' },
-          { title: 'Geometric Grid', value: 'geometric' },
-          { title: 'Particle Field', value: 'particles' },
-        ],
-      },
-      initialValue: 'vavada',
-    }),
-    defineField({
       name: 'socialLinks',
       title: 'Social Media Links',
       type: 'object',

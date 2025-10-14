@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Home, Trophy, Calendar, Link2 } from 'lucide-react';
+import { Sparkles, Gift, Crown, Swords, Share2 } from 'lucide-react';
 import { useActiveSection } from '@/app/hooks/useActiveSection';
 import { client } from '@/app/lib/sanity';
 import { useTranslations, useLocale } from 'next-intl';
@@ -80,16 +80,16 @@ export default function MiddleBar() {
 
   const items = [
     {
-      icon: ExternalLink,
+      icon: Sparkles,
       title: "VAVADA",
-      color: "from-cyan-400 to-teal-500",
+      color: "from-cyan-400 to-blue-500",
       textColor: "text-cyan-400",
       action: () => window.open(vavadaLink, '_blank'),
       isPage: false,
       pageId: null
     },
     {
-      icon: Home,
+      icon: Gift,
       title: t('getBonus'),
       color: "from-orange-400 to-red-500",
       textColor: "text-orange-400",
@@ -98,25 +98,25 @@ export default function MiddleBar() {
       pageId: 'pokupi-bonuse'
     },
     {
-      icon: Trophy,
+      icon: Crown,
       title: t('leaderboard'),
-      color: "from-purple-400 to-indigo-500",
-      textColor: "text-purple-400",
+      color: "from-yellow-400 to-amber-500",
+      textColor: "text-yellow-400",
       action: () => router.push(`/${locale}/leaderboard`),
       isPage: true,
       pageId: 'rang-lista'
     },
     {
-      icon: Calendar,
+      icon: Swords,
       title: t('tournaments'),
-      color: "from-amber-400 to-yellow-500",
-      textColor: "text-amber-400",
+      color: "from-purple-400 to-pink-500",
+      textColor: "text-purple-400",
       action: handleTurniri,
       isPage: true,
       pageId: 'turniri'
     },
     {
-      icon: Link2,
+      icon: Share2,
       title: t('social'),
       color: "from-green-400 to-emerald-500",
       textColor: "text-green-400",
@@ -127,16 +127,17 @@ export default function MiddleBar() {
   ];
 
   return (
-    <div className="relative bg-gradient-to-r from-gray-900 via-slate-900 to-gray-900 border-b border-white/5">
-      {/* Subtle background overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5 opacity-20" />
+    <div className="relative bg-gradient-to-r from-gray-900 via-black to-gray-900 border-b border-white/5 shadow-lg shadow-black/50">
+      {/* Shimmer overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-transparent to-amber-500/10 animate-pulse" />
 
-      {/* Top decorative line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      {/* Top decorative line - double layer */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent blur-sm" />
 
       <div className="relative max-w-7xl mx-auto px-2 lg:px-4">
         {/* Tabs bar background */}
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-white/10" />
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
         {/* Tabs Container */}
         <div className="flex justify-center items-end gap-0.5 lg:gap-1 overflow-x-auto scrollbar-hide">
@@ -150,13 +151,14 @@ export default function MiddleBar() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.08 }}
+                whileHover={{ scale: 1.05 }}
                 className={`
                   group relative flex flex-col lg:flex-row items-center lg:justify-center gap-1.5 lg:gap-2 px-4 lg:px-5 py-4 lg:py-4
                   transition-all duration-300 cursor-pointer flex-1 lg:flex-none lg:min-w-[176px]
                   bg-transparent border-0
                   ${isActive
-                    ? 'bg-black/40 rounded-t-xl border-t border-x border-white/10'
-                    : 'hover:bg-white/5 rounded-t-lg'
+                    ? 'bg-gradient-to-b from-gray-800/60 to-black/40 rounded-t-xl border-t border-x border-white/20 shadow-xl'
+                    : 'hover:bg-gradient-to-b hover:from-gray-700/80 hover:to-gray-800/80 rounded-t-lg'
                   }
                 `}
                 style={{
@@ -184,34 +186,44 @@ export default function MiddleBar() {
                 {/* Icon Container */}
                 <div
                   className={`
-                    relative p-2 lg:p-2 rounded-lg transition-all duration-300 flex-shrink-0
+                    relative p-2 sm:p-2.5 rounded-xl transition-all duration-300 flex-shrink-0
                     ${isActive
-                      ? `bg-gradient-to-br ${item.color} shadow-lg`
-                      : 'bg-gray-800/50 group-hover:bg-gradient-to-br group-hover:' + item.color
+                      ? `bg-gradient-to-br ${item.color} shadow-xl`
+                      : 'bg-gradient-to-b from-gray-800/80 to-gray-900/80 group-hover:bg-gradient-to-br group-hover:' + item.color
                     }
                   `}
                 >
                   <item.icon
-                    size={20}
-                    className={`lg:w-[18px] lg:h-[18px] ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'} transition-colors duration-300`}
+                    size={18}
+                    className={`sm:w-5 sm:h-5 ${isActive ? 'text-white drop-shadow-lg' : 'text-gray-400 group-hover:text-white'} transition-colors duration-300`}
                     strokeWidth={2.5}
                   />
 
                   {/* Icon glow effect on active */}
                   {isActive && (
-                    <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-50 blur-lg rounded-lg -z-10`} />
+                    <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-60 blur-xl rounded-xl -z-10 animate-pulse`} />
+                  )}
+
+                  {/* Hover glow effect on inactive */}
+                  {!isActive && (
+                    <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-40 blur-lg rounded-xl -z-10 transition-opacity duration-300`} />
                   )}
                 </div>
 
                 {/* Text Label */}
                 <span
                   className={`
-                    text-xs lg:text-sm font-bold tracking-wide transition-colors duration-300 text-center min-h-[2.5rem] lg:min-h-0 flex items-center justify-center
+                    text-xs lg:text-sm font-black tracking-wider uppercase transition-colors duration-300 text-center min-h-[2.5rem] lg:min-h-0 flex items-center justify-center
                     ${isActive
                       ? 'text-white'
                       : item.textColor + ' group-hover:text-white'
                     }
                   `}
+                  style={{
+                    filter: isActive
+                      ? 'drop-shadow(0 2px 8px rgba(255,255,255,0.5))'
+                      : undefined
+                  }}
                 >
                   {item.title}
                 </span>
@@ -220,7 +232,7 @@ export default function MiddleBar() {
                 {isActive && (
                   <motion.div
                     layoutId="activeTab"
-                    className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${item.color}`}
+                    className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${item.color} shadow-lg`}
                     transition={{ type: "spring", stiffness: 380, damping: 30 }}
                   />
                 )}

@@ -1,332 +1,361 @@
-# Leaderboard Redesign Migration Guide: Sanity CMS Integration
+# Complete Leaderboard Implementation Guide
 
-## 📋 Table of Contents
+**For Aca Jankovic Sanity CMS Project**
+
+This guide provides comprehensive instructions for Claude (or any developer) to implement the complete Leaderboard page in your actual Sanity CMS-based project, including the new "How to Win Prizes" section and simplified leaderboard design.
+
+---
+
+## Table of Contents
+
 1. [Overview](#overview)
-2. [Current vs New Design](#current-vs-new-design)
-3. [Architecture Understanding](#architecture-understanding)
-4. [Data Structure Mapping](#data-structure-mapping)
-5. [Step-by-Step Migration](#step-by-step-migration)
-6. [Sanity Integration](#sanity-integration)
-7. [Prize Cards System](#prize-cards-system)
-8. [Bilingual Support](#bilingual-support)
-9. [Navigation Integration](#navigation-integration)
-10. [Testing Checklist](#testing-checklist)
-11. [Troubleshooting](#troubleshooting)
+2. [What's New](#whats-new)
+3. [Sanity Schema Setup](#sanity-schema-setup)
+4. [Component Architecture](#component-architecture)
+5. [Implementation Steps](#implementation-steps)
+6. [Static vs Dynamic Content](#static-vs-dynamic-content)
+7. [Code Examples](#code-examples)
+8. [Testing Checklist](#testing-checklist)
+9. [Troubleshooting](#troubleshooting)
 
 ---
 
-## 📖 Overview
+## Overview
 
-This guide will help you migrate the **Leaderboard** component from your current Next.js implementation to the new simplified design in Figma Make, while maintaining full Sanity CMS integration, bilingual support, and all existing functionality.
+### Current State (Prototype)
+The prototype uses **mock data** with a simplified leaderboard showing:
+- Rank (1-10)
+- Viewer Name
+- Watch Time (formatted display)
 
-### Current Implementation
-- **Location**: `app/[locale]/leaderboard/page.tsx`
-- **Data Source**: Sanity CMS (no Botrix API)
-- **Schemas**: `leaderboardEntry`, `tournamentPrize`, `leaderboardSettings`
-- **Features**: Top 10 list, 4 prize cards, badges, rank changes, avatars
-- **Routing**: Next.js App Router with locale support (`/[locale]/leaderboard`)
-- **Translations**: next-intl (EN/SR)
+It now includes a new **"How to Win Prizes"** section that explains:
+- How viewers earn watch time (by watching on Kick)
+- That top 10 viewers win prizes based on rank
+- Includes a "Watch Aca on Kick" button
 
-### New Implementation
-- **Location**: `/components/pages/Leaderboard.tsx` (Figma Make)
-- **Data Source**: Sanity CMS (maintain existing integration)
-- **Simplified Display**: Only Place, Viewer Name, Watch Time
-- **Navigation**: NavigationProvider (already in your Figma Make prototype)
-- **Design**: Matches ContentGrid aesthetic (amber borders, hover effects)
-
----
-
-## 🎨 Current vs New Design
-
-### What's Being Completely Removed
-
-❌ **Fields Removed from Sanity Schema:**
-- `avatarEmoji` - No avatars in new design
-- `avatar` (image) - No avatars in new design
-- `badge` - No badge labels (Legend, Diamond, Platinum, Gold)
-- `daysWatched` - Not displayed in new design
-- `avgDaily` - Not displayed in new design
-- `change` - No rank change indicators (↑/↓ arrows)
-- `watchtime` (old string format) - Replaced by `watchTimeDisplay`
-
-⚠️ **IMPORTANT**: These fields are **completely removed** from the Sanity schema. The new schema only contains essential fields needed for the simplified leaderboard display.
-
-### What Remains
-
-✅ **Core Display Elements:**
-- **Place/Rank**: Large numbers with special icons for top 3 (Crown 👑, Medals 🥈🥉)
-- **Viewer Name**: Clean, bold text
-- **Watch Time**: Prominent hours display (e.g., "1,247h")
-
-✅ **Supporting Elements:**
-- Prize cards (4 prizes) above leaderboard
-- Section header ("Top Viewers")
-- Footer with CTA ("Watch Aca on Kick")
-- Loading and error states
-
-### Visual Improvements
-
-1. **Cleaner Layout**: 3-column grid (Rank | Name | Watch Time)
-2. **Better Spacing**: More breathing room, modern padding
-3. **Consistent Styling**: Matches ContentGrid amber/gold theme
-4. **Responsive Design**: 
-   - Mobile: Compact with smaller icons/text
-   - Desktop: Larger, more prominent elements
-5. **Hover Effects**: Scale and glow effects matching ContentGrid
+### Target State (Production)
+Production will use **Sanity CMS** with:
+- Simplified `leaderboardEntry` schema (5 essential fields only)
+- Live data fetching via GROQ queries
+- Real-time leaderboard updates
+- Same "How to Win Prizes" section (static content)
 
 ---
 
-## 🏗️ Architecture Understanding
+## What's New
 
-### Your Current Stack
+### 1. New "How to Win Prizes" Section
 
-```typescript
-// Current Next.js structure
-app/
-├── [locale]/
-│   ├── leaderboard/
-│   │   └── page.tsx              // Current leaderboard page
-│   └── page.tsx                   // Home page
-├── components/
-│   ├── LoadingSpinner.tsx
-│   └── ... other shared components
-└── lib/
-    └── sanity.ts                  // Sanity client setup
+**Location**: Between page header and prize cards
 
-// Sanity setup
-sanity/
-├── schemas/
-│   ├── leaderboardEntry.ts       // Viewer entries
-│   ├── tournamentPrize.ts        // Prize cards
-│   ├── leaderboardSettings.ts    // Page settings
-│   └── index.ts                  // Schema registry
-```
+**Features**:
+- ✨ Explains how viewers can win prizes
+- ✨ Clear instructions: "Watch Aca Jankovic on Kick"
+- ✨ States top 10 viewers win based on watch time
+- ✨ New "Watch Aca on Kick" button (opens https://kick.com/acajankovic)
+- ✨ Amber gradient styling matching site theme
 
-### Figma Make Structure
+### 2. Simplified Leaderboard Data
 
-```typescript
-// Figma Make structure (where you'll migrate TO)
-/
-├── App.tsx                        // Root with NavigationProvider
-├── components/
-│   ├── NavigationProvider.tsx     // Navigation state management
-│   ├── Navbar.tsx
-│   ├── MiddleBar.tsx
-│   ├── pages/
-│   │   ├── HomePage.tsx
-│   │   └── Leaderboard.tsx        // NEW redesigned leaderboard
-│   └── ui/
-│       └── ... shadcn components
-└── styles/
-    └── globals.css                // Tailwind v4
-```
+**NEW Watch Time Format**: 
+- Admin enters: `"2 Days, 5 Hours, 30 Minutes"`
+- Displayed exactly as entered (no complex calculations in frontend)
 
-### Data Flow
+**Removed Fields** (from Sanity schema):
+- ❌ `avatarEmoji`
+- ❌ `avatar` (image)
+- ❌ `daysWatched`
+- ❌ `avgDaily`
+- ❌ `badge`
+- ❌ `change`
+- ❌ `watchtime` (old format)
 
-```
-Sanity CMS
-    ↓
-  (Sanity Client with next-sanity)
-    ↓
-  GROQ Query (leaderboardQuery, prizesQuery)
-    ↓
-  Component State (useState)
-    ↓
-  Render (Loading → Data → Error)
-```
+### 3. Improved Visual Hierarchy
+
+**New Section Order**:
+1. Page Header (Top Viewers)
+2. **NEW**: How to Win Prizes section
+3. **NEW**: Prize Cards header ("Exclusive Prizes")
+4. Prize Cards (4 cards for top 4 places)
+5. Leaderboard List (top 10 viewers)
 
 ---
 
-## 🔄 Data Structure Mapping
+## Sanity Schema Setup
 
-### Sanity Schema → Component Interface
+### New Simplified Schema
 
-#### NEW Simplified Sanity Schema (leaderboardEntry)
+**File**: `schemas/leaderboardEntry.ts`
 
 ```typescript
-// New simplified schema - ONLY essential fields
-interface LeaderboardEntryData {
-  _id: string;
-  place: number;              // ✅ Rank/position (1-10)
-  viewerName: string;         // ✅ Viewer's display name
-  watchTimeDisplay: string;   // ✅ NEW - Formatted display (e.g., "2 Days, 5 Hours, 30 Minutes")
-  watchTimeHours: number;     // ✅ Total hours (for sorting/calculations)
-  isActive: boolean;          // ✅ Show/hide toggle
-}
+export default {
+  name: 'leaderboardEntry',
+  title: 'Leaderboard Entry',
+  type: 'document',
+  fields: [
+    {
+      name: 'place',
+      title: 'Place/Rank',
+      type: 'number',
+      validation: (Rule) => Rule.required().min(1).max(100),
+      description: 'Viewer rank position (1-10 for top viewers)',
+    },
+    {
+      name: 'viewerName',
+      title: 'Viewer Name',
+      type: 'string',
+      validation: (Rule) => Rule.required().min(2).max(50),
+      description: 'Display name of the viewer',
+    },
+    {
+      name: 'watchTimeDisplay',
+      title: 'Watch Time Display',
+      type: 'string',
+      validation: (Rule) => 
+        Rule.required().regex(
+          /^\d+\s*Days?,\s*\d+\s*Hours?,\s*\d+\s*Minutes?$/i,
+          {
+            name: 'watchTimeFormat',
+            invert: false,
+          }
+        ).error('Must be in format: "X Days, Y Hours, Z Minutes"'),
+      description: 'Formatted watch time for display (e.g., "2 Days, 5 Hours, 30 Minutes")',
+      placeholder: '2 Days, 5 Hours, 30 Minutes',
+    },
+    {
+      name: 'watchTimeHours',
+      title: 'Watch Time (Total Hours)',
+      type: 'number',
+      validation: (Rule) => Rule.required().min(0),
+      description: 'Total watch time in hours for sorting. Calculate: (Days × 24) + Hours + (Minutes ÷ 60)',
+    },
+    {
+      name: 'isActive',
+      title: 'Active',
+      type: 'boolean',
+      initialValue: true,
+      description: 'Show/hide this entry on the leaderboard',
+    },
+  ],
+  orderings: [
+    {
+      title: 'Place (Ascending)',
+      name: 'placeAsc',
+      by: [{ field: 'place', direction: 'asc' }],
+    },
+    {
+      title: 'Watch Time (Descending)',
+      name: 'watchTimeDesc',
+      by: [{ field: 'watchTimeHours', direction: 'desc' }],
+    },
+  ],
+  preview: {
+    select: {
+      place: 'place',
+      title: 'viewerName',
+      watchTimeDisplay: 'watchTimeDisplay',
+      watchTimeHours: 'watchTimeHours',
+      isActive: 'isActive',
+    },
+    prepare({ place, title, watchTimeDisplay, watchTimeHours, isActive }) {
+      return {
+        title: `#${place} - ${title}`,
+        subtitle: `${watchTimeDisplay} (${watchTimeHours}h total) - ${isActive ? 'Active' : 'Hidden'}`,
+      };
+    },
+  },
+};
 ```
 
-#### Fields REMOVED from Sanity Schema
+### Watch Time Calculation Helper
 
-These fields are **completely removed** from the Sanity schema in the new design:
+For Sanity Studio, create a custom component to help admins:
 
-```typescript
-// ❌ REMOVED - Not needed in new design
-interface RemovedFields {
-  watchtime: string;          // ❌ REMOVED - Replaced by watchTimeDisplay
-  avatarEmoji: string;        // ❌ REMOVED - No avatars in new design
-  avatar?: string;            // ❌ REMOVED - No avatars in new design
-  daysWatched: number;        // ❌ REMOVED - Not displayed
-  avgDaily: number;           // ❌ REMOVED - Not displayed
-  badge: string;              // ❌ REMOVED - No badges in new design
-  change: string;             // ❌ REMOVED - No rank change indicators
-}
-```
-
-#### New Component Interface
+**File**: `components/WatchTimeCalculator.tsx`
 
 ```typescript
-// Component display interface
-interface LeaderboardViewer {
-  rank: number;               // Map from 'place'
-  name: string;               // Map from 'viewerName'
-  watchTime: string;          // Map from 'watchTimeDisplay'
-  watchTimeHours: number;     // Map from 'watchTimeHours' (for sorting)
-}
-```
+import React, { useState } from 'react';
+import { Stack, Text, TextInput, Card } from '@sanity/ui';
 
-#### Prize Schema (No Changes)
+export const WatchTimeCalculator = (props) => {
+  const { value, onChange } = props;
+  const [days, setDays] = useState(0);
+  const [hours, setHours] = useState(0);
+  const [minutes, setMinutes] = useState(0);
 
-```typescript
-// From your actual Sanity schema - KEEP AS IS
-interface Prize {
-  _id: string;
-  prizeNumber: number;        // 1-4
-  prizeImage: string;         // Sanity CDN URL
-  prizeTitle: { en: string; sr: string };
-  prizeDescription?: { en: string; sr: string };
-  order: number;
-  isActive: boolean;
-}
-```
-
-### Field Mapping Strategy
-
-```typescript
-// Transformation function (minimal changes needed)
-function transformLeaderboardEntry(sanityEntry: SanityLeaderboardEntry): LeaderboardViewer {
-  return {
-    rank: sanityEntry.place,
-    name: sanityEntry.viewerName,
-    watchTime: sanityEntry.watchTimeDisplay,      // Display formatted string
-    watchTimeHours: sanityEntry.watchTimeHours    // Keep for sorting
+  const calculateTotal = () => {
+    return days * 24 + hours + minutes / 60;
   };
-}
+
+  const updateDisplay = () => {
+    const display = `${days} Days, ${hours} Hours, ${minutes} Minutes`;
+    onChange(display);
+  };
+
+  return (
+    <Stack space={3}>
+      <TextInput {...props} />
+      
+      <Card padding={3} tone="primary" radius={2}>
+        <Stack space={3}>
+          <Text size={1} weight="semibold">Watch Time Calculator</Text>
+          
+          <Stack space={2}>
+            <TextInput
+              type="number"
+              placeholder="Days"
+              value={days}
+              onChange={(e) => setDays(parseInt(e.currentTarget.value) || 0)}
+            />
+            <TextInput
+              type="number"
+              placeholder="Hours"
+              value={hours}
+              onChange={(e) => setHours(parseInt(e.currentTarget.value) || 0)}
+            />
+            <TextInput
+              type="number"
+              placeholder="Minutes"
+              value={minutes}
+              onChange={(e) => setMinutes(parseInt(e.currentTarget.value) || 0)}
+            />
+          </Stack>
+          
+          <button onClick={updateDisplay}>
+            Set: "{days} Days, {hours} Hours, {minutes} Minutes"
+          </button>
+          
+          <Text size={1}>
+            Total: {calculateTotal().toFixed(2)} hours
+          </Text>
+        </Stack>
+      </Card>
+    </Stack>
+  );
+};
 ```
-
-### Watch Time Format
-
-**Admin Input Format**: `"X Days, Y Hours, Z Minutes"`
-
-Examples:
-- `"2 Days, 5 Hours, 30 Minutes"` (52.5 hours total)
-- `"0 Days, 23 Hours, 45 Minutes"` (23.75 hours total)
-- `"156 Days, 7 Hours, 0 Minutes"` (3751 hours total)
-
-**Why Two Fields?**
-1. **watchTimeDisplay** (string): Human-readable format for display in UI
-2. **watchTimeHours** (number): Numeric value for sorting and calculations
 
 ---
 
-## 🚀 Step-by-Step Migration
+## Component Architecture
 
-### Phase 1: Understand Current Implementation
+### File Structure
 
-**Action Items:**
+```
+components/
+├── pages/
+│   └── Leaderboard.tsx          # Main leaderboard page component
+├── leaderboard/
+│   ├── HowToWinSection.tsx      # New: How to Win Prizes section (optional extraction)
+│   ├── PrizeCard.tsx            # Prize display cards (top 4)
+│   └── LeaderboardEntry.tsx     # Individual viewer entry (optional extraction)
+└── ui/                          # ShadCN components (existing)
+```
 
-1. **Review Current Page**
+### Component Hierarchy
+
+```
+Leaderboard.tsx
+├── Page Header (Top Viewers)
+├── HowToWinSection (NEW)
+│   ├── Title & Description
+│   └── "Watch Aca on Kick" Button
+├── Prize Cards Section (NEW header)
+│   └── 4 × PrizeCard (places 1-4)
+└── Leaderboard List
+    └── 10 × LeaderboardEntry (places 1-10)
+```
+
+---
+
+## Implementation Steps
+
+### Step 1: Update Sanity Schema
+
+1. **Backup existing data**
    ```bash
-   # In your actual project
-   open app/[locale]/leaderboard/page.tsx
+   # Export current leaderboard entries
+   sanity dataset export production backup-leaderboard-$(date +%Y%m%d).tar.gz
    ```
 
-2. **Identify Key Parts**
-   - Sanity client import
-   - GROQ queries (`leaderboardQuery`, `prizesQuery`, `settingsQuery`)
-   - Data fetching logic (useEffect)
-   - Loading/error states
-   - Render logic
+2. **Update schema file**
+   - Edit `schemas/leaderboardEntry.ts`
+   - Copy new schema from [Sanity Schema Setup](#sanity-schema-setup)
+   - Remove all old fields (avatar, badge, etc.)
 
-3. **Note Current GROQ Queries**
-   ```groq
-   // OLD query structure (your current implementation)
-   *[_type == "leaderboardEntry" && isActive == true] | order(place asc) [0...10] {
-     _id,
-     place,
-     viewerName,
-     watchTimeHours,
-     avatarEmoji,
-     avatar,
-     daysWatched,
-     avgDaily,
-     badge,
-     change,
-     isActive
-   }
-   
-   // NEW simplified query (for new design)
-   *[_type == "leaderboardEntry" && isActive == true] | order(place asc) [0...10] {
-     _id,
-     place,
-     viewerName,
-     watchTimeDisplay,
-     watchTimeHours,
-     isActive
-   }
-   ```
-
-### Phase 2: Prepare Figma Make Environment
-
-**Action Items:**
-
-1. **Set Up Sanity Client in Figma Make**
-
-   Create `/lib/sanity.ts`:
-   ```typescript
-   import { createClient } from 'next-sanity';
-
-   export const sanityClient = createClient({
-     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '1s30e0de',
-     dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
-     apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01',
-     useCdn: true, // Set to false for fresh data
-   });
-   ```
-
-2. **Create Environment Variables**
-
-   Create `.env.local`:
-   ```env
-   NEXT_PUBLIC_SANITY_PROJECT_ID=1s30e0de
-   NEXT_PUBLIC_SANITY_DATASET=production
-   NEXT_PUBLIC_SANITY_API_VERSION=2024-01-01
-   NEXT_PUBLIC_SITE_URL=http://localhost:3000
-   ```
-
-3. **Install Dependencies**
+3. **Deploy schema changes**
    ```bash
-   npm install next-sanity @sanity/client @sanity/image-url
+   sanity deploy
    ```
 
-### Phase 3: Create Data Fetching Utilities
+4. **Migrate existing data**
+   - Run migration script (see below) to convert old format to new
+   - Or manually update entries in Sanity Studio
 
-**Create `/utils/sanityQueries.ts`:**
+### Step 2: Create Data Migration Script
+
+**File**: `migrations/migrateLeaderboardData.ts`
 
 ```typescript
-import { sanityClient } from '@/lib/sanity';
-import imageUrlBuilder from '@sanity/image-url';
+import { getCliClient } from 'sanity/cli';
 
-// Image URL builder
-const builder = imageUrlBuilder(sanityClient);
+const client = getCliClient();
 
-export function getImageUrl(source: any): string {
-  if (!source) return '';
-  return builder.image(source).width(800).quality(80).url();
+async function migrateLeaderboardEntries() {
+  // Fetch all existing entries
+  const entries = await client.fetch(`*[_type == "leaderboardEntry"]`);
+
+  console.log(`Found ${entries.length} entries to migrate`);
+
+  for (const entry of entries) {
+    // Calculate new watchTimeDisplay from watchTimeHours
+    const totalHours = entry.watchTimeHours || 0;
+    const days = Math.floor(totalHours / 24);
+    const hours = Math.floor(totalHours % 24);
+    const minutes = Math.round((totalHours % 1) * 60);
+
+    const watchTimeDisplay = `${days} Days, ${hours} Hours, ${minutes} Minutes`;
+
+    // Create new document with only essential fields
+    const newEntry = {
+      _id: entry._id,
+      _type: 'leaderboardEntry',
+      place: entry.place,
+      viewerName: entry.viewerName,
+      watchTimeDisplay,
+      watchTimeHours: entry.watchTimeHours,
+      isActive: entry.isActive ?? true,
+    };
+
+    // Update document (this replaces the entire document)
+    await client
+      .patch(entry._id)
+      .set(newEntry)
+      .commit();
+
+    console.log(`✓ Migrated: #${entry.place} - ${entry.viewerName}`);
+  }
+
+  console.log('Migration complete!');
 }
 
-// GROQ Queries
+migrateLeaderboardEntries().catch(console.error);
+```
+
+Run with:
+```bash
+sanity exec migrations/migrateLeaderboardData.ts --with-user-token
+```
+
+### Step 3: Update GROQ Queries
+
+**File**: `lib/sanity/queries.ts` (or wherever you store queries)
+
+```typescript
+// Simple query - fetch only what we need
 export const leaderboardQuery = `
-  *[_type == "leaderboardEntry" && isActive == true] | order(place asc) [0...10] {
+  *[_type == "leaderboardEntry" && isActive == true] 
+  | order(place asc) [0...10] {
     _id,
     place,
     viewerName,
@@ -336,281 +365,568 @@ export const leaderboardQuery = `
   }
 `;
 
-export const prizesQuery = `
-  *[_type == "tournamentPrize" && isActive == true] | order(order asc) [0...4] {
+// Alternative: With fallback for missing data
+export const leaderboardQueryWithFallback = `
+  *[_type == "leaderboardEntry" && isActive == true] 
+  | order(place asc) [0...10] {
     _id,
-    prizeNumber,
-    prizeImage,
-    prizeTitle,
-    prizeDescription,
-    order,
+    place,
+    viewerName,
+    "watchTimeDisplay": coalesce(watchTimeDisplay, "0 Days, 0 Hours, 0 Minutes"),
+    "watchTimeHours": coalesce(watchTimeHours, 0),
     isActive
   }
 `;
-
-export const settingsQuery = `
-  *[_type == "leaderboardSettings"][0] {
-    _id,
-    pageTitle,
-    pageSubtitle,
-    isActive
-  }
-`;
-
-// Fetch functions
-export async function fetchLeaderboardData() {
-  try {
-    const [entries, prizes, settings] = await Promise.all([
-      sanityClient.fetch(leaderboardQuery),
-      sanityClient.fetch(prizesQuery),
-      sanityClient.fetch(settingsQuery)
-    ]);
-
-    return {
-      entries: entries || [],
-      prizes: prizes || [],
-      settings: settings || null
-    };
-  } catch (error) {
-    console.error('Error fetching leaderboard data:', error);
-    throw error;
-  }
-}
 ```
 
-### Phase 4: Create Custom Hook (Optional but Recommended)
+### Step 4: Update Leaderboard Component
 
-**Create `/hooks/useLeaderboard.ts`:**
+Replace the mock data section with Sanity data fetching:
+
+**File**: `components/pages/Leaderboard.tsx`
 
 ```typescript
-import { useState, useEffect } from 'react';
-import { fetchLeaderboardData } from '@/utils/sanityQueries';
+'use client'; // If using Next.js App Router
 
-interface LeaderboardData {
-  entries: any[];
-  prizes: any[];
-  settings: any;
+import { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
+import { Trophy } from 'lucide-react';
+import { sanityClient } from '@/lib/sanity/client';
+import { leaderboardQuery } from '@/lib/sanity/queries';
+
+// TypeScript interfaces
+interface SanityLeaderboardEntry {
+  _id: string;
+  place: number;
+  viewerName: string;
+  watchTimeDisplay: string;
+  watchTimeHours: number;
+  isActive: boolean;
 }
 
-export function useLeaderboard() {
-  const [data, setData] = useState<LeaderboardData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+interface LeaderboardViewer {
+  rank: number;
+  name: string;
+  watchTime: string;
+}
 
+export function Leaderboard() {
+  const [viewers, setViewers] = useState<LeaderboardViewer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch data from Sanity
   useEffect(() => {
-    async function loadData() {
+    async function fetchLeaderboard() {
       try {
         setLoading(true);
-        const result = await fetchLeaderboardData();
-        setData(result);
+        const data: SanityLeaderboardEntry[] = await sanityClient.fetch(leaderboardQuery);
+        
+        // Transform to component format
+        const transformed = data.map((entry) => ({
+          rank: entry.place,
+          name: entry.viewerName,
+          watchTime: entry.watchTimeDisplay,
+        }));
+        
+        setViewers(transformed);
+        setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err : new Error('Failed to load data'));
+        console.error('Error fetching leaderboard:', err);
+        setError('Failed to load leaderboard data');
       } finally {
         setLoading(false);
       }
     }
 
-    loadData();
+    fetchLeaderboard();
+    
+    // Optional: Set up polling for live updates
+    const interval = setInterval(fetchLeaderboard, 60000); // Update every minute
+    return () => clearInterval(interval);
   }, []);
 
-  return { data, loading, error };
+  // Rest of component (see full code below)...
 }
 ```
 
-### Phase 5: Update Leaderboard Component
+### Step 5: Implement "How to Win Prizes" Section
 
-**Update `/components/pages/Leaderboard.tsx`:**
+Add the new section to your Leaderboard component:
 
 ```typescript
-import { motion } from 'motion/react';
-import { Footer } from '../Footer';
-import { ImageWithFallback } from '../figma/ImageWithFallback';
-import { Trophy, Medal, Crown } from 'lucide-react';
-import { useLeaderboard } from '@/hooks/useLeaderboard';
-import { getImageUrl } from '@/utils/sanityQueries';
+{/* How to Win Section - NEW */}
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.05 }}
+  className="mb-8 bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border border-amber-500/30 rounded-2xl p-6 md:p-8 backdrop-blur-sm"
+>
+  <div className="text-center mb-6">
+    <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+      How to Win Prizes
+    </h2>
+    <div className="max-w-2xl mx-auto space-y-3 text-gray-300">
+      <p className="text-base md:text-lg">
+        Watch <span className="text-amber-400 font-bold">Aca Jankovic</span> live on{' '}
+        <span className="text-green-400 font-bold">Kick</span> to earn watch time
+      </p>
+      <p className="text-base md:text-lg">
+        The <span className="text-amber-400 font-bold">Top 10 viewers</span> with the most watch time will win exclusive prizes based on their rank
+      </p>
+      <p className="text-sm md:text-base text-gray-400">
+        Keep watching to climb the leaderboard and win amazing rewards!
+      </p>
+    </div>
+  </div>
+  
+  {/* Watch Button */}
+  <div className="flex justify-center">
+    <a 
+      href="https://kick.com/acajankovic" 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-xl hover:from-green-400 hover:to-emerald-500 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30 transform hover:scale-105"
+    >
+      <Trophy size={20} />
+      Watch Aca on Kick
+    </a>
+  </div>
+</motion.div>
 
-interface LeaderboardProps {
-  locale?: string; // 'en' | 'sr' - for bilingual support
+{/* Prize Cards Header - NEW */}
+<motion.div
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.08 }}
+  className="text-center mb-6"
+>
+  <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent mb-2">
+    Exclusive Prizes
+  </h3>
+  <p className="text-gray-400 text-sm md:text-base">
+    Top 4 viewers will receive these amazing rewards
+  </p>
+</motion.div>
+```
+
+### Step 6: Update Prize Cards (Optional)
+
+If you want prize data from Sanity instead of hardcoded:
+
+**New Schema**: `schemas/leaderboardPrize.ts`
+
+```typescript
+export default {
+  name: 'leaderboardPrize',
+  title: 'Leaderboard Prize',
+  type: 'document',
+  fields: [
+    {
+      name: 'place',
+      title: 'Place',
+      type: 'number',
+      validation: (Rule) => Rule.required().min(1).max(4),
+    },
+    {
+      name: 'title',
+      title: 'Prize Title',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'value',
+      title: 'Prize Value',
+      type: 'string',
+      description: 'e.g., "$1,000"',
+    },
+    {
+      name: 'icon',
+      title: 'Icon Name',
+      type: 'string',
+      description: 'Lucide icon name (e.g., "Trophy", "Crown")',
+      initialValue: 'Trophy',
+    },
+    {
+      name: 'color',
+      title: 'Accent Color',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Gold', value: 'gold' },
+          { title: 'Silver', value: 'silver' },
+          { title: 'Bronze', value: 'bronze' },
+          { title: 'Blue', value: 'blue' },
+        ],
+      },
+    },
+  ],
+};
+```
+
+---
+
+## Static vs Dynamic Content
+
+### Static Content (Hardcoded in Component)
+
+These elements don't change and should remain hardcoded:
+
+✅ **"How to Win Prizes" Section**
+- Title: "How to Win Prizes"
+- Instructions text
+- "Watch Aca on Kick" button
+- Kick URL: `https://kick.com/acajankovic`
+
+✅ **Page Header**
+- "Top Viewers" title
+- "Most dedicated viewers of Aca Jankovic on Kick • Updated live" subtitle
+
+✅ **Prize Cards Header**
+- "Exclusive Prizes" title
+- "Top 4 viewers will receive these amazing rewards" subtitle
+
+### Dynamic Content (Fetched from Sanity)
+
+These elements come from Sanity CMS:
+
+🔄 **Leaderboard Entries** (Required)
+- `place` → rank
+- `viewerName` → name
+- `watchTimeDisplay` → watch time
+
+🔄 **Prize Cards** (Optional - can be static or dynamic)
+- Currently hardcoded in prototype
+- Can be made dynamic with new `leaderboardPrize` schema (see Step 6)
+
+---
+
+## Code Examples
+
+### Complete Leaderboard Component
+
+**File**: `components/pages/Leaderboard.tsx`
+
+```typescript
+'use client';
+
+import { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
+import { Trophy, Crown, Medal, Award } from 'lucide-react';
+import { sanityClient } from '@/lib/sanity/client';
+import { leaderboardQuery } from '@/lib/sanity/queries';
+
+// Types
+interface SanityLeaderboardEntry {
+  _id: string;
+  place: number;
+  viewerName: string;
+  watchTimeDisplay: string;
+  watchTimeHours: number;
+  isActive: boolean;
 }
 
-export function Leaderboard({ locale = 'en' }: LeaderboardProps) {
-  const { data, loading, error } = useLeaderboard();
+interface LeaderboardViewer {
+  rank: number;
+  name: string;
+  watchTime: string;
+}
 
-  // Helper functions (keep from current design)
+interface PrizeData {
+  place: number;
+  title: string;
+  value: string;
+  icon: typeof Trophy;
+  colorClass: string;
+}
+
+// Prize data (static or fetch from Sanity)
+const prizes: PrizeData[] = [
+  {
+    place: 1,
+    title: 'Grand Prize',
+    value: '$1,000',
+    icon: Crown,
+    colorClass: 'from-amber-500 to-yellow-600',
+  },
+  {
+    place: 2,
+    title: 'Runner Up',
+    value: '$500',
+    icon: Trophy,
+    colorClass: 'from-gray-400 to-gray-500',
+  },
+  {
+    place: 3,
+    title: 'Third Place',
+    value: '$250',
+    icon: Medal,
+    colorClass: 'from-orange-600 to-amber-700',
+  },
+  {
+    place: 4,
+    title: 'Fourth Place',
+    value: '$100',
+    icon: Award,
+    colorClass: 'from-blue-500 to-cyan-600',
+  },
+];
+
+export function Leaderboard() {
+  const [viewers, setViewers] = useState<LeaderboardViewer[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch leaderboard data
+  useEffect(() => {
+    async function fetchLeaderboard() {
+      try {
+        setLoading(true);
+        const data: SanityLeaderboardEntry[] = await sanityClient.fetch(
+          leaderboardQuery,
+          {},
+          { cache: 'no-store' } // Disable caching for real-time updates
+        );
+
+        // Transform data
+        const transformed = data.map((entry) => ({
+          rank: entry.place,
+          name: entry.viewerName,
+          watchTime: entry.watchTimeDisplay,
+        }));
+
+        setViewers(transformed);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching leaderboard:', err);
+        setError('Failed to load leaderboard data');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchLeaderboard();
+
+    // Optional: Poll for updates every minute
+    const interval = setInterval(fetchLeaderboard, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Helper functions
   const getRankIcon = (rank: number) => {
-    if (rank === 1) return <Crown size={28} className="text-yellow-400 md:hidden" />;
-    if (rank === 2) return <Medal size={28} className="text-gray-300 md:hidden" />;
-    if (rank === 3) return <Medal size={28} className="text-amber-600 md:hidden" />;
-    return null;
+    switch (rank) {
+      case 1:
+        return <Crown className="w-8 h-8 md:hidden text-yellow-400" />;
+      case 2:
+        return <Trophy className="w-8 h-8 md:hidden text-gray-400" />;
+      case 3:
+        return <Medal className="w-8 h-8 md:hidden text-orange-600" />;
+      default:
+        return null;
+    }
   };
 
   const getRankIconDesktop = (rank: number) => {
-    if (rank === 1) return <Crown size={32} className="text-yellow-400 hidden md:block" />;
-    if (rank === 2) return <Medal size={32} className="text-gray-300 hidden md:block" />;
-    if (rank === 3) return <Medal size={32} className="text-amber-600 hidden md:block" />;
-    return null;
+    switch (rank) {
+      case 1:
+        return <Crown className="hidden md:block w-10 h-10 text-yellow-400" />;
+      case 2:
+        return <Trophy className="hidden md:block w-10 h-10 text-gray-400" />;
+      case 3:
+        return <Medal className="hidden md:block w-10 h-10 text-orange-600" />;
+      default:
+        return null;
+    }
   };
 
   const getRankBgColor = (rank: number) => {
-    if (rank === 1) return 'from-yellow-500/20 to-amber-600/20 border-yellow-500/40';
-    if (rank === 2) return 'from-gray-400/20 to-slate-500/20 border-gray-400/40';
-    if (rank === 3) return 'from-amber-600/20 to-orange-700/20 border-amber-600/40';
-    return 'from-gray-800/50 to-gray-900/50 border-amber-500/20';
+    switch (rank) {
+      case 1:
+        return 'from-yellow-500/10 to-amber-500/10 border-yellow-500/30';
+      case 2:
+        return 'from-gray-400/10 to-slate-400/10 border-gray-400/30';
+      case 3:
+        return 'from-orange-600/10 to-amber-600/10 border-orange-500/30';
+      default:
+        return 'from-gray-700/30 to-gray-800/30 border-gray-600/30';
+    }
   };
 
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen pt-8 pb-12 bg-gradient-to-b from-gray-900 to-black">
-        <div className="max-w-[57.6rem] mx-auto px-4 text-center">
-          <div className="text-gray-400">Loading leaderboard...</div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Trophy className="w-16 h-16 text-amber-400 animate-pulse mx-auto mb-4" />
+          <p className="text-gray-400 text-lg">Loading leaderboard...</p>
         </div>
       </div>
     );
   }
 
   // Error state
-  if (error || !data) {
+  if (error) {
     return (
-      <div className="min-h-screen pt-8 pb-12 bg-gradient-to-b from-gray-900 to-black">
-        <div className="max-w-[57.6rem] mx-auto px-4 text-center">
-          <div className="text-red-400">Failed to load leaderboard. Please try again later.</div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-400 text-lg mb-4">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-2 bg-amber-500 text-black rounded-lg hover:bg-amber-400"
+          >
+            Retry
+          </button>
         </div>
       </div>
     );
   }
 
-  const { entries, prizes, settings } = data;
-
-  // Get localized text
-  const getText = (textObj: { en: string; sr: string } | undefined) => {
-    if (!textObj) return '';
-    return locale === 'sr' ? textObj.sr : textObj.en;
-  };
-
   return (
-    <div className="min-h-screen pt-8 pb-12 bg-gradient-to-b from-gray-900 to-black">
-      <div className="max-w-[57.6rem] mx-auto px-4">
+    <div className="w-full py-8 md:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8"
         >
           <div className="flex items-center justify-center gap-3 mb-4">
             <Trophy size={40} className="text-amber-400" />
             <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent">
-              {settings?.pageTitle?.[locale] || 'Top Viewers'}
+              Top Viewers
             </h1>
           </div>
-          <p className="text-gray-400 text-lg">
-            {settings?.pageSubtitle?.[locale] || 'Most dedicated viewers of Aca Jankovic on Kick • Updated live'}
+          <p className="text-gray-400 text-lg mb-6">
+            Most dedicated viewers of Aca Jankovic on Kick • Updated live
+          </p>
+        </motion.div>
+
+        {/* How to Win Section - NEW */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.05 }}
+          className="mb-8 bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border border-amber-500/30 rounded-2xl p-6 md:p-8 backdrop-blur-sm"
+        >
+          <div className="text-center mb-6">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
+              How to Win Prizes
+            </h2>
+            <div className="max-w-2xl mx-auto space-y-3 text-gray-300">
+              <p className="text-base md:text-lg">
+                Watch <span className="text-amber-400 font-bold">Aca Jankovic</span> live on{' '}
+                <span className="text-green-400 font-bold">Kick</span> to earn watch time
+              </p>
+              <p className="text-base md:text-lg">
+                The <span className="text-amber-400 font-bold">Top 10 viewers</span> with the most
+                watch time will win exclusive prizes based on their rank
+              </p>
+              <p className="text-sm md:text-base text-gray-400">
+                Keep watching to climb the leaderboard and win amazing rewards!
+              </p>
+            </div>
+          </div>
+
+          {/* Watch Button */}
+          <div className="flex justify-center">
+            <a
+              href="https://kick.com/acajankovic"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-xl hover:from-green-400 hover:to-emerald-500 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30 transform hover:scale-105"
+            >
+              <Trophy size={20} />
+              Watch Aca on Kick
+            </a>
+          </div>
+        </motion.div>
+
+        {/* Prize Cards Header - NEW */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.08 }}
+          className="text-center mb-6"
+        >
+          <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent mb-2">
+            Exclusive Prizes
+          </h3>
+          <p className="text-gray-400 text-sm md:text-base">
+            Top 4 viewers will receive these amazing rewards
           </p>
         </motion.div>
 
         {/* Prize Cards */}
-        {prizes.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"
-          >
-            {prizes.map((prize: any, index: number) => {
-              const gradient = [
-                'from-yellow-500/20 to-amber-600/20',
-                'from-gray-400/20 to-slate-500/20',
-                'from-amber-600/20 to-orange-700/20',
-                'from-green-500/20 to-emerald-600/20'
-              ][index];
-              
-              const border = [
-                'border-yellow-500/40',
-                'border-gray-400/40',
-                'border-amber-600/40',
-                'border-green-500/40'
-              ][index];
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10"
+        >
+          {prizes.map((prize, index) => (
+            <motion.div
+              key={prize.place}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.15 + index * 0.05 }}
+              whileHover={{ scale: 1.05, y: -4 }}
+              className={`bg-gradient-to-br ${prize.colorClass} p-4 md:p-6 rounded-xl border border-white/20 text-center shadow-lg hover:shadow-xl transition-all duration-300`}
+            >
+              <prize.icon className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-2 md:mb-3 text-white" />
+              <div className="text-xl md:text-3xl font-black text-white mb-1">
+                {prize.place}
+                {prize.place === 1 ? 'st' : prize.place === 2 ? 'nd' : prize.place === 3 ? 'rd' : 'th'}
+              </div>
+              <div className="text-xs md:text-sm text-white/90 mb-2">{prize.title}</div>
+              <div className="text-lg md:text-2xl font-bold text-white">{prize.value}</div>
+            </motion.div>
+          ))}
+        </motion.div>
 
-              return (
-                <motion.div 
-                  key={prize._id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.1 + index * 0.1 }}
-                  whileHover={{ scale: 1.05, y: -4 }}
-                  className={`bg-gradient-to-br ${gradient} border ${border} rounded-xl overflow-hidden backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/20`}
-                >
-                  {/* Prize Image */}
-                  <div className="relative h-32 overflow-hidden">
-                    <ImageWithFallback
-                      src={getImageUrl(prize.prizeImage)}
-                      alt={getText(prize.prizeTitle)}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                    
-                    {/* Rank Badge */}
-                    <div className="absolute top-2 right-2 px-2 py-1 bg-black/70 backdrop-blur-sm rounded-lg border border-amber-500/30">
-                      <span className="text-xs font-bold text-amber-400">
-                        {index + 1}{index === 0 ? 'st' : index === 1 ? 'nd' : index === 2 ? 'rd' : 'th'} Place
-                      </span>
-                    </div>
-                  </div>
-                  
-                  {/* Prize Label */}
-                  <div className="p-3 text-center">
-                    <div className="font-bold text-white text-sm">
-                      {getText(prize.prizeTitle)}
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        )}
-
-        {/* Leaderboard List - NEW SIMPLIFIED DESIGN */}
+        {/* Leaderboard List */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           className="space-y-2 md:space-y-3"
         >
-          {entries.map((entry: any, index: number) => (
+          {viewers.map((viewer, index) => (
             <motion.div
-              key={entry._id}
+              key={viewer.rank}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 + index * 0.05 }}
               whileHover={{ scale: 1.02, x: 4 }}
-              className={`bg-gradient-to-r ${getRankBgColor(entry.place)} border rounded-xl md:rounded-2xl backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/10`}
+              className={`bg-gradient-to-r ${getRankBgColor(
+                viewer.rank
+              )} border rounded-xl md:rounded-2xl backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/10`}
             >
               <div className="flex items-center justify-between gap-3 md:gap-6 px-4 md:px-8 py-3 md:py-5">
                 {/* Rank */}
                 <div className="flex items-center justify-center min-w-[60px] md:min-w-[80px]">
-                  {entry.place <= 3 ? (
+                  {viewer.rank <= 3 ? (
                     <>
-                      {getRankIcon(entry.place)}
-                      {getRankIconDesktop(entry.place)}
+                      {getRankIcon(viewer.rank)}
+                      {getRankIconDesktop(viewer.rank)}
                     </>
                   ) : (
                     <span className="text-2xl md:text-3xl font-black text-gray-400">
-                      #{entry.place}
+                      #{viewer.rank}
                     </span>
                   )}
                 </div>
-                
+
                 {/* Viewer Name */}
                 <div className="flex-1 min-w-0">
                   <h3 className="text-base md:text-xl font-bold text-white truncate">
-                    {entry.viewerName}
+                    {viewer.name}
                   </h3>
                 </div>
 
                 {/* Watch Time */}
                 <div className="text-right min-w-[120px] md:min-w-[180px]">
                   <div className="text-sm md:text-lg font-black text-amber-400">
-                    {entry.watchTimeDisplay}
+                    {viewer.watchTime}
                   </div>
                   <div className="text-[10px] md:text-xs text-gray-500 uppercase tracking-wider mt-0.5">
                     watch time
@@ -621,1127 +937,313 @@ export function Leaderboard({ locale = 'en' }: LeaderboardProps) {
           ))}
         </motion.div>
 
-        {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          className="text-center mt-12"
-        >
-          <p className="text-gray-400 mb-4">
-            {locale === 'sr' ? 'Želite da vidite svoje ime ovde?' : 'Want to see your name here?'}
-          </p>
-          <a 
-            href="https://kick.com/acajankovic" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="inline-block px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-400 hover:to-emerald-500 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30 transform hover:scale-105"
-          >
-            {locale === 'sr' ? 'Gledaj Acu na Kick-u' : 'Watch Aca on Kick'}
-          </a>
-        </motion.div>
+        {/* Empty state */}
+        {viewers.length === 0 && (
+          <div className="text-center py-16">
+            <Trophy className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+            <p className="text-gray-500 text-lg">
+              No leaderboard entries yet. Start watching to appear here!
+            </p>
+          </div>
+        )}
       </div>
-      
-      <Footer />
     </div>
   );
 }
 ```
 
-### Phase 6: Update App.tsx Navigation
+### Sanity Client Setup
 
-**No changes needed!** Your existing NavigationProvider and App.tsx already support the leaderboard page:
+**File**: `lib/sanity/client.ts`
 
 ```typescript
-// App.tsx - Already correct!
-function AppContent() {
-  const { currentPage } = useNavigation();
+import { createClient } from '@sanity/client';
 
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'leaderboard':
-        return <Leaderboard />; // ✅ Already wired up
-      case 'home':
-      default:
-        return <HomePage />;
-    }
-  };
+export const sanityClient = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'your-project-id',
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  apiVersion: '2024-01-01',
+  useCdn: process.env.NODE_ENV === 'production', // Use CDN in production
+  token: process.env.SANITY_API_TOKEN, // Only needed for write operations
+});
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-black to-gray-900">
-      <Navbar />
-      <ImageGallery />
-      <MiddleBar />
-      {renderPage()}
-      <Toaster />
-    </div>
-  );
-}
+// For real-time updates (optional)
+export const sanityClientRealtime = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'your-project-id',
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  apiVersion: '2024-01-01',
+  useCdn: false, // Disable CDN for real-time
+  perspective: 'published',
+});
 ```
 
-### Phase 7: Add Locale Support (Optional)
+### Environment Variables
 
-If you need bilingual support in Figma Make, update NavigationProvider:
+**File**: `.env.local`
 
-```typescript
-// Update NavigationProvider.tsx
-interface NavigationContextType {
-  currentPage: string;
-  setCurrentPage: (page: string) => void;
-  locale: string; // Add this
-  setLocale: (locale: string) => void; // Add this
-}
-
-export function NavigationProvider({ children }: { children: ReactNode }) {
-  const [currentPage, setCurrentPage] = useState('home');
-  const [locale, setLocale] = useState('en'); // Add this
-
-  return (
-    <NavigationContext.Provider value={{ 
-      currentPage, 
-      setCurrentPage,
-      locale, // Add this
-      setLocale // Add this
-    }}>
-      {children}
-    </NavigationContext.Provider>
-  );
-}
-
-// Then use in Leaderboard:
-const { locale } = useNavigation();
-return <Leaderboard locale={locale} />;
+```bash
+# Sanity Configuration
+NEXT_PUBLIC_SANITY_PROJECT_ID=your_project_id
+NEXT_PUBLIC_SANITY_DATASET=production
+SANITY_API_TOKEN=your_api_token_here
 ```
 
 ---
 
-## 🎨 Sanity Integration
+## Testing Checklist
 
-### Sanity Schemas (MAJOR CHANGES REQUIRED!)
+### Before Going Live
 
-⚠️ **IMPORTANT**: The Sanity schema needs to be completely restructured. Remove all unnecessary fields and add the new `watchTimeDisplay` field.
+- [ ] **Sanity Schema Updated**
+  - [ ] Old fields removed (avatar, badge, etc.)
+  - [ ] New `watchTimeDisplay` field added
+  - [ ] Validation rules working
+  - [ ] Preview in Sanity Studio shows correct data
 
-#### leaderboardEntry.ts (NEW SIMPLIFIED SCHEMA)
+- [ ] **Data Migration Complete**
+  - [ ] All existing entries converted to new format
+  - [ ] Watch time format correct: "X Days, Y Hours, Z Minutes"
+  - [ ] `watchTimeHours` calculated correctly
+  - [ ] No data loss verified
 
-```typescript
-// NEW SCHEMA - Simplified to only essential fields
-export default {
-  name: 'leaderboardEntry',
-  title: 'Leaderboard Entry',
-  type: 'document',
-  fields: [
-    {
-      name: 'place',
-      title: 'Place/Rank',
-      type: 'number',
-      validation: Rule => Rule.required().min(1).max(100),
-      description: 'Viewer rank position (1-10 for top viewers)'
-    },
-    {
-      name: 'viewerName',
-      title: 'Viewer Name',
-      type: 'string',
-      validation: Rule => Rule.required().min(2).max(50),
-      description: 'Display name of the viewer'
-    },
-    {
-      name: 'watchTimeDisplay',
-      title: 'Watch Time (Display)',
-      type: 'string',
-      validation: Rule => Rule.required(),
-      description: 'Formatted watch time display (e.g., "2 Days, 5 Hours, 30 Minutes")',
-      placeholder: '2 Days, 5 Hours, 30 Minutes'
-    },
-    {
-      name: 'watchTimeHours',
-      title: 'Watch Time (Hours)',
-      type: 'number',
-      validation: Rule => Rule.required().min(0),
-      description: 'Total watch time in hours (for sorting). Calculate: Days*24 + Hours + Minutes/60'
-    },
-    {
-      name: 'isActive',
-      title: 'Active',
-      type: 'boolean',
-      initialValue: true,
-      description: 'Show/hide this entry on the leaderboard'
-    }
-  ],
-  orderings: [
-    {
-      title: 'Place (Ascending)',
-      name: 'placeAsc',
-      by: [{ field: 'place', direction: 'asc' }]
-    },
-    {
-      title: 'Watch Time (Descending)',
-      name: 'watchTimeDesc',
-      by: [{ field: 'watchTimeHours', direction: 'desc' }]
-    }
-  ],
-  preview: {
-    select: {
-      place: 'place',
-      title: 'viewerName',
-      watchTimeDisplay: 'watchTimeDisplay',
-      watchTimeHours: 'watchTimeHours',
-      isActive: 'isActive'
-    },
-    prepare({ place, title, watchTimeDisplay, watchTimeHours, isActive }) {
-      return {
-        title: `#${place} - ${title}`,
-        subtitle: `${watchTimeDisplay} (${watchTimeHours}h total)`,
-        media: undefined, // No avatar in new design
-        description: isActive ? 'Active' : 'Hidden'
-      }
-    }
-  }
-}
-```
+- [ ] **Component Testing**
+  - [ ] Leaderboard loads without errors
+  - [ ] Data displays correctly (rank, name, watch time)
+  - [ ] "How to Win Prizes" section visible
+  - [ ] "Watch Aca on Kick" button works (opens correct URL)
+  - [ ] Prize cards display correctly
+  - [ ] Responsive on mobile and desktop
+  - [ ] Loading state shows properly
+  - [ ] Error state shows when Sanity is down
 
-#### Migration Steps for Existing Data
+- [ ] **Real-time Updates**
+  - [ ] Add new entry in Sanity → appears on site
+  - [ ] Update existing entry → changes reflect on site
+  - [ ] Set `isActive: false` → entry disappears
+  - [ ] Polling interval working (if implemented)
 
-If you have existing entries in Sanity, you'll need to migrate them:
+- [ ] **Performance**
+  - [ ] Page loads in < 2 seconds
+  - [ ] No console errors
+  - [ ] Images optimized
+  - [ ] Animations smooth (60fps)
 
-```typescript
-// Migration script (run in Sanity Vision or as a migration)
-// This converts old data to new format
-
-// Example: Convert existing entries
-const oldEntry = {
-  place: 1,
-  viewerName: "SrpskiVojnik",
-  watchTimeHours: 1247,
-  daysWatched: 156,
-  avgDaily: 8.0,
-  // ... other old fields
-};
-
-// Calculate new format
-const days = Math.floor(oldEntry.watchTimeHours / 24);
-const hours = Math.floor(oldEntry.watchTimeHours % 24);
-const minutes = Math.round((oldEntry.watchTimeHours % 1) * 60);
-
-const newEntry = {
-  place: oldEntry.place,
-  viewerName: oldEntry.viewerName,
-  watchTimeDisplay: `${days} Days, ${hours} Hours, ${minutes} Minutes`,
-  watchTimeHours: oldEntry.watchTimeHours,
-  isActive: true
-};
-
-// Delete old fields: avatarEmoji, avatar, daysWatched, avgDaily, badge, change, watchtime
-```
-
-#### Helper Function for Admins
-
-Create a custom input component in Sanity Studio to help admins calculate `watchTimeHours`:
-
-```typescript
-// sanity/components/WatchTimeInput.tsx
-import { StringInput, NumberInput } from '@sanity/ui';
-import { useCallback } from 'react';
-
-export function WatchTimeInput(props) {
-  const { value, onChange } = props;
-  
-  const calculateHours = useCallback((displayValue: string) => {
-    // Parse "X Days, Y Hours, Z Minutes"
-    const match = displayValue.match(/(\d+)\s*Days?,\s*(\d+)\s*Hours?,\s*(\d+)\s*Minutes?/i);
-    if (match) {
-      const days = parseInt(match[1]) || 0;
-      const hours = parseInt(match[2]) || 0;
-      const minutes = parseInt(match[3]) || 0;
-      return days * 24 + hours + minutes / 60;
-    }
-    return 0;
-  }, []);
-  
-  return (
-    <div>
-      <StringInput {...props} />
-      <p style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
-        Format: "X Days, Y Hours, Z Minutes"
-        {value && ` (${calculateHours(value).toFixed(2)} total hours)`}
-      </p>
-    </div>
-  );
-}
-
-// Register in sanity.config.ts
-// ...
-fields: [
-  {
-    name: 'watchTimeDisplay',
-    type: 'string',
-    components: {
-      input: WatchTimeInput
-    }
-  }
-]
-```
-
-#### tournamentPrize.ts
-```typescript
-// KEEP AS IS - Already perfect
-export default {
-  name: 'tournamentPrize',
-  title: 'Tournament Prize',
-  type: 'document',
-  fields: [
-    { name: 'prizeNumber', type: 'number', validation: Rule => Rule.required().min(1).max(4) },
-    { name: 'prizeImage', type: 'image', validation: Rule => Rule.required() },
-    { 
-      name: 'prizeTitle', 
-      type: 'object',
-      fields: [
-        { name: 'en', type: 'string', title: 'English' },
-        { name: 'sr', type: 'string', title: 'Serbian' }
-      ]
-    },
-    { 
-      name: 'prizeDescription', 
-      type: 'object',
-      fields: [
-        { name: 'en', type: 'text', title: 'English' },
-        { name: 'sr', type: 'text', title: 'Serbian' }
-      ]
-    },
-    { name: 'order', type: 'number', initialValue: 1 },
-    { name: 'isActive', type: 'boolean', initialValue: true }
-  ]
-}
-```
-
-#### leaderboardSettings.ts
-```typescript
-// KEEP AS IS - Already perfect
-export default {
-  name: 'leaderboardSettings',
-  title: 'Leaderboard Settings',
-  type: 'document',
-  fields: [
-    {
-      name: 'pageTitle',
-      type: 'object',
-      fields: [
-        { name: 'en', type: 'string', initialValue: 'Top Viewers' },
-        { name: 'sr', type: 'string', initialValue: 'Najbolji Gledaoci' }
-      ]
-    },
-    {
-      name: 'pageSubtitle',
-      type: 'object',
-      fields: [
-        { name: 'en', type: 'text' },
-        { name: 'sr', type: 'text' }
-      ]
-    },
-    { name: 'isActive', type: 'boolean', initialValue: true }
-  ]
-}
-```
-
-### Image Handling with Sanity CDN
-
-```typescript
-import imageUrlBuilder from '@sanity/image-url';
-import { sanityClient } from '@/lib/sanity';
-
-const builder = imageUrlBuilder(sanityClient);
-
-export function getImageUrl(source: any): string {
-  if (!source) return '';
-  
-  return builder
-    .image(source)
-    .width(800)         // Optimal for prize cards
-    .height(600)        // Maintain aspect ratio
-    .quality(80)        // Balance quality/performance
-    .auto('format')     // Auto WebP/AVIF
-    .fit('crop')        // Crop to fill
-    .crop('center')     // Center crop
-    .url();
-}
-```
+- [ ] **SEO & Accessibility**
+  - [ ] Page title set correctly
+  - [ ] Meta description added
+  - [ ] Heading hierarchy correct (h1 → h2 → h3)
+  - [ ] Links have proper `rel="noopener noreferrer"`
+  - [ ] Color contrast meets WCAG standards
 
 ---
 
-## 🏆 Prize Cards System
+## Troubleshooting
 
-### Prize Display Logic
+### Issue: Leaderboard not loading
 
-```typescript
-// Map prize numbers to visual styling
-const getPrizeGradient = (index: number) => {
-  const gradients = [
-    'from-yellow-500/20 to-amber-600/20',     // 1st - Gold
-    'from-gray-400/20 to-slate-500/20',       // 2nd - Silver
-    'from-amber-600/20 to-orange-700/20',     // 3rd - Bronze
-    'from-green-500/20 to-emerald-600/20'     // 4th - Green
-  ];
-  return gradients[index] || gradients[3];
-};
+**Symptoms**: Loading spinner shows forever, or "Failed to load" error
 
-const getPrizeBorder = (index: number) => {
-  const borders = [
-    'border-yellow-500/40',    // 1st
-    'border-gray-400/40',      // 2nd
-    'border-amber-600/40',     // 3rd
-    'border-green-500/40'      // 4th
-  ];
-  return borders[index] || borders[3];
-};
-```
-
-### Responsive Prize Grid
-
-```typescript
-// Prize cards grid
-<div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-  {prizes.map((prize, index) => (
-    <PrizeCard 
-      key={prize._id}
-      prize={prize}
-      index={index}
-      locale={locale}
-    />
-  ))}
-</div>
-```
-
----
-
-## 🌐 Bilingual Support
-
-### Translation Strategy
-
-Your current implementation uses `next-intl`, but in Figma Make, you'll need a simpler approach:
-
-#### Option 1: Props-based (Recommended for Figma Make)
-
-```typescript
-interface LeaderboardProps {
-  locale?: 'en' | 'sr';
-}
-
-export function Leaderboard({ locale = 'en' }: LeaderboardProps) {
-  const getText = (textObj: { en: string; sr: string } | undefined) => {
-    if (!textObj) return '';
-    return locale === 'sr' ? textObj.sr : textObj.en;
-  };
-
-  return (
-    <>
-      <h1>{getText(settings?.pageTitle)}</h1>
-      <p>{getText(settings?.pageSubtitle)}</p>
-      <p>{getText(prize.prizeTitle)}</p>
-    </>
-  );
-}
-```
-
-#### Option 2: Context-based (If you need app-wide translations)
-
-```typescript
-// Create TranslationProvider.tsx
-import { createContext, useContext, useState } from 'react';
-
-type Locale = 'en' | 'sr';
-
-interface TranslationContextType {
-  locale: Locale;
-  setLocale: (locale: Locale) => void;
-  t: (key: string) => string;
-}
-
-const translations = {
-  en: {
-    'leaderboard.title': 'Top Viewers',
-    'leaderboard.watchTime': 'watch time',
-    'leaderboard.cta': 'Want to see your name here?',
-    'leaderboard.button': 'Watch Aca on Kick',
-  },
-  sr: {
-    'leaderboard.title': 'Najbolji Gledaoci',
-    'leaderboard.watchTime': 'vreme gledanja',
-    'leaderboard.cta': 'Želite da vidite svoje ime ovde?',
-    'leaderboard.button': 'Gledaj Acu na Kick-u',
-  }
-};
-
-const TranslationContext = createContext<TranslationContextType | null>(null);
-
-export function TranslationProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocale] = useState<Locale>('en');
-
-  const t = (key: string) => {
-    return translations[locale][key] || key;
-  };
-
-  return (
-    <TranslationContext.Provider value={{ locale, setLocale, t }}>
-      {children}
-    </TranslationContext.Provider>
-  );
-}
-
-export function useTranslation() {
-  const context = useContext(TranslationContext);
-  if (!context) throw new Error('useTranslation must be used within TranslationProvider');
-  return context;
-}
-```
-
-### Static Text Translations
-
-```typescript
-// For text not from Sanity
-const staticTexts = {
-  en: {
-    watchTime: 'watch time',
-    loading: 'Loading leaderboard...',
-    error: 'Failed to load leaderboard. Please try again later.',
-    cta: 'Want to see your name here?',
-    button: 'Watch Aca on Kick',
-    place: (n: number) => {
-      if (n === 1) return '1st Place';
-      if (n === 2) return '2nd Place';
-      if (n === 3) return '3rd Place';
-      return `${n}th Place`;
-    }
-  },
-  sr: {
-    watchTime: 'vreme gledanja',
-    loading: 'Učitavanje rang liste...',
-    error: 'Greška pri učitavanju. Pokušajte ponovo kasnije.',
-    cta: 'Želite da vidite svoje ime ovde?',
-    button: 'Gledaj Acu na Kick-u',
-    place: (n: number) => `${n}. Mesto`
-  }
-};
-```
-
----
-
-## 🧭 Navigation Integration
-
-### Current Navigation Setup
-
-Your Figma Make prototype already has perfect navigation:
-
-```typescript
-// NavigationProvider.tsx - Already implemented!
-export function NavigationProvider({ children }: { children: ReactNode }) {
-  const [currentPage, setCurrentPage] = useState('home');
-
-  return (
-    <NavigationContext.Provider value={{ currentPage, setCurrentPage }}>
-      {children}
-    </NavigationContext.Provider>
-  );
-}
-
-// MiddleBar.tsx - Already has leaderboard button!
-<button
-  onClick={() => handleNavigation('leaderboard')}
-  className={/* ... styling ... */}
->
-  <Trophy size={24} />
-  <span>Rang Lista</span>
-</button>
-```
-
-### No Changes Needed!
-
-✅ Navigation already works
-✅ Leaderboard route already defined in App.tsx
-✅ MiddleBar already has Trophy button
-✅ Active state tracking already implemented
-
----
-
-## ✅ Testing Checklist
-
-### Data Fetching
-
-- [ ] Sanity client connects successfully
-- [ ] Environment variables loaded correctly
-- [ ] Leaderboard entries query returns data
-- [ ] Prize cards query returns data
-- [ ] Settings query returns data
-- [ ] Image URLs generated correctly from Sanity CDN
-- [ ] `isActive: true` filter works correctly
-- [ ] Data sorted by `place` in ascending order
-
-### Visual Testing
-
-- [ ] **Top 3 Special Icons**: Crown for 1st, Silver medal for 2nd, Bronze medal for 3rd
-- [ ] **Regular Ranks**: #4, #5, etc. display correctly
-- [ ] **Viewer Names**: Display without truncation (or truncate elegantly)
-- [ ] **Watch Time**: Formatted with commas (e.g., "1,247h")
-- [ ] **Prize Cards**: Display in 2x2 grid on mobile, 1x4 on desktop
-- [ ] **Prize Images**: Load from Sanity CDN
-- [ ] **Gradient Backgrounds**: Correct colors for each rank (gold, silver, bronze, regular)
-- [ ] **Border Styling**: Matches ContentGrid aesthetic (amber borders)
-
-### Responsive Testing
-
-#### Mobile (375px - 768px)
-- [ ] 2 columns for prize cards
-- [ ] Compact leaderboard entries (smaller text/icons)
-- [ ] Icons: 28px for top 3, text-2xl for numbers
-- [ ] Watch time: text-lg
-- [ ] Padding: px-4, py-3
-- [ ] No horizontal scroll
-
-#### Desktop (1200px+)
-- [ ] 4 columns for prize cards
-- [ ] Larger leaderboard entries
-- [ ] Icons: 32px for top 3, text-3xl for numbers
-- [ ] Watch time: text-2xl
-- [ ] Padding: px-8, py-5
-- [ ] Max-width: 57.6rem (921.6px)
-
-### Functional Testing
-
-- [ ] **Navigation**: Trophy button in MiddleBar navigates to leaderboard
-- [ ] **Back Navigation**: Can return to home page
-- [ ] **Loading State**: Shows loading message during fetch
-- [ ] **Error State**: Shows error message if fetch fails
-- [ ] **Empty State**: Handles no data gracefully
-- [ ] **External Link**: "Watch Aca on Kick" button opens https://kick.com/acajankovic
-- [ ] **Hover Effects**: Cards lift and glow on hover
-- [ ] **Animations**: Staggered entry animations work smoothly
-
-### Bilingual Testing (if implemented)
-
-- [ ] Locale switches correctly (EN ↔ SR)
-- [ ] Page title translates
-- [ ] Page subtitle translates
-- [ ] Prize titles translate
-- [ ] CTA text translates
-- [ ] Button text translates
-- [ ] "watch time" label translates
-- [ ] Loading/error messages translate
-
-### Data Integrity
-
-- [ ] All 10 entries display (if available)
-- [ ] Entries sorted by place (1-10)
-- [ ] No duplicate ranks
-- [ ] No missing watch times
-- [ ] Prize cards match prize numbers (1-4)
-- [ ] Inactive entries excluded
-
-### Performance Testing
-
-- [ ] Initial load < 2 seconds
-- [ ] Images lazy load properly
-- [ ] No layout shift on data load
-- [ ] Smooth animations (60fps)
-- [ ] No console errors
-- [ ] Sanity CDN images load quickly
-
-### Browser Testing
-
-- [ ] Chrome/Edge (latest)
-- [ ] Firefox (latest)
-- [ ] Safari (macOS and iOS)
-- [ ] Mobile browsers (Chrome, Safari)
-
-### Accessibility
-
-- [ ] Semantic HTML structure
-- [ ] Heading hierarchy (h1 → h2 → h3)
-- [ ] Alt text for prize images
-- [ ] Sufficient color contrast
-- [ ] Keyboard navigation works
-- [ ] Screen reader friendly
-
----
-
-## 🐛 Troubleshooting
-
-### Issue: "Failed to load leaderboard"
-
-**Possible Causes:**
+**Possible Causes**:
 1. Sanity client not configured
-2. Environment variables missing
-3. GROQ query syntax error
-4. Network/CORS issues
+2. Wrong project ID or dataset
+3. Network/CORS issues
+4. No active entries in Sanity
 
-**Solutions:**
+**Solutions**:
 
 ```typescript
-// 1. Verify Sanity client config
+// 1. Check environment variables
 console.log('Sanity Config:', {
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION
 });
 
-// 2. Test connection manually
-import { sanityClient } from '@/lib/sanity';
+// 2. Test query in Sanity Vision
+*[_type == "leaderboardEntry" && isActive == true] | order(place asc) [0...10]
 
-sanityClient.fetch('*[_type == "leaderboardEntry"][0]')
-  .then(data => console.log('Test query result:', data))
-  .catch(err => console.error('Test query error:', err));
+// 3. Check CORS settings in Sanity
+// Go to: https://www.sanity.io/manage
+// Project Settings → API → CORS Origins
+// Add your domain (e.g., http://localhost:3000)
 
-// 3. Check GROQ query in Sanity Studio
-// Go to Vision tool: https://your-project.sanity.studio/vision
-// Paste your query and test directly
-
-// 4. Enable detailed error logging
-try {
-  const data = await sanityClient.fetch(leaderboardQuery);
-  console.log('Fetched data:', data);
-} catch (error) {
-  console.error('Fetch error details:', {
-    message: error.message,
-    stack: error.stack,
-    query: leaderboardQuery
-  });
-}
-```
-
-### Issue: Prize images not loading
-
-**Possible Causes:**
-1. Image URL builder not configured
-2. Sanity CDN CORS issues
-3. Invalid image references in Sanity
-
-**Solutions:**
-
-```typescript
-// 1. Verify image URL generation
-import { getImageUrl } from '@/utils/sanityQueries';
-
-console.log('Generated URL:', getImageUrl(prize.prizeImage));
-// Should output: https://cdn.sanity.io/images/1s30e0de/production/...
-
-// 2. Check if image exists in Sanity
-const prize = await sanityClient.fetch(`
-  *[_type == "tournamentPrize"][0] {
-    _id,
-    prizeImage {
-      asset->{
-        _id,
-        url
-      }
-    }
-  }
-`);
-console.log('Prize image data:', prize);
-
-// 3. Use ImageWithFallback component (already provided)
-<ImageWithFallback
-  src={getImageUrl(prize.prizeImage)}
-  alt={getText(prize.prizeTitle)}
-  className="w-full h-full object-cover"
-/>
-```
-
-### Issue: Data not updating
-
-**Possible Causes:**
-1. Sanity CDN caching
-2. Component not re-fetching
-3. `isActive: false` entries
-4. Schema migration not complete
-
-**Solutions:**
-
-```typescript
-// 1. Disable CDN for development
-export const sanityClient = createClient({
-  projectId: '1s30e0de',
-  dataset: 'production',
-  apiVersion: '2024-01-01',
-  useCdn: false, // Set to false for development
-});
-
-// 2. Force re-fetch on mount
-useEffect(() => {
-  fetchLeaderboardData().then(setData);
-}, []); // Empty deps array ensures single fetch
-
-// 3. Check Sanity Studio
-// Verify entries have isActive: true in Sanity Studio
-
-// 4. Verify new schema fields exist
-const testEntry = await sanityClient.fetch(`
-  *[_type == "leaderboardEntry"][0] {
-    _id,
-    place,
-    viewerName,
-    watchTimeDisplay,
-    watchTimeHours
-  }
-`);
-console.log('Test entry:', testEntry);
-// Should have watchTimeDisplay field, not old fields
+// 4. Verify data exists
+const count = await sanityClient.fetch(`count(*[_type == "leaderboardEntry" && isActive == true])`);
+console.log('Active entries:', count);
 ```
 
 ### Issue: Watch time format incorrect
 
-**Possible Causes:**
-1. Admin entered wrong format
-2. Old `watchtime` field still being used
-3. Missing `watchTimeDisplay` field
+**Symptoms**: Shows "undefined", "NaN", or wrong format
 
-**Solutions:**
+**Possible Causes**:
+1. Missing `watchTimeDisplay` field
+2. Old data not migrated
+3. Admin entered wrong format
+
+**Solutions**:
 
 ```typescript
-// 1. Validate format in Sanity schema
-{
-  name: 'watchTimeDisplay',
-  type: 'string',
-  validation: Rule => Rule.required().regex(
-    /^\d+\s*Days?,\s*\d+\s*Hours?,\s*\d+\s*Minutes?$/i,
-    'Must be in format: "X Days, Y Hours, Z Minutes"'
-  )
+// 1. Check data in Sanity Vision
+*[_type == "leaderboardEntry"][0] {
+  watchTimeDisplay,
+  watchTimeHours,
+  _updatedAt
 }
 
-// 2. Ensure GROQ query uses correct field
-export const leaderboardQuery = `
-  *[_type == "leaderboardEntry" && isActive == true] | order(place asc) [0...10] {
-    _id,
-    place,
-    viewerName,
-    watchTimeDisplay, // ← Must use this, not 'watchtime'
-    watchTimeHours,
-    isActive
-  }
-`;
+// 2. Add fallback in query
+"watchTimeDisplay": coalesce(watchTimeDisplay, "0 Days, 0 Hours, 0 Minutes")
 
-// 3. Check data in component
-console.log('Entry data:', entry);
-// Should have: { watchTimeDisplay: "2 Days, 5 Hours, 30 Minutes" }
-// NOT: { watchtime: "245 hours" }
+// 3. Validate format in component
+if (!/^\d+ Days?, \d+ Hours?, \d+ Minutes?$/.test(entry.watchTimeDisplay)) {
+  console.warn('Invalid watch time format:', entry.watchTimeDisplay);
+}
 ```
 
-### Issue: Bilingual text not switching
+### Issue: "How to Win Prizes" section not showing
 
-**Possible Causes:**
-1. Locale not passed to component
-2. `getText()` function not working
-3. Missing translations in Sanity
+**Symptoms**: Section missing or layout broken
 
-**Solutions:**
+**Possible Causes**:
+1. Component code not updated
+2. Tailwind classes not applied
+3. Motion.js animation issues
+
+**Solutions**:
 
 ```typescript
-// 1. Debug locale value
-console.log('Current locale:', locale);
+// 1. Check component structure
+// Ensure <motion.div> for "How to Win" section is present
+// Between page header and prize cards
 
-// 2. Debug getText function
-const getText = (textObj: { en: string; sr: string } | undefined) => {
-  console.log('getText input:', textObj, 'locale:', locale);
-  if (!textObj) return '';
-  return locale === 'sr' ? textObj.sr : textObj.en;
-};
+// 2. Verify Tailwind classes
+// Run: npm run build
+// Check for any Tailwind purge issues
 
-// 3. Verify Sanity data structure
-const settings = await sanityClient.fetch(`
-  *[_type == "leaderboardSettings"][0] {
-    pageTitle {
-      en,
-      sr
-    }
-  }
-`);
-console.log('Settings structure:', settings);
+// 3. Test without animations
+// Remove motion.div temporarily, use regular div
+<div className="mb-8 bg-gradient-to-br from-amber-500/10...">
 ```
 
-### Issue: Animations janky/slow
+### Issue: Kick button not working
 
-**Possible Causes:**
-1. Too many simultaneous animations
-2. Large images not optimized
-3. Hardware acceleration disabled
+**Symptoms**: Button doesn't open Kick, or opens wrong URL
 
-**Solutions:**
+**Solutions**:
 
 ```typescript
-// 1. Reduce animation complexity
-<motion.div
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ 
-    duration: 0.3, // Faster
-    delay: index * 0.03 // Shorter delays
-  }}
+// Check link attributes
+<a 
+  href="https://kick.com/acajankovic"  // ← Verify this URL
+  target="_blank"                       // ← Opens in new tab
+  rel="noopener noreferrer"             // ← Security
+  className="..."
 >
+  Watch Aca on Kick
+</a>
 
-// 2. Optimize images
-export function getImageUrl(source: any): string {
-  return builder
-    .image(source)
-    .width(800)       // Smaller size
-    .quality(70)      // Lower quality
-    .format('webp')   // Modern format
-    .url();
-}
-
-// 3. Enable will-change for better performance
-className="... will-change-transform"
+// Test in browser console
+window.open('https://kick.com/acajankovic', '_blank');
 ```
 
-### Issue: Navigation not working
+### Issue: Real-time updates not working
 
-**Possible Causes:**
-1. NavigationProvider not wrapping App
-2. useNavigation hook not available
-3. currentPage state not updating
+**Symptoms**: New entries don't show without refresh
 
-**Solutions:**
+**Solutions**:
 
 ```typescript
-// 1. Verify App.tsx structure
-export default function App() {
-  return (
-    <NavigationProvider> {/* Must wrap everything */}
-      <AppContent />
-    </NavigationProvider>
-  );
-}
+// 1. Disable CDN for development
+useCdn: false
 
-// 2. Debug navigation state
-const { currentPage, setCurrentPage } = useNavigation();
-console.log('Current page:', currentPage);
+// 2. Implement webhooks (advanced)
+// Sanity webhook → API route → revalidate
 
-// 3. Test navigation manually
-<button onClick={() => {
-  console.log('Navigating to leaderboard...');
-  setCurrentPage('leaderboard');
-}}>
-  Go to Leaderboard
-</button>
+// 3. Use Sanity Real-time (GROQ Listen)
+import { listen } from '@sanity/client';
+
+const subscription = sanityClient
+  .listen(leaderboardQuery)
+  .subscribe((update) => {
+    console.log('Leaderboard updated:', update);
+    // Refetch data
+  });
+
+// Cleanup
+return () => subscription.unsubscribe();
 ```
 
----
+### Issue: Migration script fails
 
-## 📚 Additional Resources
+**Symptoms**: Error when running migration script
 
-### Important Files to Review
-
-**In Your Actual Project:**
-1. `app/[locale]/leaderboard/page.tsx` - Current implementation
-2. `sanity/schemas/leaderboardEntry.ts` - Entry schema
-3. `sanity/schemas/tournamentPrize.ts` - Prize schema
-4. `sanity/schemas/leaderboardSettings.ts` - Settings schema
-5. `lib/sanity.ts` - Sanity client setup
-6. `.env.local` - Environment variables
-
-**In Figma Make Prototype:**
-1. `/components/pages/Leaderboard.tsx` - New implementation
-2. `/components/NavigationProvider.tsx` - Navigation system
-3. `/App.tsx` - Root component
-4. `/utils/sanityQueries.ts` - Query utilities (to be created)
-5. `/lib/sanity.ts` - Sanity client (to be created)
-
-### Useful Commands
+**Solutions**:
 
 ```bash
-# Install Sanity packages
-npm install next-sanity @sanity/client @sanity/image-url
+# 1. Check Sanity token permissions
+# Token needs "Editor" or "Administrator" role
 
-# Type check
-npm run type-check
+# 2. Run with verbose logging
+sanity exec migrations/migrateLeaderboardData.ts --with-user-token --verbose
 
-# Build and test
-npm run build
-npm run dev
+# 3. Test on single document first
+const testEntry = await client.fetch(`*[_type == "leaderboardEntry"][0]`);
+console.log('Test entry:', testEntry);
 
-# Sanity Studio commands (in your main project)
-cd sanity  # Or wherever your Sanity studio is
-npx sanity start  # Start Sanity Studio
-npx sanity deploy  # Deploy Sanity Studio
-npx sanity graphql deploy  # Deploy GraphQL API (if using)
+# 4. Backup before migration
+sanity dataset export production backup-$(date +%Y%m%d).tar.gz
 ```
 
-### Migration Timeline
+---
 
-**Estimated Time: 4-6 hours**
+## Summary
 
-- **Phase 1** (Understanding): 30 minutes
-- **Phase 2** (Environment setup): 30 minutes  
-- **Phase 3** (Data utilities): 1 hour
-- **Phase 4** (Custom hook): 30 minutes
-- **Phase 5** (Component update): 1.5 hours
-- **Phase 6** (Navigation): 15 minutes (already done!)
-- **Phase 7** (Bilingual): 30 minutes (optional)
-- **Testing**: 1-2 hours
-- **Bug fixes**: 30-60 minutes
+### Key Changes in This Implementation
+
+1. ✅ **New "How to Win Prizes" Section**
+   - Explains how viewers earn prizes
+   - Includes "Watch Aca on Kick" button
+   - Static content (no Sanity needed)
+
+2. ✅ **Simplified Sanity Schema**
+   - Only 5 fields: `place`, `viewerName`, `watchTimeDisplay`, `watchTimeHours`, `isActive`
+   - Removed 7 unused fields: avatar, badge, daysWatched, etc.
+
+3. ✅ **New Watch Time Format**
+   - Admin enters: "X Days, Y Hours, Z Minutes"
+   - Displayed exactly as entered
+   - Numeric `watchTimeHours` for sorting
+
+4. ✅ **Improved Visual Hierarchy**
+   - Header → How to Win → Prize Cards → Leaderboard
+   - Better spacing and transitions
+   - Responsive design (mobile & desktop)
+
+### What Claude/Developer Should Do
+
+1. **Update Sanity schema** (`leaderboardEntry.ts`)
+2. **Run data migration** (convert old format to new)
+3. **Replace Leaderboard component** (use provided code)
+4. **Test thoroughly** (use checklist)
+5. **Deploy to production**
+
+### Important Notes
+
+- ⚠️ **Backup data before migration** - Schema changes are destructive
+- 💡 **Test in development first** - Use a staging dataset
+- 🔄 **Disable CDN during testing** - For real-time updates
+- 🎨 **Keep static content static** - Don't put simple text in Sanity
+- 📱 **Test on mobile** - Responsive design is critical
 
 ---
 
-## 🎯 Quick Start Summary
+## Additional Resources
 
-For developers who want to migrate quickly:
-
-### Minimal Steps
-
-1. **Copy Sanity utilities** from your actual project:
-   - `lib/sanity.ts` → Figma Make `/lib/sanity.ts`
-   - `.env.local` environment variables
-
-2. **Create query utilities**:
-   - `/utils/sanityQueries.ts` with GROQ queries and fetch functions
-
-3. **Update Leaderboard component**:
-   - Replace hardcoded data with Sanity fetch
-   - Keep simplified UI (rank, name, watch time only)
-   - Maintain prize cards system
-
-4. **Test thoroughly**:
-   - Data fetching works
-   - Images load from Sanity CDN
-   - Navigation works
-   - Bilingual support works (if needed)
-
-5. **Deploy**:
-   - Verify environment variables in production
-   - Test with real Sanity data
-   - Monitor for errors
+- [Sanity GROQ Query Reference](https://www.sanity.io/docs/groq)
+- [Motion/React Documentation](https://motion.dev/docs/react-quick-start)
+- [Tailwind CSS v4 Documentation](https://tailwindcss.com/docs)
+- [Next.js Data Fetching](https://nextjs.org/docs/app/building-your-application/data-fetching)
 
 ---
 
-## 📝 Notes for Claude Code
-
-When recreating this in the user's Figma Make environment:
-
-### Critical Requirements
-
-1. **Update Sanity Schema**
-   - **CRITICAL**: Remove unnecessary fields from `leaderboardEntry` schema
-   - Add new `watchTimeDisplay` field (string format: "X Days, Y Hours, Z Minutes")
-   - Keep `watchTimeHours` for sorting/calculations
-   - Remove: `avatarEmoji`, `avatar`, `daysWatched`, `avgDaily`, `badge`, `change`, `watchtime`
-   - Migrate existing data to new format
-
-2. **Data Fetching Strategy**
-   - Use direct `client.fetch()` calls (no React Query/SWR needed)
-   - Implement loading and error states
-   - Handle empty data gracefully
-
-3. **Display Only Essential Fields**
-   - Show: rank, viewer name, watch time (formatted display)
-   - Sanity schema only contains essential fields (no hidden/unused fields)
-   - Watch time displayed as: "X Days, Y Hours, Z Minutes"
-
-4. **Maintain Existing Features**
-   - Prize cards system (4 prizes)
-   - Bilingual support (EN/SR)
-   - Navigation via NavigationProvider
-   - Footer with CTA
-   - Loading/error states
-
-5. **Match ContentGrid Aesthetic**
-   - Amber/gold gradient borders
-   - Hover effects (scale, shadow)
-   - Consistent spacing and padding
-   - Responsive design (mobile/desktop)
-
-6. **Image Optimization**
-   - Use `@sanity/image-url` builder
-   - Optimize dimensions (800x600 for prizes)
-   - Enable auto-format (WebP/AVIF)
-   - Use ImageWithFallback component
-
-7. **Type Safety**
-   - Define clear TypeScript interfaces
-   - Handle optional fields
-   - Type Sanity query responses
-
-8. **Error Handling**
-   - Graceful degradation
-   - Meaningful error messages
-   - Console logging for debugging
-
-9. **Performance**
-   - Lazy load images
-   - Optimize animations
-   - Minimize re-renders
-
-10. **Testing**
-    - Verify all data fetching
-    - Test responsive design
-    - Check bilingual support
-    - Validate navigation
-
-### Success Criteria
-
-✅ Leaderboard displays top 10 viewers from Sanity
-✅ Only shows place, name, and watch time
-✅ Prize cards display correctly with Sanity images
-✅ Navigation works from MiddleBar Trophy button
-✅ Responsive design matches ContentGrid
-✅ Bilingual support works (EN/SR)
-✅ Loading and error states handled
-✅ No regressions in existing functionality
-✅ Matches new simplified design aesthetic
-
----
-
-## 🚀 Post-Migration Enhancements
-
-After successful migration, consider these improvements:
-
-### Short-term Enhancements
-
-1. **Real-time Updates**
-   - Implement polling (refresh every 30 seconds)
-   - Add "Updated X minutes ago" timestamp
-   - Animate position changes
-
-2. **Enhanced Prize Display**
-   - Add prize descriptions on hover
-   - Prize value/details modal
-   - Countdown to prize distribution
-
-3. **Loading Skeleton**
-   - Replace text loading with skeleton cards
-   - Smoother perceived performance
-
-4. **Search/Filter**
-   - Search by viewer name
-   - Filter by rank range
-   - Export leaderboard data
-
-### Long-term Enhancements
-
-1. **Botrix API Integration**
-   - Fetch live data from https://botrix.live/k/acajankovic/leaderboard
-   - Automatic Sanity sync
-   - Real-time updates
-
-2. **Historical Data**
-   - Track viewer progress over time
-   - Monthly leaderboards
-   - Achievement badges
-
-3. **User Profiles**
-   - Click viewer for detailed stats
-   - Viewer achievements and milestones
-   - Personal leaderboard history
-
-4. **Analytics**
-   - Track most viewed leaderboard entries
-   - Prize interest analytics
-   - Engagement metrics
-
-5. **Admin Dashboard**
-   - Bulk edit entries
-   - Preview before publish
-   - Analytics overview
-
----
-
-**Version:** 1.0  
-**Last Updated:** January 2025  
-**Maintainer:** Aca Jankovic Casino Website Team
-
-**Note:** This guide assumes you're migrating from a fully functional Next.js implementation with Sanity CMS to the Figma Make prototype environment. All Sanity schemas, queries, and data remain unchanged - only the UI component is being redesigned.
-
+**Last Updated**: January 2025  
+**Version**: 2.0 (Complete Implementation with "How to Win" section)
