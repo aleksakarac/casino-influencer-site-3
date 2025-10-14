@@ -27,8 +27,22 @@ export default function Header() {
           className="flex items-center space-x-2 cursor-pointer"
           onClick={scrollToTop}
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-amber-400 to-yellow-600 flex items-center justify-center shadow-lg">
-            <span className="text-xl">🎰</span>
+          <div className="w-10 h-10 rounded-lg overflow-hidden shadow-lg bg-gradient-to-br from-amber-400 to-yellow-600 flex items-center justify-center">
+            <img
+              src="/logoaca.png"
+              alt="Aca Jankovic Logo"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.currentTarget.style.display = 'none';
+                const parent = e.currentTarget.parentElement;
+                if (parent && !parent.querySelector('span')) {
+                  const fallback = document.createElement('span');
+                  fallback.className = 'text-xl';
+                  fallback.textContent = '🎰';
+                  parent.appendChild(fallback);
+                }
+              }}
+            />
           </div>
           <h1 className="text-2xl font-bold bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent">
             Aca Jankovic

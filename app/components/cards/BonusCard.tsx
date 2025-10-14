@@ -50,7 +50,7 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
 
   return (
     <div
-      className="relative rounded-xl overflow-hidden aspect-square border hover:scale-105 transition-all duration-300 w-full group"
+      className="relative rounded-xl overflow-hidden aspect-square border hover:scale-105 transition-all duration-300 w-full max-w-[200px] mx-auto group"
       style={{
         borderColor,
         borderWidth: '1px',
@@ -63,15 +63,14 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
       <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/90" />
 
       {/* Icon (Top Left) */}
-      <div className="absolute top-2 left-2 md:top-2 md:left-2 z-10 bg-gradient-to-br from-green-500 to-emerald-600 p-1.5 md:p-1.5 rounded-md shadow-lg">
-        <Gift size={9} className="md:hidden text-white" />
-        <Gift size={10} className="hidden md:block text-white" />
+      <div className="absolute top-2 left-2 z-10 bg-gradient-to-br from-green-500 to-emerald-600 p-2.5 max-[400px]:p-2 rounded-md shadow-lg">
+        <Gift size={16} className="text-white max-[400px]:w-[13px] max-[400px]:h-[13px]" />
       </div>
 
       {/* Tag (Top Right) */}
       {card.tag && (
         <div
-          className="absolute top-2 right-2 md:top-2 md:right-2 px-2 py-0.5 md:px-2.5 md:py-0.5 text-[9px] md:text-[10px] font-bold uppercase shadow-lg z-10 rounded-full border-2 bg-black/30 backdrop-blur-sm"
+          className="absolute top-2 right-2 px-3 py-1 max-[400px]:px-2 max-[400px]:py-0.5 text-[11px] max-[400px]:text-[9px] font-bold uppercase shadow-lg z-10 rounded-full border-2 bg-black/30 backdrop-blur-sm"
           style={{
             borderColor: card.tag.color,
             color: card.tag.color,
@@ -83,56 +82,58 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
 
       {/* Content */}
       <div className="absolute inset-0 flex flex-col justify-end">
-        {/* Bottom Section with Solid Background */}
-        <div className="bg-gradient-to-br from-purple-900/70 to-indigo-950/70 backdrop-blur-sm p-2 space-y-1.5 flex flex-col items-center rounded-b-xl">
+        {/* Gradient overlay from top to bottom of entire card */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/0 via-purple-900/30 via-purple-900/60 to-purple-900/75 rounded-b-xl" />
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/0 via-indigo-950/30 via-indigo-950/60 to-indigo-950/75 rounded-b-xl" />
+        </div>
+
+        {/* Bottom Section with Content */}
+        <div className="relative p-2 space-y-1.5 flex flex-col items-center rounded-b-xl">
+
           {/* Title & Activations */}
-          <div className="w-full text-center mb-1">
-            <h3 className="text-sm md:text-base font-bold text-white leading-tight">
+          <div className="relative w-full text-center mb-1 z-10">
+            <h3 className="text-base font-bold text-white leading-tight">
               {card.title}
             </h3>
-            <p className="text-[9px] md:text-[10px] text-gray-300 mt-0.5">
+            <p className="text-[10px] text-gray-300 mt-0.5">
               {card.activationsCount} Activations
             </p>
           </div>
 
           {/* Code Box and Button Container */}
-          <div className="w-full flex flex-col md:flex-row items-center gap-1.5">
+          <div className="relative w-full flex flex-col items-center gap-1.5 z-10">
             {/* Code Box */}
-            <div className="bg-purple-800/40 backdrop-blur-sm rounded md:rounded px-2 py-1.5 md:py-1.5 flex items-center justify-between w-[80%] md:w-[43%] border border-purple-500/30 h-[24px] md:h-[30px]">
-              <span className="text-white font-mono text-[9px] md:text-[10px] font-bold tracking-wide">
+            <div className="bg-purple-800/60 rounded-xl px-2 py-1.5 flex items-center justify-between w-full max-[400px]:w-[80%] border border-purple-500/30 min-h-[30px] max-[400px]:min-h-[28px]">
+              <span className="text-white font-mono text-[10px] font-bold tracking-wide">
                 {card.bonusCode}
               </span>
               <button
                 onClick={copyCode}
                 disabled={copying}
-                className="text-gray-300 hover:text-green-400 transition-colors ml-1 md:ml-1.5 flex-shrink-0"
+                className="text-gray-300 hover:text-green-400 transition-colors ml-1.5 flex-shrink-0"
                 aria-label="Copy code"
               >
-                {copying ? (
-                  <Check size={10} className="md:hidden" />
-                ) : (
-                  <Copy size={10} className="md:hidden" />
-                )}
-                {copying ? (
-                  <Check size={11} className="hidden md:block" />
-                ) : (
-                  <Copy size={11} className="hidden md:block" />
-                )}
+                {copying ? <Check size={11} /> : <Copy size={11} />}
               </button>
             </div>
 
             {/* Claim Button */}
-            <a
-              href={vavadaLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="flex items-center justify-center w-[72%] md:w-[53%] h-[24px] md:h-[30px] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-[9px] md:text-[10px] font-bold px-2 md:px-3 rounded text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 gap-0.5 md:gap-1"
-            >
-              <Gift size={10} className="md:hidden" />
-              <Gift size={11} className="hidden md:block" />
-              CLAIM BONUS
-            </a>
+            <div className="relative w-full max-[400px]:w-[80%]">
+              {/* Animated border effect */}
+              <div className="absolute -inset-[2px] bg-gradient-to-r from-green-400 via-emerald-500 to-green-400 rounded-xl opacity-75 blur-sm animate-pulse" />
+
+              <a
+                href={vavadaLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="relative flex items-center justify-center w-full min-h-[30px] max-[400px]:min-h-[28px] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-[10px] font-bold px-3 rounded-xl text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 gap-1"
+              >
+                <Gift size={11} />
+                CLAIM BONUS
+              </a>
+            </div>
           </div>
         </div>
       </div>

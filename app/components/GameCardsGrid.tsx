@@ -41,21 +41,11 @@ interface GameCardsGridProps {
 export function GameCardsGrid({ cards, cardConfig, vavadaLink }: GameCardsGridProps) {
   return (
     <section id="games-section" className="pt-8 pb-6">
-      <div className="max-w-7xl mx-auto px-4 lg:px-8">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
-        >
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent mb-2">
-            Featured Games
-          </h2>
-          <p className="text-gray-400">Experience premium casino gaming</p>
-        </motion.div>
-
+      <div className="max-w-5xl mx-auto px-4 lg:px-8">
         {/* Games Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 px-0 md:px-4 lg:px-[20%]">
+        <div
+          className="grid grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(150px,200px))] gap-5 px-0 md:px-4 justify-center"
+        >
           {cards.map((card) => {
             const borderColor =
               card.cardType === 'bonus'
@@ -87,7 +77,7 @@ export function GameCardsGrid({ cards, cardConfig, vavadaLink }: GameCardsGridPr
                 return (
                   <WelcomeCard
                     key={card._id}
-                    card={card as { _id: string; backgroundImage: string; tag?: { name: string; color: string; textColor: string; }; bonusCode: string; benefits: string[]; }}
+                    card={card as { _id: string; backgroundImage: string; bonusCode: string; benefits: string[]; }}
                     borderColor={borderColor}
                     vavadaLink={vavadaLink || '#'}
                   />

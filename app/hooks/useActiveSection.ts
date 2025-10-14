@@ -18,11 +18,11 @@ export function useActiveSection() {
     );
 
     const gamesEl = document.getElementById('games-section');
-    const tournamentsEl = document.getElementById('tournaments-section');
+    const eventsEl = document.getElementById('events');
     const socialEl = document.getElementById('links');
 
     if (gamesEl) observer.observe(gamesEl);
-    if (tournamentsEl) observer.observe(tournamentsEl);
+    if (eventsEl) observer.observe(eventsEl);
     if (socialEl) observer.observe(socialEl);
 
     return () => observer.disconnect();

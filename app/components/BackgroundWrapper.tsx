@@ -27,36 +27,8 @@ export default function BackgroundWrapper({ children }: { children: ReactNode })
 
   return (
     <div className="relative min-h-screen">
-      {/* Vavada-style animated background */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        {/* Base gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0F1729] via-[#1A1F35] to-[#0A0A0A]"></div>
-
-        {/* Animated diagonal streaks */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-transparent via-blue-500/10 to-transparent animate-[slide_20s_linear_infinite]"></div>
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-tl from-transparent via-purple-500/10 to-transparent animate-[slide_30s_linear_infinite]"></div>
-        </div>
-
-        {/* Floating particles */}
-        <div className="absolute inset-0">
-          {particles.map((particle, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-white/20 rounded-full animate-float"
-              style={{
-                left: `${particle.left}%`,
-                top: `${particle.top}%`,
-                animationDelay: `${particle.delay}s`,
-                animationDuration: `${particle.duration}s`,
-              }}
-            ></div>
-          ))}
-        </div>
-
-        {/* Vignette effect */}
-        <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-black/60"></div>
-      </div>
+      {/* Simple gradient background */}
+      <div className="fixed inset-0 -z-10 bg-gradient-to-b from-gray-900 to-black"></div>
 
       {children}
 

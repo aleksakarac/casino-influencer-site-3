@@ -3,6 +3,9 @@
 import { Trophy, Clock, Shield } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useCountdown } from '../hooks/useCountdown';
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { client } from '@/app/lib/sanity';
 
 interface TournamentCardProps {
   name: string;
@@ -15,7 +18,8 @@ interface TournamentCardProps {
   tableType: string;
   endDate: string;
   joinLink: string;
-  tier?: string; // New optional field for badge like "Platinum"
+  tier?: string;
+  index?: number;
 }
 
 export default function TournamentCard({
@@ -30,114 +34,154 @@ export default function TournamentCard({
   endDate,
   joinLink,
   tier = 'Platinum',
+  index = 0,
 }: TournamentCardProps) {
   const t = useTranslations('Tournaments');
   const { days, hours, minutes, seconds, isExpired, isMounted } = useCountdown(endDate);
+  const [vavadaLink, setVavadaLink] = useState<string>('#');
+
+  // Fetch Vavada link from Sanity
+  useEffect(() => {
+    const fetchVavadaLink = async () => {
+      try {
+        const settings = await client.fetch(
+          `*[_type == "siteSettings"][0]{ vavadaRefLink }`
+        );
+        if (settings?.vavadaRefLink) {
+          setVavadaLink(settings.vavadaRefLink);
+        }
+      } catch (error) {
+        console.error('Error fetching Vavada link:', error);
+      }
+    };
+
+    fetchVavadaLink();
+  }, []);
 
   const handleJoin = () => {
-    window.open(joinLink, '_blank');
+    window.open(vavadaLink, '_blank', 'noopener,noreferrer');
+  };
+
+  // Get status badge gradient based on tier
+  const getStatusBadgeClass = (status: string) => {
+    const lower = status.toLowerCase();
+    if (lower.includes('beginner') || lower.includes('bronze')) {
+      return 'from-orange-600 to-amber-700';
+    } else if (lower.includes('silver')) {
+      return 'from-gray-400 to-gray-500';
+    } else if (lower.includes('gold')) {
+      return 'from-yellow-400 to-yellow-600';
+    } else if (lower.includes('platinum') || lower.includes('diamond')) {
+      return 'from-cyan-400 to-blue-500';
+    }
+    return 'from-purple-500 to-pink-600';
   };
 
   return (
-    <div className="group">
-      <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 border-2 border-amber-500/40 backdrop-blur-sm overflow-hidden relative rounded-2xl hover:border-amber-400/70 hover:shadow-2xl hover:shadow-amber-500/30 transition-all duration-300">
-        <div className="relative">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-            {/* Image section */}
-            <div className="relative h-80 lg:h-auto overflow-hidden">
-              <div
-                className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-                style={{ backgroundImage: `url(${image})` }}
-              ></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent" />
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.1, duration: 0.3 }}
+      whileHover={{ y: -8, scale: 1.02 }}
+      className="h-full flex flex-col cursor-pointer"
+    >
+      <div className="relative flex flex-col h-full bg-gradient-to-b from-gray-800/95 to-gray-900/95 border-2 border-amber-500/30 hover:border-amber-400/60 rounded-2xl shadow-xl hover:shadow-2xl hover:shadow-amber-500/20 transition-all duration-300 backdrop-blur-md overflow-hidden">
+        {/* Hover Accent Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-amber-500/30 to-yellow-500/30 opacity-0 hover:opacity-20 transition-opacity duration-500 pointer-events-none" />
 
-              {/* Prize pool badge - top left */}
-              <div className="absolute top-6 left-6">
-                <div className="bg-gradient-to-r from-amber-400 to-yellow-500 text-black font-black px-4 py-2 shadow-xl rounded-lg flex items-center gap-2 text-sm">
-                  <Trophy size={18} strokeWidth={3} />
-                  {prizePool}
-                </div>
-              </div>
+        {/* Image Section */}
+        <div className="relative h-48 sm:h-56 overflow-hidden">
+          <div
+            className="w-full h-full bg-cover bg-center transition-all duration-500 hover:scale-110 hover:brightness-110"
+            style={{ backgroundImage: `url(${image})` }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
-              {/* Tier badge - top right */}
-              <div className="absolute top-6 right-6">
-                <div className="bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-bold px-4 py-2 shadow-xl rounded-lg flex items-center gap-2 text-sm">
-                  <Shield size={18} strokeWidth={2.5} />
-                  {tier}
-                </div>
-              </div>
+          {/* Prize Pool Badge - Top Left */}
+          <div className="absolute top-3 left-3">
+            <div className="bg-gradient-to-r from-amber-500 to-yellow-600 text-black font-black px-2.5 py-1.5 rounded-lg shadow-xl flex items-center gap-1.5">
+              <Trophy size={14} strokeWidth={3} />
+              <span className="text-xs tracking-wide">{prizePool}</span>
             </div>
+          </div>
 
-            {/* Content section */}
-            <div className="p-8 lg:p-10 flex flex-col justify-between bg-gradient-to-br from-gray-800/60 to-gray-900/80">
-              <div>
-                {/* Title */}
-                <div className="mb-8">
-                  <h3 className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-amber-400 to-yellow-500 bg-clip-text text-transparent">
-                    {name}
-                  </h3>
-                </div>
-
-                {/* Countdown timer */}
-                <div className="mb-8">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Clock size={20} className="text-amber-400" />
-                    <span className="text-base text-gray-300 font-medium">{t('endsIn')}:</span>
-                  </div>
-                  {!isMounted ? (
-                    <div className="grid grid-cols-4 gap-3">
-                      {[1, 2, 3, 4].map((index) => (
-                        <div key={index} className="text-center">
-                          <div className="bg-gradient-to-b from-slate-700/80 to-slate-800/80 rounded-xl p-4 border border-slate-600/40 shadow-lg">
-                            <div className="text-3xl font-bold text-amber-400">
-                              00
-                            </div>
-                          </div>
-                          <div className="text-xs text-gray-500 mt-2 uppercase tracking-wide">...</div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : isExpired ? (
-                    <div className="text-center py-4 bg-black/40 rounded-xl">
-                      <span className="text-red-500 font-bold text-base">{t('ended')}</span>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-4 gap-3">
-                      {[
-                        { label: t('days'), value: days },
-                        { label: t('hours'), value: hours },
-                        { label: t('minutes'), value: minutes },
-                        { label: t('seconds'), value: seconds }
-                      ].map((time, index) => (
-                        <div key={index} className="text-center">
-                          <div className="bg-gradient-to-b from-slate-700/80 to-slate-800/80 rounded-xl p-4 border border-slate-600/40 shadow-lg">
-                            <div className="text-3xl font-bold text-amber-400">
-                              {String(time.value).padStart(2, '0')}
-                            </div>
-                          </div>
-                          <div className="text-xs text-gray-400 mt-2 uppercase tracking-wide font-medium">{time.label}</div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Action button */}
-              <button
-                onClick={handleJoin}
-                disabled={isExpired}
-                className={`w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 hover:shadow-xl hover:shadow-amber-500/40 text-black font-black py-4 text-base transition-all duration-300 group-hover:scale-[1.02] rounded-xl flex items-center justify-center gap-2 uppercase tracking-wide ${
-                  isExpired ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              >
-                <Trophy size={20} strokeWidth={3} />
-                {isExpired ? t('ended') : t('joinTournament')}
-              </button>
+          {/* Status Badge - Top Right */}
+          <div className="absolute top-3 right-3">
+            <div className={`bg-gradient-to-r ${getStatusBadgeClass(tier)} text-white font-bold px-2.5 py-1.5 rounded-lg shadow-xl border border-white/20 flex items-center gap-1.5`}>
+              <Shield size={14} strokeWidth={2.5} />
+              <span className="text-xs">{tier}</span>
             </div>
           </div>
         </div>
+
+        {/* Content Section */}
+        <div className="flex flex-col flex-grow p-4 sm:p-5">
+          {/* Tournament Title */}
+          <h3 className="text-base sm:text-lg font-bold text-white hover:text-amber-400 transition-colors duration-300 mb-3 sm:mb-4 line-clamp-2">
+            {name}
+          </h3>
+
+          {/* Countdown Timer */}
+          <div className="mb-4 sm:mb-5 flex-grow">
+            <div className="flex items-center gap-1.5 mb-2.5">
+              <Clock size={14} className="text-amber-400" />
+              <span className="text-xs text-gray-400">{t('endsIn')}:</span>
+            </div>
+
+            {!isMounted ? (
+              <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+                {[1, 2, 3, 4].map((idx) => (
+                  <div key={idx} className="text-center">
+                    <div className="bg-gradient-to-b from-gray-700/80 to-gray-800/80 border border-amber-500/20 rounded-lg p-1.5 sm:p-2 shadow-lg backdrop-blur-sm">
+                      <div className="text-base sm:text-lg font-black text-amber-400">00</div>
+                    </div>
+                    <div className="text-[9px] sm:text-[10px] text-gray-500 mt-1 uppercase tracking-wider">...</div>
+                  </div>
+                ))}
+              </div>
+            ) : isExpired ? (
+              <div className="text-center py-3 bg-red-900/30 rounded-lg border border-red-500/30">
+                <span className="text-red-400 font-bold text-sm">{t('ended')}</span>
+              </div>
+            ) : (
+              <div className="grid grid-cols-4 gap-1.5 sm:gap-2">
+                {[
+                  { label: 'Days', value: days },
+                  { label: 'Hrs', value: hours },
+                  { label: 'Min', value: minutes },
+                  { label: 'Sec', value: seconds }
+                ].map((time, idx) => (
+                  <div key={idx} className="text-center">
+                    <div className="bg-gradient-to-b from-gray-700/80 to-gray-800/80 border border-amber-500/20 rounded-lg p-1.5 sm:p-2 shadow-lg backdrop-blur-sm">
+                      <motion.div
+                        key={time.value}
+                        initial={{ scale: 1.2, opacity: 0.5 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="text-base sm:text-lg font-black text-amber-400"
+                      >
+                        {String(time.value).padStart(2, '0')}
+                      </motion.div>
+                    </div>
+                    <div className="text-[9px] sm:text-[10px] text-gray-500 mt-1 uppercase tracking-wider">{time.label}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Join Button */}
+          <button
+            onClick={handleJoin}
+            disabled={isExpired}
+            className={`w-full px-4 py-3 sm:py-3.5 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-black font-black text-sm rounded-xl shadow-lg shadow-amber-500/30 hover:shadow-xl hover:shadow-amber-500/50 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 ${
+              isExpired ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+          >
+            <Trophy size={16} strokeWidth={3} />
+            {isExpired ? t('ended') : 'JOIN NOW'}
+          </button>
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

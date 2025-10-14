@@ -51,6 +51,7 @@ export default defineType({
       fields: [
         { name: 'kick', title: 'Kick URL', type: 'url' },
         { name: 'instagram', title: 'Instagram URL', type: 'url' },
+        { name: 'telegram', title: 'Telegram URL', type: 'url' },
         { name: 'discord', title: 'Discord URL', type: 'url' },
       ],
     }),

@@ -15,12 +15,6 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'tag',
-      title: 'Tag (Optional)',
-      type: 'reference',
-      to: [{ type: 'cardTag' }],
-    }),
-    defineField({
       name: 'bonusCode',
       title: 'Welcome Bonus Code',
       type: 'string',

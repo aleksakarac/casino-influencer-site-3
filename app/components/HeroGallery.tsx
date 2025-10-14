@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
+import { client, urlFor } from '@/app/lib/sanity';
 
-// Placeholder images - will be replaced with Sanity CMS images
+// Placeholder images - will be used if Sanity images are not available
 const PLACEHOLDER_IMAGES = [
   'https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=1920&h=800&fit=crop',
   'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=1920&h=800&fit=crop',
@@ -13,16 +14,43 @@ const PLACEHOLDER_IMAGES = [
 
 export default function HeroGallery() {
   const t = useTranslations('Hero');
+  const locale = useLocale() as 'en' | 'sr';
   const [currentIndex, setCurrentIndex] = useState(0);
-  const autoPlaySpeed = 5000; // 5 seconds
+  const [images, setImages] = useState<string[]>(PLACEHOLDER_IMAGES);
+  const [autoPlaySpeed, setAutoPlaySpeed] = useState(5000);
+
+  useEffect(() => {
+    const fetchGalleryImages = async () => {
+      try {
+        const gallery = await client.fetch(
+          `*[_type == "gallerySettings"][0]{ images, autoPlaySpeed }`
+        );
+
+        if (gallery?.images && gallery.images.length > 0) {
+          const imageUrls = gallery.images.map((img: any) =>
+            urlFor(img.image).width(1920).height(800).url()
+          );
+          setImages(imageUrls);
+        }
+
+        if (gallery?.autoPlaySpeed) {
+          setAutoPlaySpeed(gallery.autoPlaySpeed * 1000); // Convert to milliseconds
+        }
+      } catch (error) {
+        console.error('Error fetching gallery images:', error);
+      }
+    };
+
+    fetchGalleryImages();
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % PLACEHOLDER_IMAGES.length);
+      setCurrentIndex((prev) => (prev + 1) % images.length);
     }, autoPlaySpeed);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [images.length, autoPlaySpeed]);
 
   return (
     <section className="relative w-full h-64 overflow-hidden bg-black">
@@ -38,33 +66,15 @@ export default function HeroGallery() {
         >
           <div
             className="w-full h-full bg-cover bg-center"
-            style={{ backgroundImage: `url(${PLACEHOLDER_IMAGES[currentIndex]})` }}
+            style={{ backgroundImage: `url(${images[currentIndex]})` }}
           ></div>
         </motion.div>
       </AnimatePresence>
 
-      {/* Overlay System - Layer 1: Dark */}
-      <div className="absolute inset-0 bg-black/40"></div>
-
-      {/* Overlay System - Layer 2: Theme gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[var(--primary-orange)] to-yellow-600 opacity-30"></div>
-
-      {/* Content - Layer 3 */}
-      <div className="relative z-10 h-full flex flex-col items-center justify-center px-6">
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-4xl md:text-5xl font-bold text-center text-white drop-shadow-2xl"
-        >
-          {t('title')}
-        </motion.h1>
-        <div className="w-24 h-1 bg-gradient-to-r from-[var(--primary-orange)] to-yellow-600 rounded-full mt-2"></div>
-      </div>
 
       {/* Navigation Indicators */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3 z-20">
-        {PLACEHOLDER_IMAGES.map((_, index) => (
+        {images.map((_, index) => (
           <button
             key={index}
             onClick={() => setCurrentIndex(index)}

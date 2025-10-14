@@ -40,7 +40,7 @@ export default function MiddleBar() {
       ? 'rang-lista'
       : activeSection === 'games-section'
       ? 'pokupi-bonuse'
-      : activeSection === 'tournaments-section'
+      : activeSection === 'events'
       ? 'turniri'
       : activeSection === 'links'
       ? 'social'
@@ -67,7 +67,7 @@ export default function MiddleBar() {
     if (pathname?.includes('/leaderboard')) {
       router.push(`/${locale}/#tournaments`);
     } else {
-      scrollToSection('tournaments-section');
+      scrollToSection('events');
     }
   };
 
@@ -134,12 +134,12 @@ export default function MiddleBar() {
       {/* Top decorative line */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-      <div className="relative max-w-7xl mx-auto px-4">
+      <div className="relative max-w-7xl mx-auto px-2 lg:px-4">
         {/* Tabs bar background */}
         <div className="absolute bottom-0 left-0 right-0 h-px bg-white/10" />
 
         {/* Tabs Container */}
-        <div className="flex justify-center items-end gap-1">
+        <div className="flex justify-center items-end gap-0.5 lg:gap-1 overflow-x-auto scrollbar-hide">
           {items.map((item, index) => {
             const isActive = item.pageId === activeButton;
 
@@ -151,8 +151,8 @@ export default function MiddleBar() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.08 }}
                 className={`
-                  group relative flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2 px-2 sm:px-4 py-3 sm:py-4
-                  transition-all duration-300 cursor-pointer min-w-[60px] sm:min-w-[140px]
+                  group relative flex flex-col lg:flex-row items-center lg:justify-center gap-1.5 lg:gap-2 px-4 lg:px-5 py-4 lg:py-4
+                  transition-all duration-300 cursor-pointer flex-1 lg:flex-none lg:min-w-[176px]
                   bg-transparent border-0
                   ${isActive
                     ? 'bg-black/40 rounded-t-xl border-t border-x border-white/10'
@@ -184,7 +184,7 @@ export default function MiddleBar() {
                 {/* Icon Container */}
                 <div
                   className={`
-                    relative p-1.5 sm:p-2 rounded-lg transition-all duration-300
+                    relative p-2 lg:p-2 rounded-lg transition-all duration-300 flex-shrink-0
                     ${isActive
                       ? `bg-gradient-to-br ${item.color} shadow-lg`
                       : 'bg-gray-800/50 group-hover:bg-gradient-to-br group-hover:' + item.color
@@ -192,8 +192,8 @@ export default function MiddleBar() {
                   `}
                 >
                   <item.icon
-                    size={16}
-                    className={`sm:w-[18px] sm:h-[18px] ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'} transition-colors duration-300`}
+                    size={20}
+                    className={`lg:w-[18px] lg:h-[18px] ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'} transition-colors duration-300`}
                     strokeWidth={2.5}
                   />
 
@@ -206,7 +206,7 @@ export default function MiddleBar() {
                 {/* Text Label */}
                 <span
                   className={`
-                    text-[10px] sm:text-xs font-bold tracking-wide transition-colors duration-300 text-center
+                    text-xs lg:text-sm font-bold tracking-wide transition-colors duration-300 text-center min-h-[2.5rem] lg:min-h-0 flex items-center justify-center
                     ${isActive
                       ? 'text-white'
                       : item.textColor + ' group-hover:text-white'
