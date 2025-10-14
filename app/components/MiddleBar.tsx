@@ -186,21 +186,26 @@ export default function MiddleBar() {
 
                 {/* Text Label or Logo */}
                 {item.useLogo ? (
-                  <div className="w-[138px] lg:w-[161px] h-[80px] lg:h-auto flex items-center justify-center p-3">
-                    <img
-                      src="/vavada_logo.svg"
-                      alt="Vavada"
-                      className={`w-full h-auto transition-all duration-300 ${
-                        isActive
-                          ? 'brightness-100'
-                          : 'brightness-75 group-hover:brightness-100'
-                      }`}
-                      style={{
-                        filter: isActive
-                          ? 'drop-shadow(0 2px 8px rgba(254, 40, 74, 0.5))'
-                          : undefined
-                      }}
-                    />
+                  <div className="w-[138px] lg:w-[161px] h-[80px] lg:h-auto flex items-center justify-center p-2.5">
+                    <div className="relative">
+                      {/* Animated shimmer/glow border effect */}
+                      <div className="absolute -inset-[2px] bg-gradient-to-r from-pink-500 via-red-500 to-pink-500 rounded-lg opacity-75 blur-sm animate-pulse" />
+
+                      <img
+                        src="/vavada_logo.svg"
+                        alt="Vavada"
+                        className={`relative w-full h-auto transition-all duration-300 ${
+                          isActive
+                            ? 'brightness-100'
+                            : 'brightness-75 group-hover:brightness-100'
+                        }`}
+                        style={{
+                          filter: isActive
+                            ? 'drop-shadow(0 2px 8px rgba(254, 40, 74, 0.5))'
+                            : undefined
+                        }}
+                      />
+                    </div>
                   </div>
                 ) : (
                   <>
