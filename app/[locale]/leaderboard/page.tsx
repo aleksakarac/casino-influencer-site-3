@@ -172,6 +172,7 @@ export default function LeaderboardPage() {
                 prizeImage={prize.prizeImage}
                 prizeTitle={prize.prizeTitle[locale]}
                 index={index}
+                locale={locale}
               />
             ))}
           </motion.div>

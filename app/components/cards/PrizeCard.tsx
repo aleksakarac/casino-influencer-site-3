@@ -7,6 +7,7 @@ interface PrizeCardProps {
   prizeImage: string;
   prizeTitle: string;
   index: number;
+  locale: 'en' | 'sr';
 }
 
 const getPrizeColors = (prizeNumber: number) => {
@@ -39,20 +40,25 @@ const getPrizeColors = (prizeNumber: number) => {
   }
 };
 
-const getRankLabel = (prizeNumber: number) => {
+const getRankLabel = (prizeNumber: number, locale: 'en' | 'sr') => {
   // Prize 4 is awarded to places 4-10
   if (prizeNumber === 4) {
-    return '4th - 10th Place';
+    return locale === 'sr' ? '4. - 10. Mesto' : '4th - 10th Place';
   }
 
+  if (locale === 'sr') {
+    return `${prizeNumber}. Mesto`;
+  }
+
+  // English suffixes
   const suffixes = ['st', 'nd', 'rd', 'th'];
   const suffix = prizeNumber <= 3 ? suffixes[prizeNumber - 1] : suffixes[3];
   return `${prizeNumber}${suffix} Place`;
 };
 
-export function PrizeCard({ prizeNumber, prizeImage, prizeTitle, index }: PrizeCardProps) {
+export function PrizeCard({ prizeNumber, prizeImage, prizeTitle, index, locale }: PrizeCardProps) {
   const colors = getPrizeColors(prizeNumber);
-  const rankLabel = getRankLabel(prizeNumber);
+  const rankLabel = getRankLabel(prizeNumber, locale);
 
   return (
     <motion.div
