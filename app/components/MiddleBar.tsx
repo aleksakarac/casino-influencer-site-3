@@ -184,36 +184,9 @@ export default function MiddleBar() {
                   </>
                 )}
 
-                {/* Icon Container */}
-                <div
-                  className={`
-                    relative p-2 sm:p-2.5 rounded-xl transition-all duration-300 flex-shrink-0
-                    ${isActive
-                      ? `bg-gradient-to-br ${item.color} shadow-xl`
-                      : 'bg-gradient-to-b from-gray-800/80 to-gray-900/80 group-hover:bg-gradient-to-br group-hover:' + item.color
-                    }
-                  `}
-                >
-                  <item.icon
-                    size={18}
-                    className={`sm:w-5 sm:h-5 ${isActive ? 'text-white drop-shadow-lg' : 'text-gray-400 group-hover:text-white'} transition-colors duration-300`}
-                    strokeWidth={2.5}
-                  />
-
-                  {/* Icon glow effect on active */}
-                  {isActive && (
-                    <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-60 blur-xl rounded-xl -z-10 animate-pulse`} />
-                  )}
-
-                  {/* Hover glow effect on inactive */}
-                  {!isActive && (
-                    <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-40 blur-lg rounded-xl -z-10 transition-opacity duration-300`} />
-                  )}
-                </div>
-
                 {/* Text Label or Logo */}
                 {item.useLogo ? (
-                  <div className="w-16 lg:w-20 h-auto flex items-center justify-center">
+                  <div className="w-24 lg:w-28 h-auto flex items-center justify-center">
                     <img
                       src="/vavada_logo.svg"
                       alt="Vavada"
@@ -230,6 +203,38 @@ export default function MiddleBar() {
                     />
                   </div>
                 ) : (
+                  <>
+                    {/* Icon Container */}
+                    <div
+                      className={`
+                        relative p-2 sm:p-2.5 rounded-xl transition-all duration-300 flex-shrink-0
+                        ${isActive
+                          ? `bg-gradient-to-br ${item.color} shadow-xl`
+                          : 'bg-gradient-to-b from-gray-800/80 to-gray-900/80 group-hover:bg-gradient-to-br group-hover:' + item.color
+                        }
+                      `}
+                    >
+                      <item.icon
+                        size={18}
+                        className={`sm:w-5 sm:h-5 ${isActive ? 'text-white drop-shadow-lg' : 'text-gray-400 group-hover:text-white'} transition-colors duration-300`}
+                        strokeWidth={2.5}
+                      />
+
+                      {/* Icon glow effect on active */}
+                      {isActive && (
+                        <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-60 blur-xl rounded-xl -z-10 animate-pulse`} />
+                      )}
+
+                      {/* Hover glow effect on inactive */}
+                      {!isActive && (
+                        <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-40 blur-lg rounded-xl -z-10 transition-opacity duration-300`} />
+                      )}
+                    </div>
+                  </>
+                )}
+
+                {/* Text Label (for non-logo items) */}
+                {!item.useLogo && (
                   <span
                     className={`
                       text-xs lg:text-sm font-black tracking-wider uppercase transition-colors duration-300 text-center min-h-[2.5rem] lg:min-h-0 flex items-center justify-center
