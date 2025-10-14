@@ -7,7 +7,7 @@ import { useLocale } from 'next-intl';
 interface LeaderboardEntryProps {
   rank: number;
   name: string;
-  points: number;
+  points: number | null;
   index: number;
 }
 
@@ -91,7 +91,7 @@ export function LeaderboardEntry({
         {/* Points */}
         <div className="text-right min-w-[100px] md:min-w-[140px]">
           <div className="text-lg md:text-2xl font-black text-amber-400">
-            {points.toLocaleString()}
+            {(points ?? 0).toLocaleString()}
           </div>
           <div className="text-[10px] md:text-xs text-gray-500 uppercase tracking-wider mt-0.5">
             {pointsLabel}

@@ -12,3 +12,8 @@ NEXT_PUBLIC_SANITY_PROJECT_ID = "1s30e0de"
 NEXT_PUBLIC_SANITY_DATASET = "production"
 NEXT_PUBLIC_SANITY_API_VERSION = "2024-01-01"
 NEXT_PUBLIC_SITE_URL = "https://acajankovic.karacdev.workers.dev"
+
+[observability]
+enabled = false
+head_sampling_rate = 1
+invocation_logs = true

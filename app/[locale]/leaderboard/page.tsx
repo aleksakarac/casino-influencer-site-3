@@ -24,7 +24,7 @@ interface Prize {
 interface LeaderboardEntryData {
   _id: string;
   viewerName: string;
-  points: number;
+  points: number | null;
 }
 
 interface LeaderboardSettings {
