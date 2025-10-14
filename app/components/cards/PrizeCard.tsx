@@ -78,8 +78,13 @@ export function PrizeCard({ prizeNumber, prizeImage, prizeTitle, index, locale }
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
         {/* Rank Badge */}
-        <div className="absolute top-2 right-2 px-2 py-1 bg-black/70 backdrop-blur-sm rounded-lg border border-amber-500/30">
-          <span className="text-xs font-bold text-amber-400">{rankLabel}</span>
+        <div className="absolute top-2 right-2">
+          {/* Animated glow effect */}
+          <div className="absolute -inset-[2px] bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-400 rounded-lg opacity-75 blur-sm animate-pulse" />
+
+          <div className="relative px-2 py-1 bg-black/70 backdrop-blur-sm rounded-lg border border-amber-500/30">
+            <span className="text-xs font-bold text-amber-400">{rankLabel}</span>
+          </div>
         </div>
       </div>
 
