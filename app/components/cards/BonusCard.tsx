@@ -104,7 +104,7 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
           {/* Code Box and Button Container */}
           <div className="relative w-full flex flex-col items-center gap-1.5 z-10">
             {/* Code Box */}
-            <div className="bg-purple-800/60 rounded-xl px-2 py-1.5 flex items-center justify-between w-full max-[400px]:w-[80%] border border-purple-500/30 min-h-[30px] max-[400px]:min-h-[28px]">
+            <div className="bg-purple-800/60 rounded-xl px-2 py-1.5 flex items-center justify-between w-full max-[400px]:w-[80%] min-[768px]:w-[90%] border border-purple-500/30 min-h-[30px] max-[400px]:min-h-[28px]">
               <span className="text-white font-mono text-xs font-extrabold tracking-wide">
                 {card.bonusCode}
               </span>
@@ -119,7 +119,7 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
             </div>
 
             {/* Claim Button */}
-            <div className="relative w-full max-[400px]:w-[80%]">
+            <div className="relative w-full max-[400px]:w-[80%] min-[768px]:w-[90%]">
               {/* Animated border effect */}
               <div className="absolute -inset-[2px] bg-gradient-to-r from-green-400 via-emerald-500 to-green-400 rounded-xl opacity-75 blur-sm animate-pulse" />
 

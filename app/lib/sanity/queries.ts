@@ -40,11 +40,10 @@ export const leaderboardQuery = `{
     prizeDescription,
     order
   },
-  "entries": *[_type == "leaderboardEntry" && isActive == true] | order(place asc) [0...10] {
+  "entries": *[_type == "leaderboardEntry" && isActive == true] | order(points desc) [0...10] {
     _id,
-    place,
     viewerName,
-    watchtime
+    points
   },
   "settings": *[_type == "leaderboardSettings"][0] {
     title,

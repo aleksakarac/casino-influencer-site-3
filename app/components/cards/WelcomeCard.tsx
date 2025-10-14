@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { Copy, Check } from 'lucide-react';
+import { useLocale } from 'next-intl';
 
 interface WelcomeCardProps {
   card: {
@@ -17,6 +18,7 @@ interface WelcomeCardProps {
 
 export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps) {
   const [copying, setCopying] = useState(false);
+  const locale = useLocale() as 'en' | 'sr';
 
   const copyCode = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -75,13 +77,13 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
         {/* Bottom Section - Stacked Vertically */}
         <div className="w-full flex flex-col items-center gap-1.5 mt-auto pb-1">
           {/* Code Display */}
-          <div className="flex items-center justify-between bg-purple-800/60 px-2.5 min-h-[30px] max-[400px]:min-h-[28px] rounded-xl border border-purple-500/30 w-full max-[400px]:w-[80%]">
+          <div className="flex items-center justify-between bg-purple-800/60 px-2.5 min-h-[30px] max-[400px]:min-h-[28px] rounded-xl border border-purple-500/30 w-full max-[400px]:w-[80%] min-[768px]:w-[90%]">
             <div className="flex items-center gap-1">
               <span className="text-purple-200 text-[11px] font-bold max-[400px]:hidden">
-                Sign Up with Code
+                {locale === 'sr' ? 'Koristi Kod' : 'Use Code'}
               </span>
               <span className="text-purple-200 text-[11px] font-bold hidden max-[400px]:inline">
-                Code
+                {locale === 'sr' ? 'Kod' : 'Code'}
               </span>
               <span className="font-extrabold text-white font-mono text-xs tracking-wider bg-purple-600/40 px-1.5 py-0.5 rounded border border-purple-400/30">
                 {card.bonusCode}
@@ -98,7 +100,7 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
           </div>
 
           {/* Claim Button */}
-          <div className="relative w-full max-[400px]:w-[80%]">
+          <div className="relative w-full max-[400px]:w-[80%] min-[768px]:w-[90%]">
             {/* Animated border effect */}
             <div className="absolute -inset-[2px] bg-gradient-to-r from-purple-400 via-pink-500 to-purple-400 rounded-xl opacity-75 blur-sm animate-pulse" />
 

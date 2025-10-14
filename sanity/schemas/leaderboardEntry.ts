@@ -6,13 +6,6 @@ export default defineType({
   type: 'document',
   fields: [
     defineField({
-      name: 'place',
-      title: 'Place',
-      type: 'number',
-      validation: (Rule) => Rule.required().integer().min(1).max(100),
-      description: 'Leaderboard placement (1-10 for top viewers)',
-    }),
-    defineField({
       name: 'viewerName',
       title: 'Viewer Name',
       type: 'string',
@@ -20,25 +13,11 @@ export default defineType({
       description: 'Display name of the viewer',
     }),
     defineField({
-      name: 'watchtime',
-      title: 'Watch Time',
-      type: 'string',
-      validation: (Rule) => Rule.required().custom((value) => {
-        if (!value) return 'Watch time is required';
-
-        // Check short format: "X:Y:Z"
-        const shortFormat = /^\d+:\d+:\d+$/.test(value);
-        // Check long format: "X Days, Y Hours, Z Minutes"
-        const longFormat = /^\d+\s*Days?,\s*\d+\s*Hours?,\s*\d+\s*Minutes?$/i.test(value);
-
-        if (!shortFormat && !longFormat) {
-          return 'Invalid format. Use "3:5:40" or "3 Days, 5 Hours, 40 Minutes"';
-        }
-
-        return true;
-      }),
-      description: 'Watch time display. Short: "3:5:40" or Long: "3 Days, 5 Hours, 40 Minutes"',
-      placeholder: '3:5:40 or 3 Days, 5 Hours, 40 Minutes',
+      name: 'points',
+      title: 'Points',
+      type: 'number',
+      validation: (Rule) => Rule.required().integer().min(0),
+      description: 'Total points earned (based on watch time and bonuses). Viewers are automatically ranked by highest points.',
     }),
     defineField({
       name: 'isActive',
@@ -51,23 +30,27 @@ export default defineType({
   preview: {
     select: {
       title: 'viewerName',
-      subtitle: 'watchtime',
-      place: 'place',
+      points: 'points',
       isActive: 'isActive',
     },
     prepare(selection) {
-      const { title, subtitle, place, isActive } = selection;
+      const { title, points, isActive } = selection;
       return {
-        title: `#${place} - ${title}`,
-        subtitle: `${subtitle} ${isActive ? '✓ Active' : '✗ Hidden'}`,
+        title: title,
+        subtitle: `${points.toLocaleString()} points ${isActive ? '✓ Active' : '✗ Hidden'}`,
       };
     },
   },
   orderings: [
     {
-      title: 'Place (Ascending)',
-      name: 'placeAsc',
-      by: [{ field: 'place', direction: 'asc' }],
+      title: 'Points (Highest First)',
+      name: 'pointsDesc',
+      by: [{ field: 'points', direction: 'desc' }],
+    },
+    {
+      title: 'Points (Lowest First)',
+      name: 'pointsAsc',
+      by: [{ field: 'points', direction: 'asc' }],
     },
   ],
 });

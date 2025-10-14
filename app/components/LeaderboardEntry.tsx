@@ -2,11 +2,12 @@
 
 import { motion } from 'framer-motion';
 import { Medal, Crown } from 'lucide-react';
+import { useLocale } from 'next-intl';
 
 interface LeaderboardEntryProps {
   rank: number;
   name: string;
-  watchTime: string;
+  points: number;
   index: number;
 }
 
@@ -49,41 +50,14 @@ const getRankIconDesktop = (rank: number) => {
   }
 };
 
-const formatWatchTime = (watchTime: string): string => {
-  // Handle format like "3:5:40" or "3 Days, 5 Hours, 40 Minutes"
-  if (watchTime.includes('Day') || watchTime.includes('Hour') || watchTime.includes('Min')) {
-    // Already in long format, just clean it up
-    return watchTime
-      .replace(/Minutes?/gi, 'min')
-      .replace(/Hours?/gi, 'Hours')
-      .replace(/Days?/gi, 'Days')
-      .replace(/,/g, '');
-  }
-
-  // Format from short "3:5:40" to "3 Days 5 Hours 40min"
-  const parts = watchTime.split(':');
-  if (parts.length === 3) {
-    const days = parseInt(parts[0], 10);
-    const hours = parseInt(parts[1], 10);
-    const minutes = parseInt(parts[2], 10);
-
-    const result = [];
-    if (days > 0) result.push(`${days} Day${days !== 1 ? 's' : ''}`);
-    if (hours > 0) result.push(`${hours} Hour${hours !== 1 ? 's' : ''}`);
-    if (minutes > 0) result.push(`${minutes}min`);
-
-    return result.join(' ') || '0min';
-  }
-
-  return watchTime;
-};
-
 export function LeaderboardEntry({
   rank,
   name,
-  watchTime,
+  points,
   index,
 }: LeaderboardEntryProps) {
+  const locale = useLocale() as 'en' | 'sr';
+  const pointsLabel = locale === 'sr' ? 'poeni' : 'points';
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
@@ -114,13 +88,13 @@ export function LeaderboardEntry({
           </h3>
         </div>
 
-        {/* Watch Time */}
-        <div className="text-right min-w-[100px] md:min-w-[150px]">
-          <div className="text-sm md:text-lg font-black text-amber-400">
-            {formatWatchTime(watchTime)}
+        {/* Points */}
+        <div className="text-right min-w-[100px] md:min-w-[140px]">
+          <div className="text-lg md:text-2xl font-black text-amber-400">
+            {points.toLocaleString()}
           </div>
           <div className="text-[10px] md:text-xs text-gray-500 uppercase tracking-wider mt-0.5">
-            WATCH TIME
+            {pointsLabel}
           </div>
         </div>
       </div>

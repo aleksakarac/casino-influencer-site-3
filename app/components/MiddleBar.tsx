@@ -82,6 +82,7 @@ export default function MiddleBar() {
     {
       icon: Sparkles,
       title: "VAVADA",
+      useLogo: true,
       color: "from-cyan-400 to-blue-500",
       textColor: "text-cyan-400",
       action: () => window.open(vavadaLink, '_blank'),
@@ -210,23 +211,42 @@ export default function MiddleBar() {
                   )}
                 </div>
 
-                {/* Text Label */}
-                <span
-                  className={`
-                    text-xs lg:text-sm font-black tracking-wider uppercase transition-colors duration-300 text-center min-h-[2.5rem] lg:min-h-0 flex items-center justify-center
-                    ${isActive
-                      ? 'text-white'
-                      : item.textColor + ' group-hover:text-white'
-                    }
-                  `}
-                  style={{
-                    filter: isActive
-                      ? 'drop-shadow(0 2px 8px rgba(255,255,255,0.5))'
-                      : undefined
-                  }}
-                >
-                  {item.title}
-                </span>
+                {/* Text Label or Logo */}
+                {item.useLogo ? (
+                  <div className="w-16 lg:w-20 h-auto flex items-center justify-center">
+                    <img
+                      src="/vavada_logo.svg"
+                      alt="Vavada"
+                      className={`w-full h-auto transition-all duration-300 ${
+                        isActive
+                          ? 'brightness-100'
+                          : 'brightness-75 group-hover:brightness-100'
+                      }`}
+                      style={{
+                        filter: isActive
+                          ? 'drop-shadow(0 2px 8px rgba(254, 40, 74, 0.5))'
+                          : undefined
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <span
+                    className={`
+                      text-xs lg:text-sm font-black tracking-wider uppercase transition-colors duration-300 text-center min-h-[2.5rem] lg:min-h-0 flex items-center justify-center
+                      ${isActive
+                        ? 'text-white'
+                        : item.textColor + ' group-hover:text-white'
+                      }
+                    `}
+                    style={{
+                      filter: isActive
+                        ? 'drop-shadow(0 2px 8px rgba(255,255,255,0.5))'
+                        : undefined
+                    }}
+                  >
+                    {item.title}
+                  </span>
+                )}
 
                 {/* Active Indicator Line */}
                 {isActive && (

@@ -23,9 +23,8 @@ interface Prize {
 
 interface LeaderboardEntryData {
   _id: string;
-  place: number;
   viewerName: string;
-  watchtime: string;
+  points: number;
 }
 
 interface LeaderboardSettings {
@@ -189,9 +188,9 @@ export default function LeaderboardPage() {
             {data.entries.map((entry, index) => (
               <LeaderboardEntry
                 key={entry._id}
-                rank={entry.place}
+                rank={index + 1}
                 name={entry.viewerName}
-                watchTime={entry.watchtime}
+                points={entry.points}
                 index={index}
               />
             ))}

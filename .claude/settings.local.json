@@ -5,7 +5,19 @@
       "Bash(npx sanity:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npm run deploy)",
+      "Bash(npm run deploy:cloudflare:*)",
+      "Bash(npx wrangler tail:*)",
+      "Bash(timeout 15 npx wrangler tail --format pretty)",
+      "Bash(npm run build)",
+      "Bash(timeout:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(gh run list:*)",
+      "Bash(gh run view:*)",
+      "Bash(gh run watch:*)"
     ],
     "deny": [],
     "ask": []
