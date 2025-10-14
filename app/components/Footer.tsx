@@ -159,8 +159,8 @@ export default function Footer() {
                   {/* Content */}
                   <div className="relative z-10 flex items-center justify-center gap-2 sm:gap-2">
                     <social.icon
-                      size={social.name === t('kick') ? 20 : 14}
-                      className={social.name === t('kick') ? "sm:w-6 sm:h-auto max-[400px]:w-5 max-[400px]:h-auto text-white group-hover:scale-110 transition-transform duration-300" : "sm:w-4 sm:h-4 max-[400px]:w-3.5 max-[400px]:h-3.5 text-white group-hover:scale-110 transition-transform duration-300"}
+                      size={social.name === t('kick') ? 24 : 14}
+                      className={social.name === t('kick') ? "sm:w-7 sm:h-auto max-[400px]:w-6 max-[400px]:h-auto text-white group-hover:scale-110 transition-transform duration-300" : "sm:w-4 sm:h-4 max-[400px]:w-3.5 max-[400px]:h-3.5 text-white group-hover:scale-110 transition-transform duration-300"}
                     />
                     <span className="text-[10px] sm:text-sm max-[400px]:hidden text-white group-hover:text-white/90 transition-colors duration-300">
                       {social.name}
