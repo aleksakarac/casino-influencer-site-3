@@ -186,22 +186,73 @@ export default function MiddleBar() {
 
                 {/* Text Label or Logo */}
                 {item.useLogo ? (
-                  <div className="w-[60px] min-[600px]:w-[80px] sm:w-[100px] lg:w-[161px] h-[80px] lg:h-auto flex items-center justify-center pt-2.5 px-2.5 pb-3.5">
-                    <img
-                      src="/vavada_logo.svg"
-                      alt="Vavada"
-                      className={`w-full h-auto transition-all duration-300 animate-[breathing_3s_ease-in-out_infinite] ${
-                        isActive
-                          ? 'brightness-100'
-                          : 'brightness-75 group-hover:brightness-100'
-                      }`}
-                      style={{
-                        filter: isActive
-                          ? 'drop-shadow(0 2px 8px rgba(254, 40, 74, 0.5))'
-                          : undefined
-                      }}
-                    />
-                  </div>
+                  <>
+                    {/* Mobile: Icon + Text */}
+                    <div className="lg:hidden flex flex-col items-center gap-1.5">
+                      {/* Icon Container */}
+                      <div
+                        className={`
+                          relative p-2 sm:p-2.5 rounded-xl transition-all duration-300 flex-shrink-0
+                          ${isActive
+                            ? `bg-gradient-to-br ${item.color} shadow-xl`
+                            : 'bg-gradient-to-b from-gray-800/80 to-gray-900/80 group-hover:bg-gradient-to-br group-hover:' + item.color
+                          }
+                        `}
+                      >
+                        <item.icon
+                          size={18}
+                          className={`sm:w-5 sm:h-5 ${isActive ? 'text-white drop-shadow-lg' : item.textColor + ' group-hover:text-white'} transition-colors duration-300`}
+                          strokeWidth={2.5}
+                        />
+
+                        {/* Icon glow effect on active */}
+                        {isActive && (
+                          <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-60 blur-xl rounded-xl -z-10 animate-pulse`} />
+                        )}
+
+                        {/* Hover glow effect on inactive */}
+                        {!isActive && (
+                          <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-40 blur-lg rounded-xl -z-10 transition-opacity duration-300`} />
+                        )}
+                      </div>
+
+                      {/* Text Label */}
+                      <span
+                        className={`
+                          text-xs font-black tracking-wider uppercase transition-colors duration-300 text-center min-h-[2.5rem] flex items-center justify-center
+                          ${isActive
+                            ? 'text-white'
+                            : 'text-[#FE284A] group-hover:text-white'
+                          }
+                        `}
+                        style={{
+                          filter: isActive
+                            ? 'drop-shadow(0 2px 8px rgba(254, 40, 74, 0.5))'
+                            : 'drop-shadow(0 1px 4px rgba(254, 40, 74, 0.3))'
+                        }}
+                      >
+                        {item.title}
+                      </span>
+                    </div>
+
+                    {/* Desktop: Logo SVG */}
+                    <div className="hidden lg:flex w-[161px] h-auto items-center justify-center pt-2.5 px-2.5 pb-3.5">
+                      <img
+                        src="/vavada_logo.svg"
+                        alt="Vavada"
+                        className={`w-full h-auto transition-all duration-300 animate-[breathing_3s_ease-in-out_infinite] ${
+                          isActive
+                            ? 'brightness-100'
+                            : 'brightness-75 group-hover:brightness-100'
+                        }`}
+                        style={{
+                          filter: isActive
+                            ? 'drop-shadow(0 2px 8px rgba(254, 40, 74, 0.5))'
+                            : undefined
+                        }}
+                      />
+                    </div>
+                  </>
                 ) : (
                   <>
                     {/* Icon Container */}
@@ -216,7 +267,7 @@ export default function MiddleBar() {
                     >
                       <item.icon
                         size={18}
-                        className={`sm:w-5 sm:h-5 ${isActive ? 'text-white drop-shadow-lg' : 'text-gray-400 group-hover:text-white'} transition-colors duration-300`}
+                        className={`sm:w-5 sm:h-5 ${isActive ? 'text-white drop-shadow-lg' : item.textColor + ' group-hover:text-white'} transition-colors duration-300`}
                         strokeWidth={2.5}
                       />
 
