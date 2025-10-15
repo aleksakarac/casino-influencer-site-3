@@ -158,7 +158,28 @@ export default function HeroGallery() {
   };
 
   return (
-    <section className="relative w-full h-64 overflow-hidden bg-black">
+    <section className="relative w-full h-64 overflow-hidden">
+      {/* Glassmorphism Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-950 via-black to-pink-950" />
+
+      {/* Animated Gradient Overlay */}
+      <motion.div
+        animate={{
+          background: [
+            'linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%)',
+            'linear-gradient(135deg, rgba(236, 72, 153, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%)',
+            'linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%)',
+            'linear-gradient(135deg, rgba(139, 92, 246, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%)',
+          ],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        className="absolute inset-0 z-0"
+      />
+
       {/* Image Carousel */}
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
@@ -176,7 +197,7 @@ export default function HeroGallery() {
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={1}
           onDragEnd={handleDragEnd}
-          className="absolute inset-0 cursor-grab active:cursor-grabbing"
+          className="absolute inset-0 cursor-grab active:cursor-grabbing z-10"
         >
           {/* Desktop image - hidden on mobile */}
           <img
@@ -192,31 +213,121 @@ export default function HeroGallery() {
             className="block md:hidden w-full h-full object-cover object-center pointer-events-none"
             draggable={false}
           />
+
+          {/* Image Overlay with Vignette */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30 pointer-events-none" />
         </motion.div>
       </AnimatePresence>
 
+      {/* Floating Sparkles */}
+      {[...Array(8)].map((_, i) => (
+        <motion.div
+          key={i}
+          animate={{
+            y: [0, -30, 0],
+            x: [0, Math.sin(i) * 20, 0],
+            opacity: [0.2, 0.6, 0.2],
+            scale: [0.8, 1.2, 0.8],
+          }}
+          transition={{
+            duration: 5 + i,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.4
+          }}
+          className="absolute w-2 h-2 bg-purple-400 rounded-full blur-sm z-15"
+          style={{
+            left: `${(i * 12) + 10}%`,
+            top: `${30 + (i % 3) * 20}%`,
+          }}
+        />
+      ))}
 
       {/* Navigation Indicators */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3 z-20">
         {images.map((_, index) => (
-          <button
+          <motion.button
             key={index}
             onClick={() => {
               setCurrentIndex(index);
               haptics.selection();
             }}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentIndex
-                ? 'bg-[var(--primary-orange)] shadow-[0_0_10px_rgba(251,191,36,0.6)]'
-                : 'bg-white/30 hover:bg-white/50'
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
+            whileHover={{ scale: 1.3 }}
+            whileTap={{ scale: 0.9 }}
+            className="relative group"
+          >
+            {/* Outer Glow Ring */}
+            {index === currentIndex && (
+              <motion.div
+                animate={{
+                  scale: [1, 1.5, 1],
+                  opacity: [0.4, 0, 0.4],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeOut"
+                }}
+                className="absolute inset-0 rounded-full bg-purple-500 blur-md"
+              />
+            )}
+
+            {/* Dot */}
+            <div
+              className={`relative w-3 h-3 rounded-full transition-all duration-300 ${
+                index === currentIndex
+                  ? 'bg-gradient-to-r from-purple-400 to-pink-500 shadow-[0_0_15px_rgba(168,85,247,0.8)]'
+                  : 'bg-white/30 group-hover:bg-white/50'
+              }`}
+            />
+
+            {/* Inner Sparkle */}
+            {index === currentIndex && (
+              <motion.div
+                animate={{
+                  scale: [0.5, 1, 0.5],
+                  opacity: [0.5, 1, 0.5],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="absolute inset-0 rounded-full bg-white"
+              />
+            )}
+          </motion.button>
         ))}
       </div>
 
-      {/* Decorative Border */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[var(--primary-orange)] to-transparent opacity-60"></div>
+      {/* Decorative Bottom Border with Animation */}
+      <motion.div
+        animate={{
+          x: ['-100%', '100%'],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        className="absolute bottom-0 left-0 w-1/3 h-[2px] bg-gradient-to-r from-transparent via-purple-500 to-transparent z-20"
+      />
+
+      {/* Static Bottom Glow */}
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-pink-400/50 to-transparent z-15" />
+
+      {/* Top Border Accent */}
+      <motion.div
+        animate={{
+          opacity: [0.3, 0.7, 0.3],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-purple-400/60 to-transparent z-20"
+      />
     </section>
   );
 }

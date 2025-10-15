@@ -107,8 +107,49 @@ export default function Footer() {
   ];
 
   return (
-    <footer id="links" className="relative border-t border-amber-500/20 scroll-mt-32">
-      <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5 opacity-20" />
+    <footer id="links" className="relative border-t border-purple-500/20 scroll-mt-32 overflow-hidden">
+      {/* Glassmorphism Background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-purple-950/30 via-pink-950/20 to-purple-950/30 backdrop-blur-xl" />
+
+      {/* Animated Gradient Wave */}
+      <motion.div
+        animate={{
+          backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+        }}
+        transition={{
+          duration: 15,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        className="absolute inset-0 opacity-20"
+        style={{
+          background: 'linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.3), transparent)',
+          backgroundSize: '200% 100%',
+        }}
+      />
+
+      {/* Floating Particles */}
+      {[...Array(10)].map((_, i) => (
+        <motion.div
+          key={i}
+          animate={{
+            y: [0, -40, 0],
+            x: [0, Math.sin(i) * 30, 0],
+            opacity: [0.1, 0.4, 0.1],
+          }}
+          transition={{
+            duration: 8 + i,
+            repeat: Infinity,
+            ease: "easeInOut",
+            delay: i * 0.5
+          }}
+          className="absolute w-1.5 h-1.5 bg-purple-400 rounded-full blur-sm"
+          style={{
+            left: `${(i * 10) + 5}%`,
+            top: `${20 + (i % 4) * 20}%`,
+          }}
+        />
+      ))}
 
       <div className="relative max-w-7xl mx-auto px-4 py-12">
         {/* Header Section */}
@@ -118,12 +159,30 @@ export default function Footer() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-6"
           >
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent mb-2">
+            <motion.h3
+              className="text-2xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent mb-2"
+              style={{
+                backgroundSize: '200% auto',
+              }}
+              animate={{
+                backgroundPosition: ['0% center', '200% center'],
+              }}
+              transition={{
+                duration: 5,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+            >
               {t('joinCommunity')}
-            </h3>
-            <p className="text-gray-400 max-w-md mx-auto">
+            </motion.h3>
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="text-gray-300 max-w-md mx-auto drop-shadow-lg"
+            >
               {t('communitySubtitle')}
-            </p>
+            </motion.p>
           </motion.div>
 
           {/* Social Media Buttons */}
@@ -136,39 +195,67 @@ export default function Footer() {
             {socialLinks.map((social, index) => (
               <motion.div
                 key={social.name}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3 + index * 0.1 }}
-                whileHover={{ scale: 1.05, y: -3 }}
-                whileTap={{ scale: 0.98 }}
+                whileHover={{ scale: 1.1, y: -5, rotate: [0, -5, 5, 0] }}
+                whileTap={{ scale: 0.95 }}
                 className="group relative"
               >
+                {/* Outer Glow Ring */}
+                <motion.div
+                  animate={{
+                    scale: [1, 1.2, 1],
+                    opacity: [0.3, 0, 0.3],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    ease: "easeOut",
+                    delay: index * 0.2
+                  }}
+                  className={`absolute inset-0 rounded-xl max-[400px]:rounded-full bg-gradient-to-r ${social.color} blur-xl opacity-0 group-hover:opacity-100`}
+                />
+
                 <a
                   href={social.href || '#'}
                   target={social.href ? "_blank" : undefined}
                   rel={social.href ? "noopener noreferrer" : undefined}
                   onClick={(e) => !social.href && e.preventDefault()}
-                  className={`relative flex items-center justify-center gap-2 px-2 py-2 sm:px-4 sm:py-3 rounded-xl max-[400px]:rounded-full max-[400px]:w-12 max-[400px]:h-12 max-[400px]:p-0 ${social.bgColor} text-white font-semibold transition-all duration-300 overflow-hidden group hover:shadow-2xl hover:shadow-black/30 ${!social.href ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`relative flex items-center justify-center gap-2 px-2 py-2 sm:px-4 sm:py-3 rounded-xl max-[400px]:rounded-full max-[400px]:w-12 max-[400px]:h-12 max-[400px]:p-0 ${social.bgColor} text-white font-semibold transition-all duration-300 overflow-hidden hover:shadow-2xl backdrop-blur-sm border border-white/10 ${!social.href ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
-                  {/* Background glow effect */}
-                  <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-all duration-300" />
-
-                  {/* Shimmer effect */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out" />
+                  {/* Background Shimmer Effect */}
+                  <motion.div
+                    animate={{
+                      x: ['-100%', '200%'],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "linear",
+                      delay: index * 0.3
+                    }}
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+                  />
 
                   {/* Content */}
                   <div className="relative z-10 flex items-center justify-center gap-2 sm:gap-2">
-                    <social.icon
-                      size={social.name === t('kick') ? 24 : 14}
-                      className={social.name === t('kick') ? "sm:w-7 sm:h-auto max-[400px]:w-6 max-[400px]:h-auto text-white group-hover:scale-110 transition-transform duration-300" : "sm:w-4 sm:h-4 max-[400px]:w-3.5 max-[400px]:h-3.5 text-white group-hover:scale-110 transition-transform duration-300"}
-                    />
-                    <span className="text-[10px] sm:text-sm max-[400px]:hidden text-white group-hover:text-white/90 transition-colors duration-300">
+                    <motion.div
+                      whileHover={{
+                        rotate: 360,
+                        scale: 1.2,
+                      }}
+                      transition={{ duration: 0.5 }}
+                    >
+                      <social.icon
+                        size={social.name === t('kick') ? 24 : 14}
+                        className={social.name === t('kick') ? "sm:w-7 sm:h-auto max-[400px]:w-6 max-[400px]:h-auto text-white drop-shadow-lg" : "sm:w-4 sm:h-4 max-[400px]:w-3.5 max-[400px]:h-3.5 text-white drop-shadow-lg"}
+                      />
+                    </motion.div>
+                    <span className="text-[10px] sm:text-sm max-[400px]:hidden text-white font-black tracking-wider">
                       {social.name}
                     </span>
                   </div>
-
-                  {/* Hover border glow */}
-                  <div className={`absolute inset-0 rounded-xl max-[400px]:rounded-full bg-gradient-to-r ${social.color} opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-300 -z-10`} />
                 </a>
               </motion.div>
             ))}
@@ -180,14 +267,38 @@ export default function Footer() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="text-center text-gray-500 text-sm pt-6 border-t border-gray-800"
+          className="text-center text-gray-400 text-sm pt-6 border-t border-purple-800/50"
         >
-          <p>&copy; {new Date().getFullYear()} Aca Jankovic. {t('copyright')}</p>
+          <motion.p
+            animate={{
+              opacity: [0.7, 1, 0.7],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            &copy; {new Date().getFullYear()} Aca Jankovic. {t('copyright')}
+          </motion.p>
         </motion.div>
       </div>
 
-      {/* Bottom Decorative Line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/30 to-transparent" />
+      {/* Bottom Animated Border */}
+      <motion.div
+        animate={{
+          x: ['-100%', '100%'],
+        }}
+        transition={{
+          duration: 3,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        className="absolute bottom-0 left-0 w-1/3 h-[2px] bg-gradient-to-r from-transparent via-purple-500 to-transparent"
+      />
+
+      {/* Static Bottom Glow */}
+      <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-pink-400/30 to-transparent" />
     </footer>
   );
 }
