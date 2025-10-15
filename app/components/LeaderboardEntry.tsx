@@ -57,7 +57,7 @@ export function LeaderboardEntry({
   index,
 }: LeaderboardEntryProps) {
   const locale = useLocale() as 'en' | 'sr';
-  const pointsLabel = locale === 'sr' ? 'poeni' : 'points';
+  const pointsLabel = locale === 'sr' ? 'poena' : 'points';
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}

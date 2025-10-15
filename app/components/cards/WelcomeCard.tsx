@@ -109,7 +109,7 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="relative flex items-center justify-center w-full min-h-[30px] max-[400px]:min-h-[28px] bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white text-xs font-extrabold px-4 rounded-xl text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 whitespace-nowrap"
+              className="relative flex items-center justify-center w-full min-h-[30px] max-[400px]:min-h-[28px] bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white text-sm font-extrabold px-4 rounded-xl text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 whitespace-nowrap"
             >
               CLAIM
             </a>

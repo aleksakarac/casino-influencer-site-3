@@ -61,12 +61,15 @@ export function PrizeCard({ prizeNumber, prizeImage, prizeTitle, index, locale }
   const rankLabel = getRankLabel(prizeNumber, locale);
 
   return (
-    <motion.div
+    <motion.a
+      href="https://kick.com/acajankovic"
+      target="_blank"
+      rel="noopener noreferrer"
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay: 0.1 + index * 0.1 }}
       whileHover={{ scale: 1.05, y: -4 }}
-      className={`bg-gradient-to-br ${colors.gradient} border ${colors.border} rounded-xl overflow-hidden backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/20`}
+      className={`bg-gradient-to-br ${colors.gradient} border ${colors.border} rounded-xl overflow-hidden backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:shadow-amber-500/20 cursor-pointer block`}
     >
       {/* Prize Image Section */}
       <div className="relative h-32 overflow-hidden">
@@ -92,6 +95,6 @@ export function PrizeCard({ prizeNumber, prizeImage, prizeTitle, index, locale }
       <div className="p-3 text-center">
         <div className="font-bold text-white text-sm">{prizeTitle}</div>
       </div>
-    </motion.div>
+    </motion.a>
   );
 }

@@ -128,9 +128,9 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="relative flex items-center justify-center w-full min-h-[30px] max-[400px]:min-h-[28px] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-xs font-extrabold px-3 rounded-xl text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 gap-1"
+                className="relative flex items-center justify-center w-full min-h-[30px] max-[400px]:min-h-[28px] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-sm font-extrabold px-3 rounded-xl text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 gap-1"
               >
-                <Gift size={11} />
+                <Gift size={13} />
                 CLAIM BONUS
               </a>
             </div>

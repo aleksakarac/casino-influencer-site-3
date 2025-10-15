@@ -57,9 +57,9 @@ export default function MiddleBar() {
   // Navigation handlers
   const handlePokupiBonuse = () => {
     if (pathname?.includes('/leaderboard')) {
-      router.push(`/${locale}/#games`);
+      router.push(`/${locale}/`);
     } else {
-      scrollToSection('games-section');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
