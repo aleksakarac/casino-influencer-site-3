@@ -49,13 +49,25 @@ export default function HeroGallery() {
             desktopImage?: SanityImageSource;
             mobileImage?: SanityImageSource;
             image?: SanityImageSource;
-          }) => {
+          }, index: number) => {
             // Support both old (single 'image' field) and new (desktopImage/mobileImage) formats
-            if (img.desktopImage || img.mobileImage) {
-              // New format with separate desktop/mobile images
+            if (img.desktopImage && img.mobileImage) {
+              // New format with both desktop and mobile images
               return {
-                desktopUrl: urlFor(img.desktopImage || img.mobileImage).width(1920).height(600).url(),
-                mobileUrl: urlFor(img.mobileImage || img.desktopImage).width(1920).height(800).url(),
+                desktopUrl: urlFor(img.desktopImage).width(1920).height(600).url(),
+                mobileUrl: urlFor(img.mobileImage).width(1920).height(800).url(),
+              };
+            } else if (img.desktopImage) {
+              // Only desktop image available
+              return {
+                desktopUrl: urlFor(img.desktopImage).width(1920).height(600).url(),
+                mobileUrl: urlFor(img.desktopImage).width(1920).height(800).url(),
+              };
+            } else if (img.mobileImage) {
+              // Only mobile image available
+              return {
+                desktopUrl: urlFor(img.mobileImage).width(1920).height(600).url(),
+                mobileUrl: urlFor(img.mobileImage).width(1920).height(800).url(),
               };
             } else if (img.image) {
               // Old format with single image - use for both desktop and mobile
@@ -65,10 +77,10 @@ export default function HeroGallery() {
               };
             } else {
               // Fallback to placeholder if no image found
-              const index = gallery.images.indexOf(img) % PLACEHOLDER_IMAGES.desktop.length;
+              const placeholderIndex = index % PLACEHOLDER_IMAGES.desktop.length;
               return {
-                desktopUrl: PLACEHOLDER_IMAGES.desktop[index],
-                mobileUrl: PLACEHOLDER_IMAGES.mobile[index],
+                desktopUrl: PLACEHOLDER_IMAGES.desktop[placeholderIndex],
+                mobileUrl: PLACEHOLDER_IMAGES.mobile[placeholderIndex],
               };
             }
           });
