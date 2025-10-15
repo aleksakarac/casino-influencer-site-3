@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, PanInfo } from 'framer-motion';
 import { client, urlFor } from '@/app/lib/sanity';
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types';
+import { haptics } from '@/app/utils/haptics';
 
 // Placeholder images - will be used if Sanity images are not available
 const PLACEHOLDER_IMAGES = {
@@ -36,6 +37,35 @@ export default function HeroGallery() {
     }))
   );
   const [autoPlaySpeed, setAutoPlaySpeed] = useState(5000);
+  const [direction, setDirection] = useState(0);
+
+  // Swipe handlers
+  const swipeConfidenceThreshold = 10000;
+  const swipePower = (offset: number, velocity: number) => {
+    return Math.abs(offset) * velocity;
+  };
+
+  const paginate = (newDirection: number) => {
+    setDirection(newDirection);
+    setCurrentIndex((prevIndex) => {
+      let newIndex = prevIndex + newDirection;
+      if (newIndex < 0) newIndex = images.length - 1;
+      if (newIndex >= images.length) newIndex = 0;
+      return newIndex;
+    });
+    // Haptic feedback on swipe
+    haptics.light();
+  };
+
+  const handleDragEnd = (e: MouseEvent | TouchEvent | PointerEvent, { offset, velocity }: PanInfo) => {
+    const swipe = swipePower(offset.x, velocity.x);
+
+    if (swipe < -swipeConfidenceThreshold) {
+      paginate(1);
+    } else if (swipe > swipeConfidenceThreshold) {
+      paginate(-1);
+    }
+  };
 
   useEffect(() => {
     const fetchGalleryImages = async () => {
@@ -49,13 +79,25 @@ export default function HeroGallery() {
             desktopImage?: SanityImageSource;
             mobileImage?: SanityImageSource;
             image?: SanityImageSource;
-          }) => {
+          }, index: number) => {
             // Support both old (single 'image' field) and new (desktopImage/mobileImage) formats
-            if (img.desktopImage || img.mobileImage) {
-              // New format with separate desktop/mobile images
+            if (img.desktopImage && img.mobileImage) {
+              // New format with both desktop and mobile images
               return {
-                desktopUrl: urlFor(img.desktopImage || img.mobileImage).width(1920).height(600).url(),
-                mobileUrl: urlFor(img.mobileImage || img.desktopImage).width(1920).height(800).url(),
+                desktopUrl: urlFor(img.desktopImage).width(1920).height(600).url(),
+                mobileUrl: urlFor(img.mobileImage).width(1920).height(800).url(),
+              };
+            } else if (img.desktopImage) {
+              // Only desktop image available
+              return {
+                desktopUrl: urlFor(img.desktopImage).width(1920).height(600).url(),
+                mobileUrl: urlFor(img.desktopImage).width(1920).height(800).url(),
+              };
+            } else if (img.mobileImage) {
+              // Only mobile image available
+              return {
+                desktopUrl: urlFor(img.mobileImage).width(1920).height(600).url(),
+                mobileUrl: urlFor(img.mobileImage).width(1920).height(800).url(),
               };
             } else if (img.image) {
               // Old format with single image - use for both desktop and mobile
@@ -65,10 +107,10 @@ export default function HeroGallery() {
               };
             } else {
               // Fallback to placeholder if no image found
-              const index = gallery.images.indexOf(img) % PLACEHOLDER_IMAGES.desktop.length;
+              const placeholderIndex = index % PLACEHOLDER_IMAGES.desktop.length;
               return {
-                desktopUrl: PLACEHOLDER_IMAGES.desktop[index],
-                mobileUrl: PLACEHOLDER_IMAGES.mobile[index],
+                desktopUrl: PLACEHOLDER_IMAGES.desktop[placeholderIndex],
+                mobileUrl: PLACEHOLDER_IMAGES.mobile[placeholderIndex],
               };
             }
           });
@@ -94,29 +136,62 @@ export default function HeroGallery() {
     return () => clearInterval(interval);
   }, [images.length, autoPlaySpeed]);
 
+  const variants = {
+    enter: (direction: number) => {
+      return {
+        x: direction > 0 ? 1000 : -1000,
+        opacity: 0
+      };
+    },
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction: number) => {
+      return {
+        zIndex: 0,
+        x: direction < 0 ? 1000 : -1000,
+        opacity: 0
+      };
+    }
+  };
+
   return (
     <section className="relative w-full h-64 overflow-hidden bg-black">
       {/* Image Carousel */}
-      <AnimatePresence mode="wait">
+      <AnimatePresence initial={false} custom={direction}>
         <motion.div
           key={currentIndex}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1 }}
-          className="absolute inset-0"
+          custom={direction}
+          variants={variants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{
+            x: { type: "spring", stiffness: 300, damping: 30 },
+            opacity: { duration: 0.2 }
+          }}
+          drag="x"
+          dragConstraints={{ left: 0, right: 0 }}
+          dragElastic={1}
+          onDragEnd={handleDragEnd}
+          className="absolute inset-0 cursor-grab active:cursor-grabbing"
         >
-          <picture className="w-full h-full block">
-            <source
-              media="(min-width: 768px)"
-              srcSet={images[currentIndex].desktopUrl}
-            />
-            <img
-              src={images[currentIndex].mobileUrl}
-              alt="Hero gallery image"
-              className="w-full h-full object-cover object-center"
-            />
-          </picture>
+          {/* Desktop image - hidden on mobile */}
+          <img
+            src={images[currentIndex].desktopUrl}
+            alt="Hero gallery image"
+            className="hidden md:block w-full h-full object-cover object-center pointer-events-none"
+            draggable={false}
+          />
+          {/* Mobile image - hidden on desktop */}
+          <img
+            src={images[currentIndex].mobileUrl}
+            alt="Hero gallery image"
+            className="block md:hidden w-full h-full object-cover object-center pointer-events-none"
+            draggable={false}
+          />
         </motion.div>
       </AnimatePresence>
 
@@ -126,7 +201,10 @@ export default function HeroGallery() {
         {images.map((_, index) => (
           <button
             key={index}
-            onClick={() => setCurrentIndex(index)}
+            onClick={() => {
+              setCurrentIndex(index);
+              haptics.selection();
+            }}
             className={`w-3 h-3 rounded-full transition-all duration-300 ${
               index === currentIndex
                 ? 'bg-[var(--primary-orange)] shadow-[0_0_10px_rgba(251,191,36,0.6)]'

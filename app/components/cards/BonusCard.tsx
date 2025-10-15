@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
-import { Copy, Check, Gift } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Copy, Check, Gift, Sparkles, Star, Zap } from 'lucide-react';
+import { haptics } from '@/app/utils/haptics';
 
 interface BonusCardProps {
   card: {
@@ -23,11 +25,13 @@ interface BonusCardProps {
 
 export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
   const [copying, setCopying] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const copyCode = async (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
     setCopying(true);
+    haptics.success();
 
     try {
       await navigator.clipboard.writeText(card.bonusCode);
@@ -35,7 +39,6 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
         description: `${card.bonusCode} je kopiran u clipboard`,
       });
     } catch (err) {
-      // Fallback for older browsers
       const textArea = document.createElement('textarea');
       textArea.value = card.bonusCode;
       document.body.appendChild(textArea);
@@ -49,94 +52,265 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
   };
 
   return (
-    <div
-      className="relative rounded-xl overflow-hidden aspect-square border hover:scale-105 transition-all duration-300 w-full max-w-[200px] mx-auto group"
-      style={{
-        borderColor,
-        borderWidth: '1px',
-        backgroundImage: `url(${card.backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
+    <motion.div
+      initial={{ opacity: 0, y: 20, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      whileHover={{
+        scale: 1.05,
+        rotateY: 5,
+        rotateX: 5,
+        z: 50,
       }}
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className="relative w-full max-w-[200px] mx-auto group perspective-1000"
+      style={{ transformStyle: 'preserve-3d' }}
     >
-      {/* Overlay Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/90" />
-
-      {/* Icon (Top Left) */}
-      <div className="absolute top-2 left-2 z-10 bg-gradient-to-br from-green-500 to-emerald-600 p-2.5 max-[400px]:p-2 rounded-md shadow-lg">
-        <Gift size={16} className="text-white max-[400px]:w-[13px] max-[400px]:h-[13px]" />
-      </div>
-
-      {/* Tag (Top Right) */}
-      {card.tag && (
-        <div
-          className="absolute top-2 right-2 px-3 py-1 max-[400px]:px-2 max-[400px]:py-0.5 text-[11px] max-[400px]:text-[9px] font-bold uppercase shadow-lg z-10 rounded-full border-2 bg-black/30 backdrop-blur-sm"
-          style={{
-            borderColor: card.tag.color,
-            color: card.tag.color,
+      {/* Card Container */}
+      <div
+        className="relative aspect-square rounded-2xl overflow-hidden border-2 shadow-2xl"
+        style={{
+          borderColor,
+          background: `url(${card.backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
+        {/* Animated Gradient Overlay */}
+        <motion.div
+          animate={{
+            background: [
+              'linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(236, 72, 153, 0.3) 100%)',
+              'linear-gradient(135deg, rgba(236, 72, 153, 0.3) 0%, rgba(59, 130, 246, 0.3) 100%)',
+              'linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(139, 92, 246, 0.3) 100%)',
+              'linear-gradient(135deg, rgba(139, 92, 246, 0.3) 0%, rgba(236, 72, 153, 0.3) 100%)',
+            ],
           }}
-        >
-          {card.tag.name}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          className="absolute inset-0"
+        />
+
+        {/* Glass morphism layer */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/80 backdrop-blur-[2px]" />
+
+        {/* Floating Sparkles */}
+        <AnimatePresence>
+          {isHovered && (
+            <>
+              {[...Array(5)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0, x: '50%', y: '50%' }}
+                  animate={{
+                    opacity: [0, 1, 0],
+                    scale: [0, 1, 0],
+                    x: `${Math.random() * 100}%`,
+                    y: `${Math.random() * 100}%`,
+                  }}
+                  exit={{ opacity: 0 }}
+                  transition={{
+                    duration: 1.5,
+                    delay: i * 0.2,
+                    repeat: Infinity,
+                    repeatDelay: 1
+                  }}
+                  className="absolute"
+                >
+                  <Sparkles size={12} className="text-yellow-300 fill-yellow-300" />
+                </motion.div>
+              ))}
+            </>
+          )}
+        </AnimatePresence>
+
+        {/* Animated Border Glow */}
+        <motion.div
+          animate={isHovered ? {
+            opacity: [0.5, 1, 0.5],
+          } : { opacity: 0 }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute inset-0 rounded-2xl"
+          style={{
+            boxShadow: `0 0 30px ${borderColor}, inset 0 0 30px ${borderColor}`,
+          }}
+        />
+
+        {/* Top Icons */}
+        <div className="absolute top-2 left-2 right-2 flex justify-between items-start z-20">
+          {/* Gift Icon */}
+          <motion.div
+            animate={{
+              rotate: [0, 10, -10, 0],
+              scale: [1, 1.1, 1],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="bg-gradient-to-br from-green-400 to-emerald-600 p-2 rounded-xl shadow-xl backdrop-blur-sm border border-white/20"
+          >
+            <Gift size={14} className="text-white" />
+          </motion.div>
+
+          {/* Tag */}
+          {card.tag && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="px-2 py-1 text-[10px] font-black uppercase rounded-full border-2 bg-black/50 backdrop-blur-md shadow-xl"
+              style={{
+                borderColor: card.tag.color,
+                color: card.tag.color,
+              }}
+            >
+              {card.tag.name}
+            </motion.div>
+          )}
         </div>
-      )}
 
-      {/* Content */}
-      <div className="absolute inset-0 flex flex-col justify-end">
-        {/* Gradient overlay from top to bottom of entire card */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/0 via-purple-900/30 via-purple-900/60 to-purple-900/75 rounded-b-xl" />
-          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/0 via-indigo-950/30 via-indigo-950/60 to-indigo-950/75 rounded-b-xl" />
-        </div>
+        {/* Content Section */}
+        <div className="absolute inset-0 flex flex-col justify-end p-3">
+          {/* Bottom Gradient */}
+          <div className="absolute left-0 right-0 bottom-0 h-3/4 bg-gradient-to-t from-black/95 via-purple-950/80 to-transparent rounded-b-2xl" />
 
-        {/* Bottom Section with Content */}
-        <div className="relative p-2 space-y-1.5 flex flex-col items-center rounded-b-xl">
-
-          {/* Title & Activations */}
-          <div className="relative w-full text-center mb-1 z-10">
-            <h3 className="text-base font-extrabold text-white leading-tight">
+          {/* Title Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="relative z-10 text-center mb-2"
+          >
+            <h3 className="text-sm font-black text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text mb-1 leading-tight">
               {card.title}
             </h3>
-            <p className="text-[11px] font-bold text-gray-300 mt-0.5">
-              {card.activationsCount} Activations
-            </p>
-          </div>
+            <div className="flex items-center justify-center gap-1">
+              <motion.div
+                animate={{
+                  rotate: 360,
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+              >
+                <Star size={10} className="text-yellow-400 fill-yellow-400" />
+              </motion.div>
+              <p className="text-[10px] font-bold text-gray-300">
+                {card.activationsCount} Activations
+              </p>
+            </div>
+          </motion.div>
 
-          {/* Code Box and Button Container */}
-          <div className="relative w-full flex flex-col items-center gap-1.5 z-10">
-            {/* Code Box */}
-            <div className="bg-purple-800/60 rounded-xl px-2 py-1.5 flex items-center justify-between w-full max-[400px]:w-[80%] min-[768px]:w-[90%] border border-purple-500/30 min-h-[30px] max-[400px]:min-h-[28px]">
-              <span className="text-white font-mono text-xs font-extrabold tracking-wide">
+          {/* Code Box */}
+          <motion.button
+            onClick={copyCode}
+            disabled={copying}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            className="relative w-full mb-2 z-10"
+          >
+            {/* Animated Border */}
+            <motion.div
+              animate={{
+                background: [
+                  'linear-gradient(90deg, rgba(168, 85, 247, 0.5), rgba(236, 72, 153, 0.5))',
+                  'linear-gradient(90deg, rgba(236, 72, 153, 0.5), rgba(168, 85, 247, 0.5))',
+                ],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "linear"
+              }}
+              className="absolute -inset-[1px] rounded-xl blur-sm"
+            />
+
+            <div className="relative bg-purple-900/80 hover:bg-purple-800/90 backdrop-blur-md rounded-xl px-2 py-1.5 flex items-center justify-between border border-purple-500/30 transition-all duration-200">
+              <span className="text-white font-mono text-[11px] font-extrabold tracking-wider">
                 {card.bonusCode}
               </span>
-              <button
-                onClick={copyCode}
-                disabled={copying}
-                className="text-gray-300 hover:text-green-400 transition-colors ml-1.5 flex-shrink-0"
-                aria-label="Copy code"
+              <motion.div
+                animate={copying ? {
+                  scale: [1, 1.2, 1],
+                } : {}}
+                className="text-gray-300"
               >
-                {copying ? <Check size={11} /> : <Copy size={11} />}
-              </button>
+                {copying ? <Check size={14} className="text-green-400" /> : <Copy size={14} />}
+              </motion.div>
             </div>
+          </motion.button>
 
-            {/* Claim Button */}
-            <div className="relative w-full max-[400px]:w-[80%] min-[768px]:w-[90%]">
-              {/* Animated border effect */}
-              <div className="absolute -inset-[2px] bg-gradient-to-r from-green-400 via-emerald-500 to-green-400 rounded-xl opacity-75 blur-sm animate-pulse" />
+          {/* Claim Button */}
+          <motion.div
+            className="relative w-full z-10"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            {/* Glow Effect */}
+            <motion.div
+              animate={{
+                opacity: [0.5, 1, 0.5],
+                scale: [1, 1.05, 1],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="absolute -inset-[2px] bg-gradient-to-r from-green-400 via-emerald-500 to-green-400 rounded-xl blur-md"
+            />
 
-              <a
-                href={vavadaLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="relative flex items-center justify-center w-full min-h-[30px] max-[400px]:min-h-[28px] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-xs font-extrabold px-3 rounded-xl text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 gap-1"
+            <a
+              href={vavadaLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="relative flex items-center justify-center w-full py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-[11px] font-black rounded-xl transition-all duration-300 shadow-xl gap-1.5"
+            >
+              <motion.div
+                animate={{
+                  rotate: [0, 360],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
               >
-                <Gift size={11} />
-                CLAIM BONUS
-              </a>
-            </div>
-          </div>
+                <Zap size={12} className="fill-white" />
+              </motion.div>
+              CLAIM BONUS
+            </a>
+          </motion.div>
         </div>
       </div>
-    </div>
+
+      {/* Outer Glow Ring */}
+      <motion.div
+        animate={isHovered ? {
+          scale: [1, 1.1, 1],
+          opacity: [0.3, 0.6, 0.3],
+        } : { opacity: 0 }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute inset-0 rounded-2xl -z-10 blur-xl"
+        style={{
+          background: `radial-gradient(circle, ${borderColor} 0%, transparent 70%)`,
+        }}
+      />
+    </motion.div>
   );
 }

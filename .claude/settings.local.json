@@ -20,7 +20,11 @@
       "Bash(gh run watch:*)",
       "Bash(git checkout:*)",
       "Bash(git merge:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(git log:*)",
+      "Bash(npx wrangler domains add:*)",
+      "Bash(rd:*)",
+      "Bash(git pull:*)"
     ],
     "deny": [],
     "ask": []

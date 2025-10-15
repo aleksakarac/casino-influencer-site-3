@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { Copy, Check } from 'lucide-react';
 import { useLocale } from 'next-intl';
+import { haptics } from '@/app/utils/haptics';
 
 interface WelcomeCardProps {
   card: {
@@ -24,6 +25,9 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
     e.stopPropagation();
     e.preventDefault();
     setCopying(true);
+
+    // Haptic feedback on copy
+    haptics.success();
 
     try {
       await navigator.clipboard.writeText(card.bonusCode);
@@ -76,8 +80,13 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
 
         {/* Bottom Section - Stacked Vertically */}
         <div className="w-full flex flex-col items-center gap-1.5 mt-auto pb-1">
-          {/* Code Display */}
-          <div className="flex items-center justify-between bg-purple-800/60 px-2.5 min-h-[30px] max-[400px]:min-h-[28px] rounded-xl border border-purple-500/30 w-full max-[400px]:w-[80%] min-[768px]:w-[90%]">
+          {/* Code Display - Entire box is clickable */}
+          <button
+            onClick={copyCode}
+            disabled={copying}
+            className="flex items-center justify-between bg-purple-800/60 hover:bg-purple-700/70 px-2.5 min-h-[30px] max-[400px]:min-h-[28px] rounded-xl border border-purple-500/30 hover:border-purple-400/50 w-full max-[400px]:w-[80%] min-[768px]:w-[90%] transition-all duration-200 cursor-pointer group/codebox"
+            aria-label="Copy code"
+          >
             <div className="flex items-center gap-1">
               <span className="text-purple-200 text-[11px] font-bold max-[400px]:hidden">
                 {locale === 'sr' ? 'Koristi Kod' : 'Use Code'}
@@ -89,15 +98,10 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
                 {card.bonusCode}
               </span>
             </div>
-            <button
-              onClick={copyCode}
-              disabled={copying}
-              className="text-gray-300 hover:text-green-400 transition-colors ml-1.5 flex-shrink-0"
-              aria-label="Copy code"
-            >
-              {copying ? <Check size={11} /> : <Copy size={11} />}
-            </button>
-          </div>
+            <div className="text-gray-300 group-hover/codebox:text-green-400 transition-colors ml-1.5 flex-shrink-0">
+              {copying ? <Check size={16} /> : <Copy size={16} />}
+            </div>
+          </button>
 
           {/* Claim Button */}
           <div className="relative w-full max-[400px]:w-[80%] min-[768px]:w-[90%]">

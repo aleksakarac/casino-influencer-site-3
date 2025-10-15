@@ -9,6 +9,7 @@ import HeroGallery from '@/app/components/HeroGallery';
 import MiddleBar from '@/app/components/MiddleBar';
 import Footer from '@/app/components/Footer';
 import BackgroundWrapper from '@/app/components/BackgroundWrapper';
+import HapticsInitializer from '@/app/components/HapticsInitializer';
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -67,6 +68,7 @@ export default async function LocaleLayout({
     <html lang={locale}>
       <body className="antialiased">
         <NextIntlClientProvider messages={messages}>
+          <HapticsInitializer />
           <BackgroundWrapper>
             <div className="min-h-screen">
               {/* PERSISTENT - Header */}
