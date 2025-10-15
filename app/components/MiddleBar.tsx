@@ -186,7 +186,7 @@ export default function MiddleBar() {
 
                 {/* Text Label or Logo */}
                 {item.useLogo ? (
-                  <div className="w-24 lg:w-28 h-auto flex items-center justify-center">
+                  <div className="w-[60px] min-[600px]:w-[80px] sm:w-[100px] lg:w-[161px] h-[80px] lg:h-auto flex items-center justify-center pt-2.5 px-2.5 pb-3.5">
                     <img
                       src="/vavada_logo.svg"
                       alt="Vavada"
