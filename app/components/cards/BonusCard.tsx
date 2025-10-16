@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import { Copy, Check, Gift, Sparkles } from 'lucide-react';
@@ -23,11 +23,11 @@ interface BonusCardProps {
   vavadaLink: string;
 }
 
-export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
+export const BonusCard = memo(function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
   const [copying, setCopying] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  const copyCode = async (e: React.MouseEvent) => {
+  const copyCode = useCallback(async (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
     haptics.light();
@@ -50,7 +50,7 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
     }
 
     setTimeout(() => setCopying(false), 2000);
-  };
+  }, [card.bonusCode]);
 
   return (
     <motion.div
@@ -206,4 +206,4 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
       </motion.div>
     </motion.div>
   );
-}
+});

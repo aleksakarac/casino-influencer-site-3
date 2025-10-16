@@ -1,8 +1,9 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 import { Sparkles, Gift, Crown, Swords, Share2 } from 'lucide-react';
 import { useActiveSection } from '@/app/hooks/useActiveSection';
 import { client } from '@/app/lib/sanity';
@@ -72,31 +73,32 @@ export default function MiddleBar() {
     }
   };
 
-  // Navigation handlers
-  const handlePokupiBonuse = () => {
+  // Navigation handlers - memoized for performance
+  const handlePokupiBonuse = useCallback(() => {
     if (pathname?.includes('/leaderboard')) {
       router.push(`/${locale}/`);
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  };
+  }, [pathname, locale, router]);
 
-  const handleTurniri = () => {
+  const handleTurniri = useCallback(() => {
     if (pathname?.includes('/leaderboard')) {
       router.push(`/${locale}/#tournaments`);
     } else {
       scrollToSection('events');
     }
-  };
+  }, [pathname, locale, router]);
 
-  const handleSocial = () => {
+  const handleSocial = useCallback(() => {
     const footer = document.querySelector('footer');
     if (footer) {
       footer.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, []);
 
-  const items = [
+  // Memoize items array to prevent recreation on every render
+  const items = useMemo(() => [
     {
       icon: Sparkles,
       title: "VAVADA",
@@ -143,7 +145,7 @@ export default function MiddleBar() {
       isPage: false,
       pageId: null
     }
-  ];
+  ], [vavadaLink, isMobile, t, handlePokupiBonuse, handleTurniri, handleSocial, router, locale]);
 
   return (
     <div className="relative glass border-b border-white/10 shadow-lg shadow-black/50">
@@ -254,11 +256,12 @@ export default function MiddleBar() {
                     </div>
 
                     {/* Desktop: Logo SVG */}
-                    <div className="hidden lg:flex w-[161px] h-auto items-center justify-center pt-2.5 px-2.5 pb-3.5">
-                      <img
+                    <div className="hidden lg:flex w-[161px] h-[50px] items-center justify-center pt-2.5 px-2.5 pb-3.5 relative">
+                      <Image
                         src="/vavada_logo.svg"
                         alt="Vavada"
-                        className={`w-full h-auto transition-all duration-300 animate-[breathing_3s_ease-in-out_infinite] ${
+                        fill
+                        className={`object-contain transition-all duration-300 animate-[breathing_3s_ease-in-out_infinite] ${
                           isActive
                             ? 'brightness-100'
                             : 'brightness-75 group-hover:brightness-100'
@@ -268,6 +271,7 @@ export default function MiddleBar() {
                             ? 'drop-shadow(0 2px 8px rgba(254, 40, 74, 0.5))'
                             : undefined
                         }}
+                        priority
                       />
                     </div>
                   </>
