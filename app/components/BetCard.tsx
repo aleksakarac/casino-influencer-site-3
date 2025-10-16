@@ -203,6 +203,17 @@ export default function BetCard({
           accentGlow: 'from-blue-500/10 via-cyan-500/5 to-transparent',
           label: 'CASHED OUT',
         };
+      default:
+        return {
+          bgColor: 'from-gray-800/95 via-gray-800/90 to-gray-900/95',
+          borderColor: 'border-gray-500/40',
+          glowColor: 'shadow-gray-500/20',
+          labelBg: 'bg-gradient-to-r from-gray-500/30 to-gray-600/30',
+          labelText: 'text-gray-300',
+          labelBorder: 'border-gray-400/50',
+          accentGlow: 'from-gray-500/10 via-gray-600/5 to-transparent',
+          label: 'PENDING',
+        };
     }
   };
 
