@@ -2,11 +2,18 @@
 
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { GameCardsGrid } from '@/app/components/GameCardsGrid';
 import TournamentGrid from '@/app/components/TournamentGrid';
 import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { client } from '@/app/lib/sanity';
 import { gameCardsQuery } from '@/app/lib/sanity/queries';
+
+// Load BettingSection only on client side to avoid SSR issues
+const BettingSection = dynamic(() => import('@/app/components/BettingSection'), {
+  ssr: false,
+  loading: () => <LoadingSpinner />
+});
 
 export default function HomePage() {
   const searchParams = useSearchParams();
@@ -88,6 +95,10 @@ export default function HomePage() {
 
       <Suspense fallback={<LoadingSpinner />}>
         <TournamentGrid />
+      </Suspense>
+
+      <Suspense fallback={<LoadingSpinner />}>
+        <BettingSection />
       </Suspense>
     </>
   );
