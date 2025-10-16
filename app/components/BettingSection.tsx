@@ -133,7 +133,17 @@ export default function BettingSection() {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div
+            className={`
+              grid gap-4 sm:gap-6 justify-items-center
+              ${bets.length === 1
+                ? 'grid-cols-1 max-w-md mx-auto'
+                : bets.length === 2
+                ? 'grid-cols-1 sm:grid-cols-2 max-w-4xl mx-auto'
+                : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3'
+              }
+            `}
+          >
             {bets.map((bet, index) => (
               <BetCard
                 key={bet._id}

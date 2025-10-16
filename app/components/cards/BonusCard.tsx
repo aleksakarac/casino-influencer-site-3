@@ -93,10 +93,10 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
 
           {/* Title & Activations */}
           <div className="relative w-full text-center mb-1 z-10">
-            <h3 className="text-base font-extrabold text-white leading-tight">
+            <h3 className="text-[10px] min-[360px]:text-xs sm:text-base font-extrabold text-white leading-tight px-1">
               {card.title}
             </h3>
-            <p className="text-[11px] font-bold text-gray-300 mt-0.5">
+            <p className="text-[8px] min-[360px]:text-[9px] sm:text-[11px] font-bold text-gray-300 mt-0.5">
               {card.activationsCount} Activations
             </p>
           </div>
@@ -104,34 +104,34 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
           {/* Code Box and Button Container */}
           <div className="relative w-full flex flex-col items-center gap-1.5 z-10">
             {/* Code Box */}
-            <div className="bg-purple-800/60 rounded-xl px-2 py-1.5 flex items-center justify-between w-full max-[400px]:w-[80%] min-[768px]:w-[90%] border border-purple-500/30 min-h-[30px] max-[400px]:min-h-[28px]">
-              <span className="text-white font-mono text-xs font-extrabold tracking-wide">
+            <div className="bg-purple-800/60 rounded-lg px-1.5 sm:px-2 py-1 sm:py-1.5 flex items-center justify-between w-full max-[360px]:w-[90%] max-[400px]:w-[85%] min-[768px]:w-[90%] border border-purple-500/30 min-h-[24px] min-[360px]:min-h-[26px] sm:min-h-[30px]">
+              <span className="text-white font-mono text-[9px] min-[360px]:text-[10px] sm:text-xs font-extrabold tracking-tight">
                 {card.bonusCode}
               </span>
               <button
                 onClick={copyCode}
                 disabled={copying}
-                className="text-gray-300 hover:text-green-400 transition-colors ml-1.5 flex-shrink-0"
+                className="text-gray-300 hover:text-green-400 transition-colors ml-1 flex-shrink-0"
                 aria-label="Copy code"
               >
-                {copying ? <Check size={11} /> : <Copy size={11} />}
+                {copying ? <Check size={9} className="min-[360px]:w-[10px] min-[360px]:h-[10px] sm:w-[11px] sm:h-[11px]" /> : <Copy size={9} className="min-[360px]:w-[10px] min-[360px]:h-[10px] sm:w-[11px] sm:h-[11px]" />}
               </button>
             </div>
 
             {/* Claim Button */}
-            <div className="relative w-full max-[400px]:w-[80%] min-[768px]:w-[90%]">
+            <div className="relative w-full max-[360px]:w-[90%] max-[400px]:w-[85%] min-[768px]:w-[90%]">
               {/* Animated border effect */}
-              <div className="absolute -inset-[2px] bg-gradient-to-r from-green-400 via-emerald-500 to-green-400 rounded-xl opacity-75 blur-sm animate-pulse" />
+              <div className="absolute -inset-[2px] bg-gradient-to-r from-green-400 via-emerald-500 to-green-400 rounded-lg opacity-75 blur-sm animate-pulse" />
 
               <a
                 href={vavadaLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
-                className="relative flex items-center justify-center w-full min-h-[30px] max-[400px]:min-h-[28px] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-sm font-extrabold px-3 rounded-xl text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 gap-1"
+                className="relative flex items-center justify-center w-full min-h-[24px] min-[360px]:min-h-[26px] sm:min-h-[30px] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-[10px] min-[360px]:text-[11px] sm:text-sm font-extrabold px-1.5 sm:px-3 rounded-lg text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 gap-0.5 sm:gap-1"
               >
-                <Gift size={13} />
-                CLAIM BONUS
+                <Gift size={10} className="min-[360px]:w-[11px] min-[360px]:h-[11px] sm:w-[13px] sm:h-[13px]" />
+                <span className="tracking-tighter min-[360px]:tracking-tight">CLAIM BONUS</span>
               </a>
             </div>
           </div>

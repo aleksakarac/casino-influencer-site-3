@@ -3,7 +3,8 @@
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { TrendingUp, Calendar, DollarSign, Sparkles } from 'lucide-react';
 import { useLocale } from 'next-intl';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { client } from '@/app/lib/sanity';
 
 interface BetCardProps {
   useImageMode?: boolean;
@@ -42,6 +43,25 @@ export default function BetCard({
 }: BetCardProps) {
   const locale = useLocale();
   const [isHovered, setIsHovered] = useState(false);
+  const [vavadaLink, setVavadaLink] = useState<string>('#');
+
+  // Fetch Vavada link from Sanity
+  useEffect(() => {
+    const fetchVavadaLink = async () => {
+      try {
+        const settings = await client.fetch(
+          `*[_type == "siteSettings"][0]{ vavadaRefLink }`
+        );
+        if (settings?.vavadaRefLink) {
+          setVavadaLink(settings.vavadaRefLink);
+        }
+      } catch (error) {
+        console.error('Error fetching Vavada link:', error);
+      }
+    };
+
+    fetchVavadaLink();
+  }, []);
 
   // If image mode is enabled, render image card
   if (useImageMode && cardImageUrl) {
@@ -307,18 +327,24 @@ export default function BetCard({
             </div>
           </div>
 
-          {/* VAVADA Logo with Glow */}
-          <motion.div
-            className="flex justify-center py-2 sm:py-3"
+          {/* VAVADA Logo with Glow - Clickable */}
+          <motion.a
+            href={vavadaLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex justify-center py-2 sm:py-3 cursor-pointer"
             whileHover={{ scale: 1.1 }}
             transition={{ duration: 0.3 }}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
           >
             <svg width="80" height="20" viewBox="0 0 100 25" fill="none" className="sm:w-[90px] sm:h-[22px] drop-shadow-[0_0_8px_rgba(254,40,74,0.5)]">
               <text x="50%" y="50%" dominantBaseline="middle" textAnchor="middle" fill="#FE284A" fontSize="18" fontWeight="900" fontFamily="Arial, sans-serif">
                 VAVADA
               </text>
             </svg>
-          </motion.div>
+          </motion.a>
 
           {/* Odds Section with Enhanced Design */}
           <div className="space-y-2 sm:space-y-2.5">

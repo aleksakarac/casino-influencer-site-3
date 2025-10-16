@@ -54,10 +54,10 @@ export function PlayCard({ card, borderColor, vavadaLink }: PlayCardProps) {
       )}
 
       {/* Play Now Button - Bottom Center */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-[75%]">
+      <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-20 w-[85%] min-[360px]:w-[80%] sm:w-[75%]">
         <div className="relative">
           {/* Animated border effect */}
-          <div className="absolute -inset-[2px] bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-400 rounded-xl opacity-75 blur-sm animate-pulse" />
+          <div className="absolute -inset-[2px] bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-400 rounded-lg opacity-75 blur-sm animate-pulse" />
 
           <button
             onClick={(e) => {
@@ -67,20 +67,24 @@ export function PlayCard({ card, borderColor, vavadaLink }: PlayCardProps) {
             className="
               relative
               w-full
-              min-h-[30px]
-              px-3
+              min-h-[24px]
+              min-[360px]:min-h-[26px]
+              sm:min-h-[30px]
+              px-1.5
+              min-[360px]:px-2
+              sm:px-3
               bg-gradient-to-r from-amber-500 to-yellow-600
               hover:from-amber-400 hover:to-yellow-500
-              text-black text-sm font-extrabold
-              rounded-xl
+              text-black text-[10px] min-[360px]:text-[11px] sm:text-sm font-extrabold
+              rounded-lg
               shadow-md hover:shadow-lg
               transition-all duration-300
               transform hover:scale-105
-              flex items-center justify-center gap-1
+              flex items-center justify-center gap-0.5 sm:gap-1
             "
           >
-            <Play size={12} fill="currentColor" />
-            PLAY NOW
+            <Play size={9} fill="currentColor" className="min-[360px]:w-[10px] min-[360px]:h-[10px] sm:w-3 sm:h-3" />
+            <span className="tracking-tighter min-[360px]:tracking-tight">PLAY NOW</span>
           </button>
         </div>
       </div>

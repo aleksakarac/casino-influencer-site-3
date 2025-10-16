@@ -15,6 +15,7 @@ export default function MiddleBar() {
   const activeSection = useActiveSection();
   const [vavadaLink, setVavadaLink] = useState<string>('#');
   const [isMobile, setIsMobile] = useState(false);
+  const [isSmallPhone, setIsSmallPhone] = useState(false);
   const t = useTranslations('MiddleBar');
 
   // Fetch Vavada link from Sanity
@@ -35,19 +36,20 @@ export default function MiddleBar() {
     fetchVavadaLink();
   }, []);
 
-  // Track window width for mobile detection (≤800px)
+  // Track window width for mobile detection (≤800px) and small phone (≤430px)
   useEffect(() => {
-    const checkMobile = () => {
+    const checkScreenSize = () => {
       setIsMobile(window.innerWidth <= 800);
+      setIsSmallPhone(window.innerWidth <= 430);
     };
 
     // Initial check
-    checkMobile();
+    checkScreenSize();
 
     // Add resize listener
-    window.addEventListener('resize', checkMobile);
+    window.addEventListener('resize', checkScreenSize);
 
-    return () => window.removeEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
   // Determine active button
@@ -170,7 +172,7 @@ export default function MiddleBar() {
                 transition={{ delay: index * 0.08 }}
                 whileHover={{ scale: 1.05 }}
                 className={`
-                  group relative flex flex-col lg:flex-row items-center lg:justify-center gap-1.5 lg:gap-2 px-4 lg:px-5 py-4 lg:py-4
+                  group relative flex flex-col lg:flex-row items-center lg:justify-center gap-0.5 lg:gap-2 px-1.5 sm:px-4 lg:px-5 py-3 lg:py-4
                   transition-all duration-300 cursor-pointer flex-1 lg:flex-none lg:min-w-[176px]
                   bg-transparent border-0
                   ${isActive
@@ -180,7 +182,9 @@ export default function MiddleBar() {
                 `}
                 style={{
                   marginBottom: isActive ? '-1px' : '0',
-                  paddingBottom: isActive ? 'calc(0.75rem + 1px)' : '0.75rem'
+                  paddingBottom: isActive ? 'calc(0.75rem + 1px)' : '0.75rem',
+                  // iPhone-specific: Limit flex-basis to prevent overflow
+                  maxWidth: isSmallPhone ? '20%' : 'none'
                 }}
               >
                 {/* Chrome Tab Curves (Active Only) */}
@@ -204,11 +208,11 @@ export default function MiddleBar() {
                 {item.useLogo ? (
                   <>
                     {/* Mobile: Icon + Text */}
-                    <div className="lg:hidden flex flex-col items-center gap-1.5">
+                    <div className="lg:hidden flex flex-col items-center gap-1">
                       {/* Icon Container */}
                       <div
                         className={`
-                          relative p-2 sm:p-2.5 rounded-xl transition-all duration-300 flex-shrink-0
+                          relative p-1 sm:p-2.5 rounded-lg transition-all duration-300 flex-shrink-0
                           ${isActive
                             ? `bg-gradient-to-br ${item.color} shadow-xl`
                             : 'bg-gradient-to-b from-gray-800/80 to-gray-900/80 group-hover:bg-gradient-to-br group-hover:' + item.color
@@ -216,7 +220,7 @@ export default function MiddleBar() {
                         `}
                       >
                         <item.icon
-                          size={18}
+                          size={14}
                           className={`sm:w-5 sm:h-5 ${isActive ? 'text-white drop-shadow-lg' : item.textColor + ' group-hover:text-white'} transition-colors duration-300`}
                           strokeWidth={2.5}
                         />
@@ -235,7 +239,7 @@ export default function MiddleBar() {
                       {/* Text Label */}
                       <span
                         className={`
-                          text-xs font-black tracking-wider uppercase transition-colors duration-300 text-center min-h-[2.5rem] flex items-center justify-center
+                          text-[8px] sm:text-xs font-black tracking-tight uppercase transition-colors duration-300 text-center flex items-center justify-center leading-[1.1] whitespace-nowrap
                           ${isActive
                             ? 'text-white'
                             : 'text-[#FE284A] group-hover:text-white'
@@ -274,7 +278,7 @@ export default function MiddleBar() {
                     {/* Icon Container */}
                     <div
                       className={`
-                        relative p-2 sm:p-2.5 rounded-xl transition-all duration-300 flex-shrink-0
+                        relative p-1 sm:p-2.5 rounded-lg transition-all duration-300 flex-shrink-0
                         ${isActive
                           ? `bg-gradient-to-br ${item.color} shadow-xl`
                           : 'bg-gradient-to-b from-gray-800/80 to-gray-900/80 group-hover:bg-gradient-to-br group-hover:' + item.color
@@ -282,7 +286,7 @@ export default function MiddleBar() {
                       `}
                     >
                       <item.icon
-                        size={18}
+                        size={14}
                         className={`sm:w-5 sm:h-5 ${isActive ? 'text-white drop-shadow-lg' : item.textColor + ' group-hover:text-white'} transition-colors duration-300`}
                         strokeWidth={2.5}
                       />
@@ -304,7 +308,7 @@ export default function MiddleBar() {
                 {!item.useLogo && (
                   <span
                     className={`
-                      text-xs lg:text-sm font-black tracking-wider uppercase transition-colors duration-300 text-center min-h-[2.5rem] lg:min-h-0 flex items-center justify-center
+                      text-[8px] sm:text-xs lg:text-sm font-black tracking-tight uppercase transition-colors duration-300 text-center lg:min-h-0 flex items-center justify-center leading-[1.1] whitespace-nowrap
                       ${isActive
                         ? 'text-white'
                         : item.textColor + ' group-hover:text-white'
