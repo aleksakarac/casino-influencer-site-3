@@ -147,7 +147,8 @@ export default function BetCard({
   };
 
   // Format date
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return '';
     const date = new Date(dateString);
     const day = date.getDate();
     const month = date.getMonth() + 1;
@@ -377,7 +378,7 @@ export default function BetCard({
                   animate={{ scale: [1, 1.05, 1] }}
                   transition={{ duration: 2, repeat: Infinity }}
                 >
-                  {odds.toFixed(2)}
+                  {odds?.toFixed(2) || '0.00'}
                 </motion.span>
               </div>
             </motion.div>
@@ -389,7 +390,7 @@ export default function BetCard({
                 whileHover={{ scale: 1.03, borderColor: 'rgba(156, 163, 175, 0.5)' }}
               >
                 <span className="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wide mb-1">Stake</span>
-                <span className="text-sm sm:text-base font-black text-white">€{stake.toFixed(2)}</span>
+                <span className="text-sm sm:text-base font-black text-white">€{stake?.toFixed(2) || '0.00'}</span>
               </motion.div>
 
               <motion.div
@@ -397,7 +398,7 @@ export default function BetCard({
                 whileHover={{ scale: 1.03, borderColor: 'rgba(34, 197, 94, 0.4)' }}
               >
                 <span className="text-[10px] sm:text-xs text-gray-400 font-semibold uppercase tracking-wide mb-1">Win</span>
-                <span className="text-sm sm:text-base font-black text-green-400">€{potentialWin.toFixed(2)}</span>
+                <span className="text-sm sm:text-base font-black text-green-400">€{potentialWin?.toFixed(2) || '0.00'}</span>
               </motion.div>
             </div>
           </div>
@@ -419,7 +420,7 @@ export default function BetCard({
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5, type: "spring" }}
             >
-              + €{potentialWin.toFixed(2)}
+              + €{potentialWin?.toFixed(2) || '0.00'}
             </motion.div>
           ) : status === 'lost' ? (
             <motion.div
@@ -428,7 +429,7 @@ export default function BetCard({
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5, type: "spring" }}
             >
-              - €{stake.toFixed(2)}
+              - €{stake?.toFixed(2) || '0.00'}
             </motion.div>
           ) : status === 'cashedOut' && cashoutAmount ? (
             <motion.div
