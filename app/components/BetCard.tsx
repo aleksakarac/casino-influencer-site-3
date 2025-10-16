@@ -207,7 +207,7 @@ export default function BetCard({
   };
 
   const statusStyles = getStatusStyles();
-  const betTypeText = locale === 'sr' ? betType.sr : betType.en;
+  const betTypeText = locale === 'sr' ? betType?.sr : betType?.en;
 
   return (
     <motion.div
