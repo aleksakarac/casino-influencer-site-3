@@ -11,9 +11,7 @@ interface Bet {
   _id: string;
   useImageMode?: boolean;
   cardImage?: {
-    asset: {
-      url: string;
-    };
+    url: string;
   };
   matchTitle?: string;
   betType?: { en: string; sr: string };
