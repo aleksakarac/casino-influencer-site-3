@@ -9,11 +9,10 @@ import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { client } from '@/app/lib/sanity';
 import { gameCardsQuery } from '@/app/lib/sanity/queries';
 
-// BettingSection temporarily disabled during UI redesign
-// const BettingSection = dynamic(() => import('@/app/components/BettingSection'), {
-//   ssr: false,
-//   loading: () => <LoadingSpinner />
-// });
+const BettingSection = dynamic(() => import('@/app/components/BettingSection'), {
+  ssr: false,
+  loading: () => <LoadingSpinner />
+});
 
 export default function HomePage() {
   const searchParams = useSearchParams();
@@ -97,10 +96,9 @@ export default function HomePage() {
         <TournamentGrid />
       </Suspense>
 
-      {/* BettingSection temporarily disabled during UI redesign */}
-      {/* <Suspense fallback={<LoadingSpinner />}>
+      <Suspense fallback={<LoadingSpinner />}>
         <BettingSection />
-      </Suspense> */}
+      </Suspense>
     </>
   );
 }
