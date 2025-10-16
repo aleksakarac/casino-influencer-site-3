@@ -29,14 +29,17 @@ interface Bet {
 }
 
 export default function BettingSection() {
+  console.log('BettingSection component rendering');
   const [bets, setBets] = useState<Bet[]>([]);
   const [loading, setLoading] = useState(true);
   const locale = useLocale();
   const t = useTranslations('Betting');
 
   useEffect(() => {
+    console.log('BettingSection useEffect triggered');
     const fetchBets = async () => {
       try {
+        console.log('Starting to fetch bets from Sanity...');
         const fetchedBets = await client.fetch(
           `*[_type == "activeBet" && isActive == true] | order(order asc, matchDateTime desc) {
             _id,
@@ -59,11 +62,14 @@ export default function BettingSection() {
         );
         console.log('Fetched bets:', fetchedBets);
         console.log('Bets count:', fetchedBets?.length);
+        console.log('Bets array:', JSON.stringify(fetchedBets, null, 2));
         setBets(fetchedBets || []);
       } catch (error) {
         console.error('Error fetching bets:', error);
+        console.error('Error details:', JSON.stringify(error, null, 2));
         setBets([]);
       } finally {
+        console.log('Setting loading to false');
         setLoading(false);
       }
     };
@@ -81,7 +87,9 @@ export default function BettingSection() {
   }, []);
 
   // Don't render if no bets
+  console.log('BettingSection render check - loading:', loading, 'bets.length:', bets.length);
   if (!loading && bets.length === 0) {
+    console.log('BettingSection returning null - no bets to display');
     return null;
   }
 
