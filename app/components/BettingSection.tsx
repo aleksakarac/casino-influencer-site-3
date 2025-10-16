@@ -83,11 +83,7 @@ export default function BettingSection() {
   }
 
   return (
-    <section id="betting" className="relative py-12 sm:py-16 lg:py-20 overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-gray-900/60 to-black/40" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-900/10 via-transparent to-transparent" />
-
+    <section id="betting" className="relative py-12 sm:py-16 lg:py-20">
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <motion.div
