@@ -107,8 +107,8 @@ export default function Footer() {
   ];
 
   return (
-    <footer id="links" className="relative border-t border-amber-500/20 scroll-mt-32">
-      <div className="absolute inset-0 bg-gradient-to-r from-amber-500/5 via-transparent to-amber-500/5 opacity-20" />
+    <footer id="links" className="relative glass border-t border-gold-500/20 scroll-mt-32">
+      <div className="absolute inset-0 bg-gradient-to-r from-gold-500/5 via-purple-500/5 to-gold-500/5 opacity-20" />
 
       <div className="relative max-w-7xl mx-auto px-4 py-12">
         {/* Header Section */}
@@ -148,7 +148,7 @@ export default function Footer() {
                   target={social.href ? "_blank" : undefined}
                   rel={social.href ? "noopener noreferrer" : undefined}
                   onClick={(e) => !social.href && e.preventDefault()}
-                  className={`relative flex items-center justify-center gap-2 px-2 py-2 sm:px-4 sm:py-3 rounded-xl max-[400px]:rounded-full max-[400px]:w-12 max-[400px]:h-12 max-[400px]:p-0 ${social.bgColor} text-white font-semibold transition-all duration-300 overflow-hidden group hover:shadow-2xl hover:shadow-black/30 ${!social.href ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  className={`relative flex items-center justify-center gap-2 px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl min-h-[44px] max-[400px]:rounded-full max-[400px]:w-11 max-[400px]:h-11 max-[400px]:min-h-0 max-[400px]:p-0 ${social.bgColor} text-white font-semibold transition-all duration-300 overflow-hidden group hover:shadow-2xl hover:shadow-black/30 ${!social.href ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   {/* Background glow effect */}
                   <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-all duration-300" />
@@ -157,12 +157,12 @@ export default function Footer() {
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out" />
 
                   {/* Content */}
-                  <div className="relative z-10 flex items-center justify-center gap-2 sm:gap-2">
+                  <div className="relative z-10 flex items-center justify-center gap-1.5 sm:gap-2">
                     <social.icon
-                      size={social.name === t('kick') ? 24 : 14}
-                      className={social.name === t('kick') ? "sm:w-7 sm:h-auto max-[400px]:w-6 max-[400px]:h-auto text-white group-hover:scale-110 transition-transform duration-300" : "sm:w-4 sm:h-4 max-[400px]:w-3.5 max-[400px]:h-3.5 text-white group-hover:scale-110 transition-transform duration-300"}
+                      size={social.name === t('kick') ? 20 : 16}
+                      className="flex-shrink-0 text-white group-hover:scale-110 transition-transform duration-300"
                     />
-                    <span className="text-[10px] sm:text-sm max-[400px]:hidden text-white group-hover:text-white/90 transition-colors duration-300">
+                    <span className="text-[10px] sm:text-sm max-[400px]:hidden text-white group-hover:text-white/90 transition-colors duration-300 whitespace-nowrap">
                       {social.name}
                     </span>
                   </div>
@@ -187,7 +187,7 @@ export default function Footer() {
       </div>
 
       {/* Bottom Decorative Line */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/30 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/30 to-transparent" />
     </footer>
   );
 }

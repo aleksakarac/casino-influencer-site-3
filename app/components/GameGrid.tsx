@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { motion } from 'framer-motion';
 import GameCard from './GameCard';
 
 // Placeholder game data - Phase 2 will make this CMS-managed
@@ -66,14 +67,26 @@ export default function GameGrid() {
   const locale = (typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'en') as 'en' | 'sr';
 
   return (
-    <section className="pt-8 pb-6 bg-gradient-to-b from-gray-900 to-black max-w-7xl mx-auto px-4">
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="pt-8 pb-6 max-w-7xl mx-auto px-4"
+    >
       {/* Section Header */}
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent mb-2">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+        className="text-center mb-8"
+      >
+        <h2 className="text-3xl sm:text-4xl font-bold gradient-text gradient-text-animated mb-3">
           {t('title')}
         </h2>
-        <p className="text-gray-400">{t('subtitle')}</p>
-      </div>
+        <p className="text-slate-400 text-sm sm:text-base">{t('subtitle')}</p>
+      </motion.div>
 
       {/* Game Cards Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:gap-6 mb-10">
@@ -92,11 +105,21 @@ export default function GameGrid() {
       </div>
 
       {/* View All Button */}
-      <div className="text-center">
-        <button className="px-8 py-3 bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-black font-semibold rounded-xl hover:shadow-[0_10px_15px_-3px_rgba(251,191,36,0.3)] hover:scale-105 transition-all duration-300">
-          {t('viewAll')}
-        </button>
-      </div>
-    </section>
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.4, duration: 0.5 }}
+        className="text-center"
+      >
+        <div className="relative inline-block">
+          {/* Glow Effect */}
+          <div className="absolute -inset-[2px] bg-gradient-to-r from-amber-500 to-yellow-600 rounded-xl blur-sm opacity-60" />
+          <button className="relative px-8 py-3 bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-400 hover:to-yellow-500 text-slate-900 font-bold rounded-xl transition-all duration-300 shadow-lg hover:scale-105">
+            {t('viewAll')}
+          </button>
+        </div>
+      </motion.div>
+    </motion.section>
   );
 }

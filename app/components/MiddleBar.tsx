@@ -146,9 +146,9 @@ export default function MiddleBar() {
   ];
 
   return (
-    <div className="relative bg-gradient-to-r from-gray-900 via-black to-gray-900 border-b border-white/5 shadow-lg shadow-black/50">
+    <div className="relative glass border-b border-white/10 shadow-lg shadow-black/50">
       {/* Shimmer overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-amber-500/10 via-transparent to-amber-500/10 animate-pulse" />
+      <div className="absolute inset-0 bg-gradient-to-r from-gold-500/5 via-transparent to-purple-500/5 animate-pulse" />
 
       {/* Top decorative line - double layer */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-500/40 to-transparent" />
@@ -172,8 +172,8 @@ export default function MiddleBar() {
                 transition={{ delay: index * 0.08 }}
                 whileHover={{ scale: 1.05 }}
                 className={`
-                  group relative flex flex-col lg:flex-row items-center lg:justify-center gap-0.5 lg:gap-2 px-1.5 sm:px-4 lg:px-5 py-3 lg:py-4
-                  transition-all duration-300 cursor-pointer flex-1 lg:flex-none lg:min-w-[176px]
+                  group relative flex flex-col lg:flex-row items-center lg:justify-center gap-0.5 lg:gap-2 px-2 sm:px-4 lg:px-5 py-3 lg:py-4
+                  transition-all duration-300 cursor-pointer flex-1 lg:flex-none lg:min-w-[176px] min-w-0
                   bg-transparent border-0
                   ${isActive
                     ? 'bg-gradient-to-b from-gray-800/60 to-black/40 rounded-t-xl border-t border-x border-white/20 shadow-xl'
@@ -182,9 +182,7 @@ export default function MiddleBar() {
                 `}
                 style={{
                   marginBottom: isActive ? '-1px' : '0',
-                  paddingBottom: isActive ? 'calc(0.75rem + 1px)' : '0.75rem',
-                  // iPhone-specific: Limit flex-basis to prevent overflow
-                  maxWidth: isSmallPhone ? '20%' : 'none'
+                  paddingBottom: isActive ? 'calc(0.75rem + 1px)' : '0.75rem'
                 }}
               >
                 {/* Chrome Tab Curves (Active Only) */}

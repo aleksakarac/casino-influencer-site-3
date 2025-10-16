@@ -155,9 +155,9 @@ export default function TournamentCard({
       className="h-full flex flex-col cursor-pointer"
     >
       <motion.div
-        className={`relative flex flex-col h-full bg-gradient-to-br from-gray-800/95 via-gray-800/90 to-gray-900/95 border-2 ${tierStyles.borderGlow} rounded-2xl shadow-2xl ${tierStyles.glow} transition-all duration-500 backdrop-blur-md overflow-hidden group`}
+        className={`relative flex flex-col h-full glass-elevated border-2 ${tierStyles.borderGlow} rounded-2xl shadow-2xl ${tierStyles.glow} transition-all duration-500 overflow-hidden group`}
         whileHover={{
-          scale: 1.03,
+          scale: 1.02,
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
         }}
       >

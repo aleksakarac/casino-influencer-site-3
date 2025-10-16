@@ -9,11 +9,11 @@ import LoadingSpinner from '@/app/components/LoadingSpinner';
 import { client } from '@/app/lib/sanity';
 import { gameCardsQuery } from '@/app/lib/sanity/queries';
 
-// Load BettingSection only on client side to avoid SSR issues
-const BettingSection = dynamic(() => import('@/app/components/BettingSection'), {
-  ssr: false,
-  loading: () => <LoadingSpinner />
-});
+// BettingSection temporarily disabled during UI redesign
+// const BettingSection = dynamic(() => import('@/app/components/BettingSection'), {
+//   ssr: false,
+//   loading: () => <LoadingSpinner />
+// });
 
 export default function HomePage() {
   const searchParams = useSearchParams();
@@ -97,9 +97,10 @@ export default function HomePage() {
         <TournamentGrid />
       </Suspense>
 
-      <Suspense fallback={<LoadingSpinner />}>
+      {/* BettingSection temporarily disabled during UI redesign */}
+      {/* <Suspense fallback={<LoadingSpinner />}>
         <BettingSection />
-      </Suspense>
+      </Suspense> */}
     </>
   );
 }

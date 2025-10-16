@@ -40,11 +40,17 @@ interface GameCardsGridProps {
 
 export function GameCardsGrid({ cards, cardConfig, vavadaLink }: GameCardsGridProps) {
   return (
-    <section id="games-section" className="pt-8 pb-6">
+    <motion.section
+      id="games-section"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+      className="pt-8 pb-6"
+    >
       <div className="max-w-5xl mx-auto px-4 lg:px-8">
         {/* Games Grid */}
         <div
-          className="grid grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(150px,200px))] gap-5 px-0 md:px-4 justify-center"
+          className="grid grid-cols-2 sm:grid-cols-[repeat(auto-fit,minmax(150px,200px))] gap-5 px-0 md:px-4 justify-items-center place-content-center"
         >
           {cards.map((card) => {
             const borderColor =
@@ -88,6 +94,6 @@ export function GameCardsGrid({ cards, cardConfig, vavadaLink }: GameCardsGridPr
           })}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

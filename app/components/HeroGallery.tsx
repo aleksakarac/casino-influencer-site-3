@@ -107,15 +107,15 @@ export default function HeroGallery() {
   }, [images.length, autoPlaySpeed]);
 
   return (
-    <section className="relative w-full h-64 overflow-hidden bg-black">
+    <section className="relative w-full h-64 overflow-hidden bg-slate-950">
       {/* Image Carousel */}
       <AnimatePresence mode="wait">
         <motion.div
           key={currentIndex}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1 }}
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="absolute inset-0"
         >
           <picture className="w-full h-full block">
@@ -129,28 +129,49 @@ export default function HeroGallery() {
               className="w-full h-full object-cover object-center"
             />
           </picture>
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
         </motion.div>
       </AnimatePresence>
 
-
       {/* Navigation Indicators */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-3 z-20">
-        {images.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentIndex(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentIndex
-                ? 'bg-[var(--primary-orange)] shadow-[0_0_10px_rgba(251,191,36,0.6)]'
-                : 'bg-white/30 hover:bg-white/50'
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+        <div className="glass-elevated rounded-full px-3 py-2 flex items-center gap-2 shadow-lg">
+          {images.map((_, index) => (
+            <motion.button
+              key={index}
+              onClick={() => setCurrentIndex(index)}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+              className="relative"
+              aria-label={`Go to slide ${index + 1}`}
+            >
+              <motion.div
+                animate={{
+                  scale: index === currentIndex ? 1 : 0.8,
+                  opacity: index === currentIndex ? 1 : 0.5,
+                }}
+                transition={{ duration: 0.3 }}
+                className={`w-2 h-2 rounded-full ${
+                  index === currentIndex
+                    ? 'bg-gold-400'
+                    : 'bg-slate-400'
+                }`}
+              />
+              {index === currentIndex && (
+                <motion.div
+                  layoutId="activeIndicator"
+                  className="absolute inset-0 rounded-full bg-gold-400 blur-sm"
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                />
+              )}
+            </motion.button>
+          ))}
+        </div>
       </div>
 
       {/* Decorative Border */}
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[var(--primary-orange)] to-transparent opacity-60"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/50 to-transparent" />
     </section>
   );
 }

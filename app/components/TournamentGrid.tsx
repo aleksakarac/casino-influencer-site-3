@@ -68,10 +68,10 @@ export default function TournamentGrid() {
             transition={{ duration: 0.5 }}
             className="text-center mb-6 md:mb-8"
           >
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent mb-2">
+            <h2 className="text-3xl sm:text-4xl font-bold gradient-text gradient-text-animated mb-3">
               {t('title')}
             </h2>
-            <p className="text-gray-400">Join the ultimate gaming competitions</p>
+            <p className="text-slate-400 text-sm sm:text-base">Join the ultimate gaming competitions</p>
           </motion.div>
           <div className="text-center text-gray-400">Loading tournaments...</div>
         </div>
@@ -84,22 +84,27 @@ export default function TournamentGrid() {
   }
 
   return (
-    <section
+    <motion.section
       id="events"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
       className="py-6 md:py-8 scroll-mt-32"
     >
       <div className="max-w-7xl mx-auto px-4 lg:px-8">
         {/* Section Header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2, duration: 0.5 }}
           className="text-center mb-6 md:mb-8"
         >
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent mb-2">
+          <h2 className="text-3xl sm:text-4xl font-bold gradient-text gradient-text-animated mb-3">
             {t('title')}
           </h2>
-          <p className="text-gray-400">Join the ultimate gaming competitions</p>
+          <p className="text-slate-400 text-sm sm:text-base">Join the ultimate gaming competitions</p>
         </motion.div>
 
         {/* Tournament Cards Grid */}
@@ -129,6 +134,6 @@ export default function TournamentGrid() {
           })}
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

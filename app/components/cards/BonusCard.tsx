@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { Copy, Check, Gift } from 'lucide-react';
+import { Copy, Check, Gift, Sparkles } from 'lucide-react';
+import { haptics } from '@/app/utils/haptics';
 
 interface BonusCardProps {
   card: {
@@ -23,10 +25,12 @@ interface BonusCardProps {
 
 export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
   const [copying, setCopying] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const copyCode = async (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
+    haptics.light();
     setCopying(true);
 
     try {
@@ -49,94 +53,157 @@ export function BonusCard({ card, borderColor, vavadaLink }: BonusCardProps) {
   };
 
   return (
-    <div
-      className="relative rounded-xl overflow-hidden aspect-square border hover:scale-105 transition-all duration-300 w-full max-w-[200px] mx-auto group"
-      style={{
-        borderColor,
-        borderWidth: '1px',
-        backgroundImage: `url(${card.backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center'
-      }}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="relative w-full max-w-[200px] mx-auto h-full"
     >
-      {/* Overlay Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/90" />
-
-      {/* Icon (Top Left) */}
-      <div className="absolute top-2 left-2 z-10 bg-gradient-to-br from-green-500 to-emerald-600 p-2.5 max-[400px]:p-2 rounded-md shadow-lg">
-        <Gift size={16} className="text-white max-[400px]:w-[13px] max-[400px]:h-[13px]" />
-      </div>
-
-      {/* Tag (Top Right) */}
-      {card.tag && (
-        <div
-          className="absolute top-2 right-2 px-3 py-1 max-[400px]:px-2 max-[400px]:py-0.5 text-[11px] max-[400px]:text-[9px] font-bold uppercase shadow-lg z-10 rounded-full border-2 bg-black/30 backdrop-blur-sm"
-          style={{
-            borderColor: card.tag.color,
-            color: card.tag.color,
+      <motion.div
+        whileHover={{ y: -4 }}
+        whileTap={{ scale: 0.98 }}
+        className="relative aspect-square rounded-2xl overflow-hidden glass-elevated shadow-lg transition-all duration-300 hover:shadow-2xl"
+        style={{
+          boxShadow: isHovered
+            ? `0 20px 40px -12px ${borderColor}40, 0 0 0 1px ${borderColor}30`
+            : '0 10px 30px -10px rgba(0, 0, 0, 0.3)'
+        }}
+      >
+        {/* Background Image */}
+        <motion.div
+          animate={{
+            scale: isHovered ? 1.1 : 1,
           }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: `url(${card.backgroundImage})` }}
+        />
+
+        {/* Gradient Overlays */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-slate-950/40 to-slate-950/90" />
+        <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 via-transparent to-emerald-600/20" />
+
+        {/* Shimmer Effect */}
+        <motion.div
+          animate={{
+            x: isHovered ? ['0%', '200%'] : '0%',
+          }}
+          transition={{
+            duration: 1.5,
+            ease: "easeInOut"
+          }}
+          className="absolute inset-0 w-1/3 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12"
+        />
+
+        {/* Gift Icon Badge */}
+        <motion.div
+          initial={{ scale: 0, rotate: -45 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ delay: 0.2, type: "spring" }}
+          className="absolute top-3 left-3 z-10 bg-gradient-to-br from-green-500 to-emerald-600 p-2 rounded-lg shadow-lg"
         >
-          {card.tag.name}
-        </div>
-      )}
+          <Gift size={14} className="text-white" />
+        </motion.div>
 
-      {/* Content */}
-      <div className="absolute inset-0 flex flex-col justify-end">
-        {/* Gradient overlay from top to bottom of entire card */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute inset-0 bg-gradient-to-b from-purple-900/0 via-purple-900/30 via-purple-900/60 to-purple-900/75 rounded-b-xl" />
-          <div className="absolute inset-0 bg-gradient-to-b from-indigo-950/0 via-indigo-950/30 via-indigo-950/60 to-indigo-950/75 rounded-b-xl" />
-        </div>
+        {/* Tag */}
+        {card.tag && (
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.1, type: "spring" }}
+            className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-full glass-elevated border-2 shadow-lg"
+            style={{
+              borderColor: card.tag.color,
+              color: card.tag.color,
+            }}
+          >
+            <span className="text-[9px] font-bold uppercase tracking-wide">
+              {card.tag.name}
+            </span>
+          </motion.div>
+        )}
 
-        {/* Bottom Section with Content */}
-        <div className="relative p-2 space-y-1.5 flex flex-col items-center rounded-b-xl">
-
-          {/* Title & Activations */}
-          <div className="relative w-full text-center mb-1 z-10">
-            <h3 className="text-[10px] min-[360px]:text-xs sm:text-base font-extrabold text-white leading-tight px-1">
+        {/* Content Container */}
+        <div className="absolute inset-0 flex flex-col justify-end p-3">
+          {/* Title & Stats */}
+          <div className="relative mb-3 text-center px-1">
+            <h3 className="text-white text-sm sm:text-base font-bold mb-1 leading-tight line-clamp-2">
               {card.title}
             </h3>
-            <p className="text-[8px] min-[360px]:text-[9px] sm:text-[11px] font-bold text-gray-300 mt-0.5">
-              {card.activationsCount} Activations
-            </p>
+            <div className="flex items-center justify-center gap-1.5">
+              <Sparkles size={10} className="text-green-400" />
+              <p className="text-[9px] sm:text-[10px] font-semibold text-green-400">
+                {card.activationsCount} Activations
+              </p>
+            </div>
           </div>
 
-          {/* Code Box and Button Container */}
-          <div className="relative w-full flex flex-col items-center gap-1.5 z-10">
-            {/* Code Box */}
-            <div className="bg-purple-800/60 rounded-lg px-1.5 sm:px-2 py-1 sm:py-1.5 flex items-center justify-between w-full max-[360px]:w-[90%] max-[400px]:w-[85%] min-[768px]:w-[90%] border border-purple-500/30 min-h-[24px] min-[360px]:min-h-[26px] sm:min-h-[30px]">
-              <span className="text-white font-mono text-[9px] min-[360px]:text-[10px] sm:text-xs font-extrabold tracking-tight">
+          {/* Code Box */}
+          <div className="relative mb-2">
+            <div className="glass-elevated rounded-lg px-2.5 py-2 flex items-center justify-between border border-green-500/20">
+              <span className="text-white font-mono text-[10px] sm:text-xs font-bold tracking-tight">
                 {card.bonusCode}
               </span>
-              <button
+              <motion.button
                 onClick={copyCode}
                 disabled={copying}
-                className="text-gray-300 hover:text-green-400 transition-colors ml-1 flex-shrink-0"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="p-1 rounded-md glass hover:bg-green-500/20 transition-colors"
                 aria-label="Copy code"
               >
-                {copying ? <Check size={9} className="min-[360px]:w-[10px] min-[360px]:h-[10px] sm:w-[11px] sm:h-[11px]" /> : <Copy size={9} className="min-[360px]:w-[10px] min-[360px]:h-[10px] sm:w-[11px] sm:h-[11px]" />}
-              </button>
-            </div>
-
-            {/* Claim Button */}
-            <div className="relative w-full max-[360px]:w-[90%] max-[400px]:w-[85%] min-[768px]:w-[90%]">
-              {/* Animated border effect */}
-              <div className="absolute -inset-[2px] bg-gradient-to-r from-green-400 via-emerald-500 to-green-400 rounded-lg opacity-75 blur-sm animate-pulse" />
-
-              <a
-                href={vavadaLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="relative flex items-center justify-center w-full min-h-[24px] min-[360px]:min-h-[26px] sm:min-h-[30px] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-[10px] min-[360px]:text-[11px] sm:text-sm font-extrabold px-1.5 sm:px-3 rounded-lg text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 gap-0.5 sm:gap-1"
-              >
-                <Gift size={10} className="min-[360px]:w-[11px] min-[360px]:h-[11px] sm:w-[13px] sm:h-[13px]" />
-                <span className="tracking-tighter min-[360px]:tracking-tight">CLAIM BONUS</span>
-              </a>
+                {copying ? (
+                  <Check size={10} className="text-green-400" />
+                ) : (
+                  <Copy size={10} className="text-slate-300" />
+                )}
+              </motion.button>
             </div>
           </div>
+
+          {/* Claim Button */}
+          <div className="relative">
+            {/* Glow Effect */}
+            <motion.div
+              animate={{
+                opacity: [0.5, 0.8, 0.5],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="absolute -inset-[2px] bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg blur-sm"
+            />
+
+            <motion.a
+              href={vavadaLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="relative flex items-center justify-center w-full min-h-[32px] bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white text-[11px] sm:text-sm font-bold rounded-lg transition-all duration-300 shadow-lg gap-1.5"
+            >
+              <Gift size={12} />
+              <span className="tracking-wide">CLAIM BONUS</span>
+            </motion.a>
+          </div>
         </div>
-      </div>
-    </div>
+
+        {/* Border Glow */}
+        <motion.div
+          animate={{
+            opacity: isHovered ? 1 : 0,
+          }}
+          className="absolute inset-0 rounded-2xl pointer-events-none"
+          style={{
+            border: `1px solid ${borderColor}40`
+          }}
+        />
+      </motion.div>
+    </motion.div>
   );
 }

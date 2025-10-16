@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import { toast } from 'sonner';
-import { Copy, Check } from 'lucide-react';
+import { Copy, Check, Sparkles, PartyPopper } from 'lucide-react';
 import { useLocale } from 'next-intl';
+import { haptics } from '@/app/utils/haptics';
 
 interface WelcomeCardProps {
   card: {
@@ -18,11 +20,13 @@ interface WelcomeCardProps {
 
 export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps) {
   const [copying, setCopying] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const locale = useLocale() as 'en' | 'sr';
 
   const copyCode = async (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
+    haptics.light();
     setCopying(true);
 
     try {
@@ -45,77 +49,158 @@ export function WelcomeCard({ card, borderColor, vavadaLink }: WelcomeCardProps)
   };
 
   return (
-    <div
-      className="relative rounded-xl overflow-hidden aspect-square border w-full max-w-[200px] mx-auto group hover:scale-105 transition-all duration-300 bg-gradient-to-br from-purple-900 to-indigo-950"
-      style={{
-        borderColor,
-        borderWidth: '1px',
-      }}
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="relative w-full max-w-[200px] mx-auto h-full"
     >
-      {/* Gradient Overlay for depth */}
-      <div className="absolute inset-0 bg-gradient-to-b from-purple-800/20 via-transparent to-black/40" />
+      <motion.div
+        whileHover={{ y: -4 }}
+        whileTap={{ scale: 0.98 }}
+        className="relative aspect-square rounded-2xl overflow-hidden glass-elevated shadow-lg transition-all duration-300 hover:shadow-2xl"
+        style={{
+          boxShadow: isHovered
+            ? `0 20px 40px -12px ${borderColor}40, 0 0 0 1px ${borderColor}30`
+            : '0 10px 30px -10px rgba(0, 0, 0, 0.3)'
+        }}
+      >
+        {/* Background Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-950" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
 
-      {/* Content */}
-      <div className="absolute inset-0 p-2 flex flex-col items-center text-center">
-        {/* Title - At Top */}
-        <div className="w-full">
-          <h3 className="text-base max-[400px]:text-sm font-bold text-white drop-shadow-lg">
-            Welcome Package
-          </h3>
-        </div>
+        {/* Shimmer Effect */}
+        <motion.div
+          animate={{
+            x: isHovered ? ['0%', '200%'] : '0%',
+          }}
+          transition={{
+            duration: 1.5,
+            ease: "easeInOut"
+          }}
+          className="absolute inset-0 w-1/3 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12"
+        />
 
-        {/* Benefits - Shows above 370px, smaller text below 460px */}
-        <div className="hidden min-[370px]:flex min-[370px]:flex-col min-[370px]:items-center min-[370px]:justify-center w-full space-y-1.5 flex-1">
-          {card.benefits && card.benefits.map((benefit, index) => (
-            <div key={index} className="text-gray-200 text-center flex items-center text-[11px] min-[460px]:text-xs font-bold">
-              <span className="text-purple-400 mr-2">✓</span>
-              <span>{benefit}</span>
+        {/* Sparkle Icon Badge */}
+        <motion.div
+          initial={{ scale: 0, rotate: -45 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ delay: 0.2, type: "spring" }}
+          className="absolute top-3 left-3 z-10 bg-gradient-to-br from-purple-500 to-pink-600 p-2 rounded-lg shadow-lg"
+        >
+          <PartyPopper size={14} className="text-white" />
+        </motion.div>
+
+        {/* Welcome Badge */}
+        <motion.div
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
+          transition={{ delay: 0.1, type: "spring" }}
+          className="absolute top-3 right-3 z-10 px-2.5 py-1 rounded-full glass-elevated border-2 border-purple-400/50 shadow-lg"
+        >
+          <span className="text-[9px] font-bold uppercase tracking-wide text-purple-300">
+            VIP
+          </span>
+        </motion.div>
+
+        {/* Content Container */}
+        <div className="absolute inset-0 flex flex-col p-3">
+          {/* Title */}
+          <div className="relative text-center mb-2">
+            <h3 className="text-white text-sm sm:text-base font-bold leading-tight gradient-text gradient-text-animated">
+              Welcome Package
+            </h3>
+          </div>
+
+          {/* Benefits - Centered */}
+          <div className="flex-1 flex flex-col items-center justify-center space-y-1.5 mb-3">
+            {card.benefits && card.benefits.map((benefit, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 + index * 0.1 }}
+                className="flex items-center gap-1.5"
+              >
+                <div className="w-1 h-1 rounded-full bg-purple-400" />
+                <span className="text-slate-200 text-[10px] sm:text-[11px] font-semibold">
+                  {benefit}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Code Box */}
+          <div className="relative mb-2">
+            <div className="glass-elevated rounded-lg px-2 sm:px-2.5 py-2 flex items-center justify-between gap-2 border border-purple-500/20">
+              <div className="flex items-center gap-1 sm:gap-1.5 min-w-0 flex-1">
+                <span className="text-purple-300 text-[9px] font-semibold flex-shrink-0">
+                  {locale === 'sr' ? 'Kod' : 'Code'}:
+                </span>
+                <span className="text-white font-mono text-[10px] sm:text-xs font-bold tracking-tight truncate">
+                  {card.bonusCode}
+                </span>
+              </div>
+              <motion.button
+                onClick={copyCode}
+                disabled={copying}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                className="p-1 rounded-md glass hover:bg-purple-500/20 transition-colors"
+                aria-label="Copy code"
+              >
+                {copying ? (
+                  <Check size={10} className="text-purple-400" />
+                ) : (
+                  <Copy size={10} className="text-slate-300" />
+                )}
+              </motion.button>
             </div>
-          ))}
-        </div>
-
-        {/* Bottom Section - Stacked Vertically */}
-        <div className="w-full flex flex-col items-center gap-1.5 mt-auto pb-1">
-          {/* Code Display */}
-          <div className="flex items-center justify-between bg-purple-800/60 px-2.5 min-h-[30px] max-[400px]:min-h-[28px] rounded-xl border border-purple-500/30 w-full max-[400px]:w-[80%] min-[768px]:w-[90%]">
-            <div className="flex items-center gap-1">
-              <span className="text-purple-200 text-[11px] font-bold max-[400px]:hidden">
-                {locale === 'sr' ? 'Koristi Kod' : 'Use Code'}
-              </span>
-              <span className="text-purple-200 text-[11px] font-bold hidden max-[400px]:inline">
-                {locale === 'sr' ? 'Kod' : 'Code'}
-              </span>
-              <span className="font-extrabold text-white font-mono text-xs tracking-wider bg-purple-600/40 px-1.5 py-0.5 rounded border border-purple-400/30">
-                {card.bonusCode}
-              </span>
-            </div>
-            <button
-              onClick={copyCode}
-              disabled={copying}
-              className="text-gray-300 hover:text-green-400 transition-colors ml-1.5 flex-shrink-0"
-              aria-label="Copy code"
-            >
-              {copying ? <Check size={11} /> : <Copy size={11} />}
-            </button>
           </div>
 
           {/* Claim Button */}
-          <div className="relative w-full max-[400px]:w-[80%] min-[768px]:w-[90%]">
-            {/* Animated border effect */}
-            <div className="absolute -inset-[2px] bg-gradient-to-r from-purple-400 via-pink-500 to-purple-400 rounded-xl opacity-75 blur-sm animate-pulse" />
+          <div className="relative">
+            {/* Glow Effect */}
+            <motion.div
+              animate={{
+                opacity: [0.5, 0.8, 0.5],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="absolute -inset-[2px] bg-gradient-to-r from-purple-500 to-pink-600 rounded-lg blur-sm"
+            />
 
-            <a
+            <motion.a
               href={vavadaLink}
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="relative flex items-center justify-center w-full min-h-[30px] max-[400px]:min-h-[28px] bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white text-sm font-extrabold px-4 rounded-xl text-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 whitespace-nowrap"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="relative flex items-center justify-center w-full min-h-[32px] bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white text-[11px] sm:text-sm font-bold rounded-lg transition-all duration-300 shadow-lg gap-1.5"
             >
-              CLAIM
-            </a>
+              <Sparkles size={12} />
+              <span className="tracking-wide">CLAIM NOW</span>
+            </motion.a>
           </div>
         </div>
-      </div>
-    </div>
+
+        {/* Border Glow */}
+        <motion.div
+          animate={{
+            opacity: isHovered ? 1 : 0,
+          }}
+          className="absolute inset-0 rounded-2xl pointer-events-none"
+          style={{
+            border: `1px solid ${borderColor}40`
+          }}
+        />
+      </motion.div>
+    </motion.div>
   );
 }

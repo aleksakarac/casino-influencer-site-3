@@ -64,7 +64,7 @@ export default function LeaderboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-900 to-black">
+      <div className="min-h-screen flex items-center justify-center">
         <LoadingSpinner />
       </div>
     );
@@ -72,10 +72,10 @@ export default function LeaderboardPage() {
 
   if (error || !data) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-gray-900 to-black">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-red-500 mb-4">{t('error')}</h1>
-          <p className="text-gray-400">{t('errorMessage')}</p>
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <div className="text-center glass-elevated p-8 rounded-2xl max-w-md">
+          <h1 className="text-3xl font-bold text-red-400 mb-3">{t('error')}</h1>
+          <p className="text-slate-300">{t('errorMessage')}</p>
         </div>
       </div>
     );
@@ -91,16 +91,29 @@ export default function LeaderboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="text-center mb-12"
         >
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Trophy size={40} className="text-amber-400" />
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent">
+            <motion.div
+              animate={{
+                rotate: [0, -10, 10, 0],
+                scale: [1, 1.1, 1.1, 1],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            >
+              <Trophy size={40} className="text-gold-400 drop-shadow-lg" />
+            </motion.div>
+            <h1 className="text-4xl md:text-5xl font-bold gradient-text gradient-text-animated">
               {title}
             </h1>
           </div>
           {subtitle && (
-            <p className="text-gray-400 text-lg">{subtitle}</p>
+            <p className="text-slate-400 text-base md:text-lg">{subtitle}</p>
           )}
         </motion.div>
 
@@ -108,9 +121,12 @@ export default function LeaderboardPage() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.05 }}
-          className="mb-8 bg-gradient-to-br from-amber-500/10 to-yellow-500/10 border border-amber-500/30 rounded-2xl p-6 md:p-8 backdrop-blur-sm"
+          transition={{ delay: 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-8 glass-elevated border border-gold-500/20 rounded-2xl p-6 md:p-8 shadow-lg relative overflow-hidden"
         >
+          {/* Accent glow */}
+          <div className="absolute inset-0 bg-gradient-to-br from-gold-500/5 to-purple-500/5" />
+
           <div className="text-center mb-6">
             <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
               {t('howToWinTitle')}
@@ -149,10 +165,10 @@ export default function LeaderboardPage() {
           transition={{ delay: 0.08 }}
           className="text-center mb-6"
         >
-          <h3 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-amber-400 to-yellow-600 bg-clip-text text-transparent mb-2">
+          <h3 className="text-xl md:text-2xl font-bold gradient-text gradient-text-animated mb-2">
             {t('exclusivePrizesTitle')}
           </h3>
-          <p className="text-gray-400 text-sm md:text-base">
+          <p className="text-slate-400 text-sm md:text-base">
             {t('exclusivePrizesSubtitle')}
           </p>
         </motion.div>
@@ -197,8 +213,8 @@ export default function LeaderboardPage() {
             ))}
           </motion.div>
         ) : (
-          <div className="text-center py-12">
-            <p className="text-gray-400 text-lg">{t('noEntries')}</p>
+          <div className="text-center py-12 glass-elevated rounded-2xl p-8">
+            <p className="text-slate-400 text-lg">{t('noEntries')}</p>
           </div>
         )}
 
@@ -207,17 +223,34 @@ export default function LeaderboardPage() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
-          className="text-center mt-12"
+          className="text-center mt-12 glass-elevated rounded-2xl p-8"
         >
-          <p className="text-gray-400 mb-4">{t('wantToSeeYourName')}</p>
-          <a
-            href="https://kick.com/acajankovic"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-400 hover:to-emerald-500 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30 transform hover:scale-105"
-          >
-            {t('watchButton')}
-          </a>
+          <p className="text-slate-300 mb-4 text-lg">{t('wantToSeeYourName')}</p>
+          <div className="relative inline-block">
+            {/* Glow Effect */}
+            <motion.div
+              animate={{
+                opacity: [0.5, 0.8, 0.5],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="absolute -inset-[2px] bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl blur-sm"
+            />
+            <motion.a
+              href="https://kick.com/acajankovic"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              className="relative inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-xl hover:from-green-400 hover:to-emerald-500 transition-all duration-300 shadow-lg"
+            >
+              <Trophy size={20} />
+              {t('watchButton')}
+            </motion.a>
+          </div>
         </motion.div>
       </div>
     </div>
