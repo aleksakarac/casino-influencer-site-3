@@ -57,9 +57,12 @@ export default function BettingSection() {
             order
           }`
         );
-        setBets(fetchedBets);
+        console.log('Fetched bets:', fetchedBets);
+        console.log('Bets count:', fetchedBets?.length);
+        setBets(fetchedBets || []);
       } catch (error) {
         console.error('Error fetching bets:', error);
+        setBets([]);
       } finally {
         setLoading(false);
       }
