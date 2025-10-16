@@ -9,6 +9,7 @@ import welcomeCard from './welcomeCard';
 import leaderboardEntry from './leaderboardEntry';
 import tournamentPrize from './tournamentPrize';
 import leaderboardSettings from './leaderboardSettings';
+import activeBet from './activeBet';
 
 export const schemas = [
   siteSettings,
@@ -22,4 +23,5 @@ export const schemas = [
   leaderboardEntry,
   tournamentPrize,
   leaderboardSettings,
+  activeBet,
 ];
