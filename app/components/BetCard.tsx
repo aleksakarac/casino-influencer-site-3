@@ -78,8 +78,11 @@ export default function BetCard({
         }}
         className="h-full"
       >
-        <motion.div
-          className="relative flex flex-col h-full rounded-2xl shadow-2xl overflow-hidden group cursor-pointer"
+        <motion.a
+          href={vavadaLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative flex flex-col h-full rounded-2xl shadow-2xl overflow-hidden group cursor-pointer block"
           whileHover={{
             scale: 1.03,
             boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
@@ -110,7 +113,7 @@ export default function BetCard({
               transition={{ duration: 0.8, ease: 'easeInOut' }}
             />
           </div>
-        </motion.div>
+        </motion.a>
       </motion.div>
     );
   }

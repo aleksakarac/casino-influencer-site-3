@@ -99,7 +99,7 @@ export default function BettingSection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-8 sm:mb-12"
         >
-          <div className="inline-flex items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+          <div className="inline-flex items-center justify-center gap-2 sm:gap-3">
             <motion.div
               animate={{
                 rotate: [0, 10, -10, 10, 0],
@@ -117,9 +117,6 @@ export default function BettingSection() {
               {t('title')}
             </h2>
           </div>
-          <p className="text-sm sm:text-base text-gray-400 max-w-2xl mx-auto">
-            {t('subtitle')}
-          </p>
         </motion.div>
 
         {/* Bets Grid */}
