@@ -14,6 +14,7 @@ export default function MiddleBar() {
   const locale = useLocale();
   const activeSection = useActiveSection();
   const [vavadaLink, setVavadaLink] = useState<string>('#');
+  const [isMobile, setIsMobile] = useState(false);
   const t = useTranslations('MiddleBar');
 
   // Fetch Vavada link from Sanity
@@ -32,6 +33,21 @@ export default function MiddleBar() {
     };
 
     fetchVavadaLink();
+  }, []);
+
+  // Track window width for mobile detection (≤800px)
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 800);
+    };
+
+    // Initial check
+    checkMobile();
+
+    // Add resize listener
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // Determine active button
@@ -91,7 +107,7 @@ export default function MiddleBar() {
     },
     {
       icon: Gift,
-      title: t('getBonus'),
+      title: isMobile ? 'Bonus' : t('getBonus'),
       color: "from-orange-400 to-red-500",
       textColor: "text-orange-400",
       action: handlePokupiBonuse,
@@ -100,7 +116,7 @@ export default function MiddleBar() {
     },
     {
       icon: Crown,
-      title: t('leaderboard'),
+      title: isMobile ? 'Top 10' : t('leaderboard'),
       color: "from-yellow-400 to-amber-500",
       textColor: "text-yellow-400",
       action: () => router.push(`/${locale}/leaderboard`),
