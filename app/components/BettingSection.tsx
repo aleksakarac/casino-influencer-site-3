@@ -86,15 +86,22 @@ export default function BettingSection() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Don't render if no bets
+  // Debug: Always show component for now
   console.log('BettingSection render check - loading:', loading, 'bets.length:', bets.length);
-  if (!loading && bets.length === 0) {
-    console.log('BettingSection returning null - no bets to display');
-    return null;
-  }
+
+  // TEMPORARILY DISABLED FOR DEBUGGING
+  // if (!loading && bets.length === 0) {
+  //   console.log('BettingSection returning null - no bets to display');
+  //   return null;
+  // }
 
   return (
-    <section id="betting" className="relative py-12 sm:py-16 lg:py-20 overflow-hidden">
+    <section id="betting" className="relative py-12 sm:py-16 lg:py-20 overflow-hidden border-4 border-red-500">
+      {/* DEBUG: Red border to show component is rendering */}
+      <div className="bg-yellow-200 text-black p-4 text-center font-bold">
+        DEBUG: BettingSection - Loading: {loading ? 'Yes' : 'No'} | Bets Count: {bets.length} | Bets: {JSON.stringify(bets)}
+      </div>
+
       {/* Background Elements */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-gray-900/60 to-black/40" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-yellow-900/10 via-transparent to-transparent" />
